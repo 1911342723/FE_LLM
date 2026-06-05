@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="420" viewBox="0 0 880 420" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="a3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444"/>
+    </marker>
+  </defs>
+
+  <text x="440" y="36" text-anchor="middle" font-size="22" font-weight="bold" fill="#1a2b4a">教师—学生蒸馏与训练管道</text>
+  <text x="440" y="58" text-anchor="middle" font-size="13" fill="#5a6b8a">大模型/公开语料作教师，固化两个轻量学生网络的权重</text>
+
+  <!-- 教师层 -->
+  <rect x="40" y="90" width="240" height="120" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="160" y="116" text-anchor="middle" font-size="15" font-weight="bold" fill="#5b21b6">教师 / 数据源</text>
+  <text x="160" y="142" text-anchor="middle" font-size="12" fill="#6d28d9">DeepSeek (出题/解题/语料)</text>
+  <text x="160" y="162" text-anchor="middle" font-size="12" fill="#6d28d9">DashScope (1536维向量)</text>
+  <text x="160" y="182" text-anchor="middle" font-size="12" fill="#6d28d9">OPUS-100 公开平行语料</text>
+  <text x="160" y="200" text-anchor="middle" font-size="11.5" fill="#7c3aed">规则引擎(蒸馏惊奇标签)</text>
+
+  <!-- 数据层 -->
+  <rect x="330" y="90" width="220" height="120" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="1.8"/>
+  <text x="440" y="116" text-anchor="middle" font-size="15" font-weight="bold" fill="#9a3412">蒸馏数据</text>
+  <text x="440" y="142" text-anchor="middle" font-size="12" fill="#7c2d12">算术 (题目→答案)</text>
+  <text x="440" y="162" text-anchor="middle" font-size="12" fill="#7c2d12">中英平行句对 pairs.jsonl</text>
+  <text x="440" y="182" text-anchor="middle" font-size="12" fill="#7c2d12">(信号,期望)→误差标签</text>
+  <text x="440" y="200" text-anchor="middle" font-size="11.5" fill="#ea580c">缓存 / 断点续生成</text>
+
+  <!-- 学生层 -->
+  <rect x="600" y="78" width="240" height="68" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+  <text x="720" y="104" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">SurpriseNet</text>
+  <text x="720" y="126" text-anchor="middle" font-size="11.5" fill="#15803d">自由能/惊奇打分网络</text>
+
+  <rect x="600" y="158" width="240" height="68" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+  <text x="720" y="184" text-anchor="middle" font-size="14" font-weight="bold" fill="#166534">DecoderNet / Transformer</text>
+  <text x="720" y="206" text-anchor="middle" font-size="11.5" fill="#15803d">能量递减解码 / 序列生成</text>
+
+  <!-- 权重产物 -->
+  <rect x="330" y="280" width="220" height="80" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.8"/>
+  <text x="440" y="308" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">固化权重 checkpoints/</text>
+  <text x="440" y="332" text-anchor="middle" font-size="12" fill="#475569">surprise_net.pt · decoder_net.pt</text>
+  <text x="440" y="350" text-anchor="middle" font-size="12" fill="#475569">arith_fe.pt · translation.pt</text>
+
+  <!-- GPU -->
+  <rect x="600" y="290" width="240" height="60" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="720" y="316" text-anchor="middle" font-size="13.5" font-weight="bold" fill="#92400e">RTX 5060 · 混合精度训练</text>
+  <text x="720" y="336" text-anchor="middle" font-size="11.5" fill="#b45309">AMP + TF32, GPU 利用率 ~97%</text>
+
+  <!-- 连线 -->
+  <line x1="280" y1="150" x2="330" y2="150" stroke="#444" stroke-width="1.8" marker-end="url(#a3)"/>
+  <line x1="550" y1="135" x2="600" y2="112" stroke="#444" stroke-width="1.8" marker-end="url(#a3)"/>
+  <line x1="550" y1="165" x2="600" y2="190" stroke="#444" stroke-width="1.8" marker-end="url(#a3)"/>
+  <line x1="720" y1="226" x2="560" y2="300" stroke="#444" stroke-width="1.6" marker-end="url(#a3)"/>
+  <line x1="660" y1="290" x2="600" y2="320" stroke="#d97706" stroke-width="1.4" stroke-dasharray="4 3"/>
+
+  <text x="440" y="395" text-anchor="middle" font-size="12" fill="#334155">学生网络只学"如何衡量误差/规划路径"，知识沉淀在世界模型，故参数极小、训练快</text>
+</svg>

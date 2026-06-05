@@ -1,0 +1,11 @@
+# ===== 核心运行时 =====
+numpy>=1.21
+python-dotenv>=1.0        # 加载 .env 配置
+openai>=1.0               # 通过 OpenAI 兼容协议调用 DashScope 向量 API
+
+# ===== 向量数据库 =====
+psycopg[binary]>=3.1      # PostgreSQL 驱动
+pgvector>=0.2             # pgvector 的 Python 适配（向量类型注册）
+
+# ===== 训练层（仅训练时需要）=====
+torch>=2.0                # 训练 SurpriseNet 与 DecoderNet 两个小网络

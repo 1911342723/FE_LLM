@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="760" viewBox="0 0 900 760" font-family="'Segoe UI','Microsoft YaHei',sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#444"/>
+    </marker>
+    <marker id="arrowUp" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#c0392b"/>
+    </marker>
+    <linearGradient id="blanket" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#eef6ff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+  </defs>
+
+  <!-- 标题 -->
+  <text x="450" y="34" text-anchor="middle" font-size="24" font-weight="bold" fill="#1a2b4a">FE-LLM 总体架构：最小自由能认知闭环</text>
+  <text x="450" y="58" text-anchor="middle" font-size="14" fill="#5a6b8a">Free Energy Large Language Model — Markov Blanket / Predictive Coding / Active Inference</text>
+
+  <!-- 外部环境：用户输入 -->
+  <rect x="60" y="80" width="220" height="46" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="170" y="108" text-anchor="middle" font-size="15" fill="#92400e">外部环境 · 用户 Prompt</text>
+
+  <!-- 马尔可夫毯大框 -->
+  <rect x="40" y="150" width="820" height="470" rx="16" fill="url(#blanket)" stroke="#3b82f6" stroke-width="2" stroke-dasharray="8 5"/>
+  <text x="60" y="178" font-size="15" font-weight="bold" fill="#1d4ed8">马尔可夫毯 (Markov Blanket) — 内外隔离边界</text>
+
+  <!-- 感知层 -->
+  <rect x="80" y="200" width="300" height="64" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="230" y="226" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">① 感知层 Sensory Layer</text>
+  <text x="230" y="248" text-anchor="middle" font-size="12" fill="#475569">DashScope 向量化 → 抽象惊奇信号</text>
+
+  <!-- 自由能引擎 -->
+  <rect x="80" y="290" width="300" height="86" rx="10" fill="#fff7ed" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="230" y="315" text-anchor="middle" font-size="15" font-weight="bold" fill="#9a3412">② 自由能引擎 Free Energy</text>
+  <text x="230" y="336" text-anchor="middle" font-size="12" fill="#7c2d12">三层惊奇：语义 / 因果 / 噪音</text>
+  <text x="230" y="356" text-anchor="middle" font-size="11.5" fill="#b45309">规则版 ⟷ SurpriseNet (可训练权重)</text>
+
+  <!-- 预测编码 -->
+  <rect x="80" y="402" width="300" height="86" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="230" y="427" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">③ 分层预测编码</text>
+  <text x="230" y="448" text-anchor="middle" font-size="12" fill="#475569">自上而下预测 / 自下而上误差</text>
+  <text x="230" y="468" text-anchor="middle" font-size="11.5" fill="#64748b">迭代坍缩 → 稳定意图向量</text>
+
+  <!-- 主动推理 + 解码 -->
+  <rect x="80" y="514" width="300" height="86" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="230" y="539" text-anchor="middle" font-size="15" font-weight="bold" fill="#166534">④ 主动推理 + 能量递减解码</text>
+  <text x="230" y="560" text-anchor="middle" font-size="12" fill="#15803d">意图定型 → EFE → 策略选择</text>
+  <text x="230" y="580" text-anchor="middle" font-size="11.5" fill="#16a34a">几何解码 ⟷ DecoderNet (可训练权重)</text>
+
+  <!-- 世界模型 (右侧) -->
+  <rect x="470" y="290" width="330" height="200" rx="12" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.8"/>
+  <text x="635" y="318" text-anchor="middle" font-size="15" font-weight="bold" fill="#5b21b6">世界模型 · 能量地貌</text>
+  <text x="635" y="340" text-anchor="middle" font-size="12" fill="#6d28d9">pgvector (PostgreSQL) 持久化吸引子</text>
+  <!-- 能量地貌小图 -->
+  <path d="M495,455 Q525,455 545,415 Q565,375 590,440 Q610,455 640,400 Q665,360 690,445 Q715,455 745,418 Q765,400 780,455"
+        fill="none" stroke="#7c3aed" stroke-width="2"/>
+  <circle cx="565" cy="447" r="4" fill="#5b21b6"/>
+  <circle cx="655" cy="450" r="4" fill="#5b21b6"/>
+  <text x="635" y="478" text-anchor="middle" font-size="11" fill="#7c3aed">公理/常识/经验 = 能量谷底(吸引子)</text>
+
+  <!-- 行动层 -->
+  <rect x="470" y="514" width="330" height="64" rx="10" fill="#ffffff" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="635" y="540" text-anchor="middle" font-size="15" font-weight="bold" fill="#1e3a8a">⑤ 行动层 Active Layer</text>
+  <text x="635" y="562" text-anchor="middle" font-size="12" fill="#475569">内部意图 → 人类可读文字输出</text>
+
+  <!-- 输出 -->
+  <rect x="620" y="652" width="240" height="46" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="740" y="680" text-anchor="middle" font-size="15" fill="#92400e">改变用户下一步输入</text>
+
+  <!-- 连线：输入 → 感知层 -->
+  <line x1="170" y1="126" x2="200" y2="200" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- 感知 → 自由能 -->
+  <line x1="230" y1="264" x2="230" y2="290" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- 自由能 → 预测编码 -->
+  <line x1="230" y1="376" x2="230" y2="402" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- 预测编码 → 主动推理 -->
+  <line x1="230" y1="488" x2="230" y2="514" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- 主动推理 → 行动层 -->
+  <line x1="380" y1="557" x2="470" y2="546" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+  <!-- 行动层 → 输出 -->
+  <line x1="700" y1="578" x2="730" y2="652" stroke="#444" stroke-width="1.8" marker-end="url(#arrow)"/>
+
+  <!-- 世界模型 双向交互：自由能/预测编码/主动推理 都查询世界模型 -->
+  <line x1="380" y1="320" x2="470" y2="340" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+  <line x1="380" y1="440" x2="470" y2="400" stroke="#7c3aed" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#arrow)"/>
+
+  <!-- 自下而上误差回流 (红色虚线) -->
+  <path d="M120,402 C100,360 100,330 120,290" fill="none" stroke="#c0392b" stroke-width="1.6" stroke-dasharray="5 4" marker-end="url(#arrowUp)"/>
+  <text x="70" y="350" font-size="10.5" fill="#c0392b" transform="rotate(-90 70 350)">误差上传</text>
+
+  <!-- 输出回到外部环境 (闭环) -->
+  <path d="M860,675 C885,500 885,200 290,103" fill="none" stroke="#d97706" stroke-width="1.6" stroke-dasharray="6 4" marker-end="url(#arrow)"/>
+  <text x="868" y="430" font-size="11" fill="#d97706" transform="rotate(-90 868 430)">认知闭环：降低下一轮惊奇</text>
+
+  <!-- 底部说明 -->
+  <text x="450" y="730" text-anchor="middle" font-size="12.5" fill="#334155">核心原理：系统通过感知-编码-行动不断最小化自由能(惊奇度)，使内部世界模型与外部观测自洽</text>
+</svg>
