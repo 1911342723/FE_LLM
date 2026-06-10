@@ -18,47 +18,47 @@
 
 - [PASS] action (turn 1): expected=ask_clarification selected=ask_clarification
 - [PASS] action (turn 2): expected=answer selected=answer
-- [PASS] surprise_drop (turn 2): prev=0.325 now=0.040 drop_ratio=87.78%
+- [PASS] surprise_drop (turn 2): prev=0.325 now=0.040 drop_ratio=87.57%
 
 ### vague_then_clarified_translation [PASS]
 
 | turn | prompt | action | surprise | 召回记忆 |
 |---:|---|---|---:|---|
 | 1 | 帮我弄一下 | `ask_clarification` | 0.325 | - |
-| 2 | 把这段话翻译成英文：早上好，今天的会议改到三点 | `answer` | 0.094 | - |
+| 2 | 把这段话翻译成英文：早上好，今天的会议改到三点 | `answer` | 0.046 | - |
 
 - [PASS] action (turn 1): expected=ask_clarification selected=ask_clarification
 - [PASS] action (turn 2): expected=answer selected=answer
-- [PASS] surprise_drop (turn 2): prev=0.325 now=0.094 drop_ratio=71.17%
+- [PASS] surprise_drop (turn 2): prev=0.325 now=0.046 drop_ratio=85.94%
 
 ### conflict_then_corrected [PASS]
 
 | turn | prompt | action | surprise | 召回记忆 |
 |---:|---|---|---:|---|
 | 1 | 我昨天明天去了北京 | `ask_clarification` | 0.304 | - |
-| 2 | 抱歉说错了，我是昨天去了北京，想问当地有什么好玩的 | `answer` | 0.095 | - |
+| 2 | 抱歉说错了，我是昨天去了北京，想问当地有什么好玩的 | `answer` | 0.044 | - |
 
 - [PASS] action (turn 1): expected=ask_clarification selected=ask_clarification
 - [PASS] action (turn 2): expected=answer selected=answer
-- [PASS] surprise_drop (turn 2): prev=0.304 now=0.095 drop_ratio=68.64%
+- [PASS] surprise_drop (turn 2): prev=0.304 now=0.044 drop_ratio=85.60%
 
 ### vague_then_still_vague [PASS]
 
 | turn | prompt | action | surprise | 召回记忆 |
 |---:|---|---|---:|---|
 | 1 | 帮我写一下 | `ask_clarification` | 0.325 | - |
-| 2 | 帮我弄一下 | `ask_clarification` | 0.306 | - |
+| 2 | 帮我弄一下 | `ask_clarification` | 0.309 | - |
 
 - [PASS] action (turn 1): expected=ask_clarification selected=ask_clarification
 - [PASS] action (turn 2): expected=ask_clarification selected=ask_clarification
-- [PASS] surprise_stay_high (turn 2): prev=0.325 now=0.306 drop_ratio=5.75%
+- [PASS] surprise_stay_high (turn 2): prev=0.325 now=0.309 drop_ratio=4.77%
 
 ### memory_then_recalled [PASS]
 
 | turn | prompt | action | surprise | 召回记忆 |
 |---:|---|---|---:|---|
 | 1 | 记住我喜欢简短回答 | `update_memory` | 0.075 | - |
-| 2 | 给我讲讲什么是自由能原理 | `answer` | 0.047 | 记住我喜欢简短回答 |
+| 2 | 给我讲讲什么是自由能原理 | `answer` | 0.061 | 记住我喜欢简短回答 |
 
 - [PASS] action (turn 1): expected=update_memory selected=update_memory
 - [PASS] action (turn 2): expected=answer selected=answer

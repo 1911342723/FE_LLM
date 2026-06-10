@@ -100,6 +100,10 @@ class ActionRealizer:
             "engine": "energy_decoder",
             "intent_source": info.get("intent_source", "prompt_only"),
             "intent_norm": info.get("intent_norm"),
+            "decode_mode": info.get("decode_mode"),
+            # 与纯 argmax logit 决策不同的步数：能量信号真实参与了选字的证据。
+            "decode_disagreement_steps": info.get("disagreement_steps"),
+            "decode_total_steps": info.get("total_steps"),
             "n_chars": info.get("n_chars"),
             "energy_start": trace[0]["residual_energy"] if trace else None,
             "energy_end": trace[-1]["residual_energy"] if trace else None,

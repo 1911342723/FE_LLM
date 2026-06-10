@@ -20,12 +20,16 @@ class ObservationState:
     vector: np.ndarray
     features: dict[str, Any]
     text: str
+    # 编码来源："intent_model"（IntentEncoder）或 "hash"（回退哈希向量）。
+    # 策略分类器只在与训练时相同的编码空间下启用，避免特征分布错配误判。
+    encoder_kind: str = "hash"
 
     def to_dict(self) -> dict[str, Any]:
         return {
             "vector": {"dim": int(self.vector.size), "norm": float(np.linalg.norm(self.vector))},
             "features": self.features,
             "text": self.text,
+            "encoder_kind": self.encoder_kind,
         }
 
 
@@ -49,12 +53,15 @@ class PerceptionEncoder:
 
     def encode(self, observation: Observation) -> ObservationState:
         vector = self._encode_with_intent_model(observation.text)
+        encoder_kind = "intent_model"
         if vector is None:
             vector = self.fallback.embed_one(observation.text)
+            encoder_kind = "hash"
         return ObservationState(
             vector=np.asarray(vector, dtype=np.float32),
             features=dict(observation.features),
             text=observation.text,
+            encoder_kind=encoder_kind,
         )
 
     def _try_load_intent_model(self) -> None:

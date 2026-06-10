@@ -11,21 +11,21 @@
       "refuse": 690,
       "update_memory": 652
     },
-    "accuracy": 0.9660107334525939,
-    "balanced_accuracy": 0.9330201681556313,
+    "accuracy": 0.9485688729874776,
+    "balanced_accuracy": 0.9292512400943629,
     "per_class_recall": {
-      "answer": 0.9909502262443439,
-      "ask_clarification": 0.8898305084745762,
-      "retrieve": 0.8594594594594595,
-      "refuse": 0.9710144927536232,
-      "update_memory": 0.9538461538461539
+      "answer": 0.9657401422107305,
+      "ask_clarification": 0.8983050847457628,
+      "retrieve": 0.827027027027027,
+      "refuse": 0.9782608695652174,
+      "update_memory": 0.9769230769230769
     },
     "per_class_precision": {
-      "answer": 0.9858520900321543,
-      "ask_clarification": 0.9417040358744395,
-      "retrieve": 0.8736263736263736,
-      "refuse": 1.0,
-      "update_memory": 0.8732394366197183
+      "answer": 0.9854881266490765,
+      "ask_clarification": 0.933920704845815,
+      "retrieve": 0.8793103448275862,
+      "refuse": 0.9854014598540146,
+      "update_memory": 0.6978021978021978
     },
     "confusion_matrix": {
       "labels": [
@@ -37,39 +37,39 @@
       ],
       "rows_true_cols_pred": [
         [
-          1533,
+          1494,
           0,
+          7,
           0,
-          0,
-          14
+          46
         ],
         [
           4,
-          210,
-          22,
-          0,
-          0
+          212,
+          14,
+          1,
+          5
         ],
         [
+          15,
           13,
-          11,
-          159,
-          0,
-          2
+          153,
+          1,
+          3
         ],
         [
           0,
           2,
           0,
-          134,
-          2
+          135,
+          1
         ],
         [
-          5,
+          3,
           0,
-          1,
           0,
-          124
+          0,
+          127
         ]
       ]
     }
@@ -81,7 +81,7 @@
     "classifier_weight": 0.5,
     "base_formula_accuracy": 0.9467799642218246,
     "calibrated_formula_accuracy": 0.9463327370304114,
-    "final_selector_accuracy": 0.9597495527728086,
+    "final_selector_accuracy": 0.9579606440071556,
     "base_formula_metrics": {
       "accuracy": 0.9467799642218246,
       "balanced_accuracy": 0.8891770041819893,
@@ -211,21 +211,21 @@
       }
     },
     "final_selector_metrics": {
-      "accuracy": 0.9597495527728086,
-      "balanced_accuracy": 0.9215421690747887,
+      "accuracy": 0.9579606440071556,
+      "balanced_accuracy": 0.9231795645805789,
       "per_class_recall": {
-        "answer": 0.9915966386554622,
-        "ask_clarification": 0.826271186440678,
+        "answer": 0.9870717517776342,
+        "ask_clarification": 0.8389830508474576,
         "retrieve": 0.8432432432432433,
         "refuse": 0.9927536231884058,
         "update_memory": 0.9538461538461539
       },
       "per_class_precision": {
-        "answer": 0.9890393294648614,
-        "ask_clarification": 0.9241706161137441,
-        "retrieve": 0.8253968253968254,
-        "refuse": 0.9513888888888888,
-        "update_memory": 0.8794326241134752
+        "answer": 0.9851612903225806,
+        "ask_clarification": 0.9383886255924171,
+        "retrieve": 0.8041237113402062,
+        "refuse": 0.9647887323943662,
+        "update_memory": 0.8920863309352518
       },
       "confusion_matrix": {
         "labels": [
@@ -237,24 +237,24 @@
         ],
         "rows_true_cols_pred": [
           [
-            1534,
+            1527,
             0,
-            1,
+            8,
             0,
             12
           ],
           [
             3,
-            195,
-            31,
+            198,
+            30,
             2,
-            5
+            3
           ],
           [
-            10,
             15,
+            12,
             156,
-            4,
+            2,
             0
           ],
           [
@@ -265,9 +265,9 @@
             0
           ],
           [
-            4,
+            5,
             0,
-            1,
+            0,
             1,
             124
           ]
@@ -289,11 +289,11 @@
       "retrieve": 151
     },
     "final_prediction_distribution": {
-      "update_memory": 141,
-      "answer": 1551,
-      "refuse": 144,
+      "update_memory": 139,
+      "answer": 1550,
+      "refuse": 142,
       "ask_clarification": 211,
-      "retrieve": 189
+      "retrieve": 194
     }
   },
   "scenarios": {

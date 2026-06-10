@@ -23,9 +23,9 @@
         "text": "帮我写一份给老板的项目周报，大约两百字",
         "selected_action": "answer",
         "expected_action": "answer",
-        "surprise": 0.0397,
+        "surprise": 0.0404,
         "prediction_error": {
-          "semantic_error": 0.015,
+          "semantic_error": 0.0202,
           "intent_error": 0.1,
           "consistency_error": 0.0,
           "uncertainty_error": 0.1,
@@ -52,7 +52,7 @@
         "kind": "surprise_drop",
         "turn": 2,
         "passed": true,
-        "detail": "prev=0.325 now=0.040 drop_ratio=87.78%"
+        "detail": "prev=0.325 now=0.040 drop_ratio=87.57%"
       }
     ],
     "passed": true
@@ -81,9 +81,9 @@
         "text": "把这段话翻译成英文：早上好，今天的会议改到三点",
         "selected_action": "answer",
         "expected_action": "answer",
-        "surprise": 0.0937,
+        "surprise": 0.0457,
         "prediction_error": {
-          "semantic_error": 0.3854,
+          "semantic_error": 0.0565,
           "intent_error": 0.1,
           "consistency_error": 0.0,
           "uncertainty_error": 0.1,
@@ -110,7 +110,7 @@
         "kind": "surprise_drop",
         "turn": 2,
         "passed": true,
-        "detail": "prev=0.325 now=0.094 drop_ratio=71.17%"
+        "detail": "prev=0.325 now=0.046 drop_ratio=85.94%"
       }
     ],
     "passed": true
@@ -139,9 +139,9 @@
         "text": "抱歉说错了，我是昨天去了北京，想问当地有什么好玩的",
         "selected_action": "answer",
         "expected_action": "answer",
-        "surprise": 0.0954,
+        "surprise": 0.0438,
         "prediction_error": {
-          "semantic_error": 0.3969,
+          "semantic_error": 0.043,
           "intent_error": 0.1,
           "consistency_error": 0.0,
           "uncertainty_error": 0.1,
@@ -168,7 +168,7 @@
         "kind": "surprise_drop",
         "turn": 2,
         "passed": true,
-        "detail": "prev=0.304 now=0.095 drop_ratio=68.64%"
+        "detail": "prev=0.304 now=0.044 drop_ratio=85.60%"
       }
     ],
     "passed": true
@@ -197,9 +197,9 @@
         "text": "帮我弄一下",
         "selected_action": "ask_clarification",
         "expected_action": "ask_clarification",
-        "surprise": 0.3063,
+        "surprise": 0.3095,
         "prediction_error": {
-          "semantic_error": 0.0,
+          "semantic_error": 0.0225,
           "intent_error": 0.65,
           "consistency_error": 0.0,
           "uncertainty_error": 0.95,
@@ -226,7 +226,7 @@
         "kind": "surprise_stay_high",
         "turn": 2,
         "passed": true,
-        "detail": "prev=0.325 now=0.306 drop_ratio=5.75%"
+        "detail": "prev=0.325 now=0.309 drop_ratio=4.77%"
       }
     ],
     "passed": true
@@ -255,9 +255,9 @@
         "text": "给我讲讲什么是自由能原理",
         "selected_action": "answer",
         "expected_action": "answer",
-        "surprise": 0.0471,
+        "surprise": 0.0614,
         "prediction_error": {
-          "semantic_error": 0.0088,
+          "semantic_error": 0.1067,
           "intent_error": 0.15,
           "consistency_error": 0.0,
           "uncertainty_error": 0.1,

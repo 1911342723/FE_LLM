@@ -201,6 +201,10 @@ class PolicySelector:
     ) -> dict[ActionType, float] | None:
         if self._classifier is None or observation_state is None or prediction_error is None:
             return None
+        if observation_state.encoder_kind != "intent_model":
+            # MLP 是在 IntentEncoder 嵌入空间上训练的；hash 回退向量与其分布
+            # 完全错配，强行融合会破坏"你好"等基础场景，此时交由公式主导。
+            return None
         try:
             import torch
 

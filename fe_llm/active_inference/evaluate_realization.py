@@ -52,6 +52,9 @@ def evaluate(controller: ActiveInferenceController) -> dict[str, Any]:
             "text": response.text,
             "engine": realization.get("engine"),
             "intent_source": realization.get("intent_source"),
+            "decode_mode": realization.get("decode_mode"),
+            "decode_disagreement_steps": realization.get("decode_disagreement_steps"),
+            "decode_total_steps": realization.get("decode_total_steps"),
             "rejected_generation": realization.get("rejected_generation", {}).get("rejected")
             if isinstance(realization.get("rejected_generation"), dict)
             else None,
@@ -87,6 +90,16 @@ def evaluate(controller: ActiveInferenceController) -> dict[str, Any]:
             sum(row["monotonic_step_ratio"] for row in decoder_rows) / max(len(decoder_rows), 1), 4
         ),
         "fallback_count": len(answer_rows) - len(decoder_rows),
+        # 决策分歧率：hybrid 选字与纯 argmax logit 不同的步数占比，
+        # 这是"能量信号真实参与选字"（而非概率机器）的直接证据。
+        "mean_decode_disagreement_rate": round(
+            sum(
+                (row.get("decode_disagreement_steps") or 0) / max(row.get("decode_total_steps") or 1, 1)
+                for row in decoder_rows
+            )
+            / max(len(decoder_rows), 1),
+            4,
+        ),
     }
     return {"summary": summary, "rows": rows}
 
@@ -105,6 +118,7 @@ def make_report(results: dict[str, Any]) -> str:
         f"- 能量整体下降通过：{summary['energy_descent_pass']}/{summary['energy_decoder_used']}",
         f"- 平均能量降幅：{summary['mean_energy_drop_ratio']:.1%}",
         f"- 单调下降步占比：{summary['mean_monotonic_step_ratio']:.1%}",
+        f"- 选字决策分歧率（hybrid vs 纯 logit argmax）：{summary['mean_decode_disagreement_rate']:.1%}",
         "",
         "## 样例明细",
         "",

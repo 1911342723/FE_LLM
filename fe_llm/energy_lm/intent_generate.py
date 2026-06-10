@@ -49,6 +49,9 @@ class IntentChat:
         record: bool = False,
         belief_intent=None,
         belief_mix: float = 0.35,
+        decode_mode: str = "hybrid",
+        top_k: int = 8,
+        decode_alpha: float = 1.0,
     ):
         """三阶段生成：感知→思考→行动。
 
@@ -57,7 +60,15 @@ class IntentChat:
         范数——这让"控制层相信什么"真正成为生成层的目标吸引子，而不只是分类特征。
         两者处于同一意图空间：PerceptionEncoder 与本生成器共用同一个 IntentEncoder。
 
-        返回 (text, info)。info 含可溯源的完整轨迹。
+        decode_mode：
+            "hybrid"：复合评分选字（默认）——score = log P(w) - α·归一化残余能量。
+                      对应设计草案"打分 = 语言可读性 + 距离 z* 的残余能量"：
+                      语言能力由 logit 承载，意图收敛由能量承载。
+            "energy"：纯 argmin distance（实验对照用——当前训练强度下会牺牲语言性，
+                      纯距离贪心容易退化成循环字）。
+            "logit" ：纯 argmax logit（GPT 式决策，实验对照用）。
+
+        返回 (text, info)。info 含可溯源的完整轨迹与决策分歧统计。
         """
         tok = self.tok
 
@@ -82,6 +93,8 @@ class IntentChat:
         gen_ids = [tok.bos_id]
         trace = []
         prev_dist = None
+        disagreement_steps = 0
+        total_steps = 0
 
         for step in range(max_new):
             dec_input = gen_ids + [tok.pad_id] * (DEC_MAX - len(gen_ids))
@@ -95,38 +108,40 @@ class IntentChat:
             # 残余能量 = 当前隐状态到意图的距离
             cur_dist = float(torch.norm(h_row - z_intent[0]))
 
-            # 选字：argmin distance(h(prefix+w), intent)
-            # 近似：用 logit 排序的 top-K 候选，逐个模拟距离（精确但慢）
-            # 快速近似：logit 与意图空间有对齐（因为训了L_approach），直接用 logit argmax
-            # 作为近似的"最接近意图的字"。后续可以换成精确距离计算。
-            # 但为了演示"不是概率机器"的性质，同时计算两个候选做对比：
-            #   A. argmax logit（概率最大）
-            #   B. 逐候选算距离取 argmin（最接近意图）
-            # 若 A≠B 就能直接证明"决策逻辑不同"。
-
-            # 屏蔽特殊符
+            # 屏蔽特殊符（保留 EOS：停止也是一个候选行动）
             logit_row_clean = logit_row.clone()
             for sp in (tok.mask_id, tok.bos_id, tok.sep_id, tok.pad_id, tok.unk_id):
                 logit_row_clean[sp] = -1e9
 
-            # 方式A：概率最大
+            # 方式A：概率最大（GPT 式决策）
             tid_prob = int(logit_row_clean.argmax())
 
-            # 方式B（简化）：由于训练时 L_approach 对齐了隐状态→意图方向，
-            # logit argmax 已经近似等于 argmin distance。
-            # 真正的区别体现在：残余能量是否单调下降。我们追踪这个。
-            tid = tid_prob                                  # 当前用 A（快），后续可换精确 B
+            if decode_mode in ("energy", "hybrid") and len(gen_ids) < DEC_MAX:
+                # 对 top-K 候选逐个模拟"说出该字后"的隐状态，得到各候选的残余能量。
+                tid = self._candidate_choice(
+                    gen_ids, z_intent, logit_row_clean, top_k,
+                    mode=decode_mode, alpha=decode_alpha,
+                )
+            else:
+                tid = tid_prob
+            total_steps += 1
+            if tid != tid_prob:
+                disagreement_steps += 1
 
             delta_e = (prev_dist - cur_dist) if prev_dist is not None else 0.0
 
             if record:
                 char = tok.id_to_tok[tid] if tid != tok.eos_id else "[EOS]"
-                trace.append({
+                entry = {
                     "step": step,
                     "char": char,
                     "residual_energy": round(cur_dist, 4),
                     "energy_drop": round(delta_e, 4),
-                })
+                }
+                if tid != tid_prob:
+                    # 记录决策分歧：概率会选什么字、能量选了什么字。
+                    entry["prob_char"] = tok.id_to_tok[tid_prob] if tid_prob != tok.eos_id else "[EOS]"
+                trace.append(entry)
 
             if tid == tok.eos_id:
                 break
@@ -138,10 +153,46 @@ class IntentChat:
         info = {
             "intent_norm": round(intent_norm, 4),
             "intent_source": intent_source,
+            "decode_mode": decode_mode,
+            "disagreement_steps": disagreement_steps,
+            "total_steps": total_steps,
             "trace": trace,
             "n_chars": len(gen_ids) - 1,
         }
         return text, info
+
+    @torch.no_grad()
+    def _candidate_choice(self, gen_ids: list[int], z_intent: torch.Tensor,
+                          logit_row_clean: torch.Tensor, top_k: int,
+                          mode: str = "hybrid", alpha: float = 1.0) -> int:
+        """对 top-K 候选批量模拟一步，按 mode 决策：
+
+        - energy：argmin 残余能量（纯距离，可能牺牲语言性）；
+        - hybrid：argmax( log P(w) - α·归一化残余能量 )——
+                  语言可读性与意图收敛复合打分。
+        """
+
+        tok = self.tok
+        topk = torch.topk(logit_row_clean, k=min(top_k, logit_row_clean.numel()))
+        cand_ids = topk.indices.tolist()
+        pos = len(gen_ids)                                 # 候选字将出现的位置
+        batch = []
+        for cand in cand_ids:
+            seq = gen_ids + [cand]
+            seq = seq + [tok.pad_id] * (DEC_MAX - len(seq))
+            batch.append(seq[:DEC_MAX])
+        batch_tensor = torch.tensor(batch, device=self.device)
+        z_batch = z_intent.expand(len(cand_ids), -1)
+        _, h_intent = self.model.decoder(batch_tensor, z_batch)
+        h_at = h_intent[:, pos]                            # (K, intent_dim) 说出候选字后的隐状态
+        dists = torch.norm(h_at - z_batch, dim=-1)         # (K,) 各候选的残余能量
+        if mode == "energy":
+            return int(cand_ids[int(dists.argmin())])
+        # hybrid：能量在候选内做 min-max 归一化（量纲 ~[0,1]），与 log prob 同尺度复合。
+        log_probs = torch.log_softmax(logit_row_clean, dim=-1)[topk.indices]
+        dist_norm = (dists - dists.min()) / (dists.max() - dists.min() + 1e-8)
+        scores = log_probs - alpha * dist_norm
+        return int(cand_ids[int(scores.argmax())])
 
 
 def main():

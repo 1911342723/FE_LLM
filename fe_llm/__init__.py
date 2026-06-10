@@ -2,31 +2,16 @@
 """
 FE-LLM (Free Energy Large Language Model)
 ==========================================
-基于 Karl Friston「最小自由能原理(FEP)」与「主动推理(Active Inference)」的
-下一代认知架构原型。
+以「状态趋稳」为第一性原理的非自回归语言生成架构探索。
 
-设计哲学（与传统 Transformer 的根本区别）：
-    - Transformer：被动计算「下一个词的概率分布」，本质是文字接龙。
-    - FE-LLM    ：主动计算「我该如何输出，才能让系统内部的惊奇度降到最低」，
-                  本质是为了恢复内部平静而采取的目标导向行动。
+当前主线（见 docs/FE-LLM论文.md）：
+    energy_lm/    —— 能量坍缩对话模型：单个能量函数 E_θ + PER 交互 + 退火去掩码坍缩。
+                     不预测下一个词，而让整句从全 [MASK] 并行弛豫到能量最低的稳定配置。
+    embedding/    —— 语义嵌入层（kernel 概念空间使用）：DashScope 真实向量 + 哈希降级。
+    config        —— 统一配置中心（读 .env）。
 
-模块组织（严格对应文档的四步走路线图 + 分层隔离）：
-    config            —— 统一配置中心(.env)
-    第一步  world_model/       —— ① 世界模型: pgvector 持久化 + 内存降级(出厂世界观)
-    第二步  free_energy/       —— ② 自由能引擎: 规则版 + 可训练 SurpriseNet
-    第三步  perception/        —— ③ 马尔可夫毯 + 分层预测编码
-    第四步  generation/        —— ④ 概念分词器 + 主动推理 + 能量解码器(+ 可训练 DecoderNet)
-    embedding/        —— 语义嵌入层: DashScope 真实向量 + 哈希降级
-
-只有两部分需要被深度学习框架真正训练并固化成权重(见 training/ 训练层)：
-    - SurpriseNet (free_energy/surprise_net.py) : 给输入与期望的多维误差打分
-    - DecoderNet  (generation/decoder_net.py)   : 规划输出词汇的能量下降路径
-
-顶层入口：FreeEnergyLLM(engine.py) / load_model(factory.py)
+概念推理内核见 kernel/（M0–M5 里程碑：可见思考 / 概念学习 / 零重训成长 /
+主动推理 / 消融 / 规模化）。
 """
 
-from .engine import FreeEnergyLLM  # noqa: E402  (定义见下方说明)
-from .factory import load_model  # noqa: E402
-
-__all__ = ["FreeEnergyLLM", "load_model"]
-__version__ = "0.2.0"
+__version__ = "0.3.0"
