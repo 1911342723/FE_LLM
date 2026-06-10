@@ -142,7 +142,15 @@ def main():
             ri = torch.tensor(resp_in[ch], device=device, dtype=torch.long)
             rt = torch.tensor(resp_tgt[ch], device=device, dtype=torch.long)
 
-            logits, h_intent, z_pred, z_target = model(p_ids, ri)
+            # 关键修复（翻译实验回源，详见 经验.md"翻译泛化实验"一节）：
+            # 旧写法 model(p_ids, ri) 让解码器条件于 z_target=encoder(response)，
+            # 推理时只有 z_pred=encoder(prompt)；InfoNCE 不收敛时两者不对齐，
+            # 解码器面对分布外意图会塌缩成高频句。
+            # 改为解码器直接条件于 z_pred：训练/推理同分布，decode 梯度直训编码器。
+            z_pred = model.encoder(p_ids)
+            with torch.no_grad():
+                z_target = model.encoder(ri)
+            logits, h_intent = model.decoder(ri, z_pred)
 
             # --- L_decode：解码器逐字交叉熵（条件于意图）---
             # 只在非 PAD 位置计损失
@@ -152,13 +160,13 @@ def main():
 
             # --- L_intent：对比学习（逼意图编码器区分不同prompt→不同意图）---
             # InfoNCE：z_pred[i] 应该跟 z_target[i] 近，跟 z_target[j≠i] 远
-            sim = F.cosine_similarity(z_pred.unsqueeze(1), z_target.detach().unsqueeze(0), dim=-1)  # (B,B)
+            sim = F.cosine_similarity(z_pred.unsqueeze(1), z_target.unsqueeze(0), dim=-1)  # (B,B)
             labels = torch.arange(sim.size(0), device=device)
             l_intent = F.cross_entropy(sim / 0.07, labels)     # temperature=0.07
 
             # --- L_approach：能量递减正则（隐状态逐字接近意图）---
-            # 在每个有效位置，希望 dist(h_i, z_target) 逐步递减
-            dist = torch.norm(h_intent - z_target.detach().unsqueeze(1), dim=-1)  # (B,L)
+            # 在每个有效位置，希望 dist(h_i, z_pred) 逐步递减（detach 防作弊）
+            dist = torch.norm(h_intent - z_pred.detach().unsqueeze(1), dim=-1)  # (B,L)
             # 惩罚 dist[i] > dist[i-1]（离意图更远了）
             violations = F.relu(dist[:, 1:] - dist[:, :-1])          # (B, L-1)
             l_approach = violations[mask[:, 1:]].mean() if mask[:, 1:].any() else torch.tensor(0.0, device=device)
