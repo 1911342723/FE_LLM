@@ -25,6 +25,8 @@ class InferenceTrace:
     action_scores: dict[ActionType, ExpectedFreeEnergyScore]
     selected_action: CandidateAction
     posterior_belief: BeliefState
+    # 生成层轨迹：answer 动作的逐字残余能量等可溯源信息（engine/能量起止/轨迹）。
+    realization: dict[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -38,6 +40,7 @@ class InferenceTrace:
             "action_scores": {key.value: value.to_dict() for key, value in self.action_scores.items()},
             "selected_action": self.selected_action.to_dict(),
             "posterior_belief": self.posterior_belief.to_dict(),
+            "realization": dict(self.realization) if self.realization else None,
         }
 
 
@@ -56,6 +59,7 @@ class TraceRecorder:
         action_scores: dict[ActionType, ExpectedFreeEnergyScore],
         selected_action: CandidateAction,
         posterior_belief: BeliefState,
+        realization: dict[str, Any] | None = None,
     ) -> InferenceTrace:
         return InferenceTrace(
             observation=observation,
@@ -68,6 +72,7 @@ class TraceRecorder:
             action_scores=action_scores,
             selected_action=selected_action,
             posterior_belief=posterior_belief,
+            realization=realization,
         )
 
 
@@ -81,6 +86,7 @@ class TraceConsistencyScorer:
         "action_scores",
         "selected_action",
         "posterior_belief",
+        "realization",
     }
 
     def validate(self, trace: InferenceTrace) -> tuple[bool, list[str]]:

@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import os
 import unittest
 
 from fe_llm.active_inference import ActiveInferenceController, ActionType
+
+INTENT_CKPT = os.path.join("checkpoints", "energy_lm", "intent_lm.pt")
 
 
 class ActiveInferenceControllerTests(unittest.TestCase):
@@ -102,6 +105,35 @@ class ActiveInferenceControllerTests(unittest.TestCase):
         second = self.controller.respond("帮我写一份周报，两百字左右，给老板看", session_id="state-1")
         self.assertFalse(second.trace.posterior_belief.pending_clarification)
         self.assertEqual(second.trace.posterior_belief.turn_index, 2)
+
+    def test_realization_present_in_trace(self) -> None:
+        response = self.controller.respond("你好")
+        self.assertIsNotNone(response.trace.realization)
+        self.assertIn(response.trace.realization.get("engine"), {"rule", "template", "energy_decoder"})
+
+
+@unittest.skipUnless(os.path.exists(INTENT_CKPT), "energy_lm checkpoint not available")
+class EnergyDecoderRealizationTests(unittest.TestCase):
+    """生成层回归：answer 动作走 EnergyDecoder，能量轨迹整体下降且信念意图注入。"""
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.controller = ActiveInferenceController(memory_candidate_path=None)
+
+    def test_answer_uses_energy_decoder_with_belief_intent(self) -> None:
+        response = self.controller.respond("我有点累", session_id="energy-1")
+        self.assertEqual(response.selected_action_type, ActionType.ANSWER)
+        realization = response.trace.realization
+        self.assertEqual(realization["engine"], "energy_decoder")
+        self.assertEqual(realization["intent_source"], "belief_mixed")
+
+    def test_energy_trace_descends_overall(self) -> None:
+        response = self.controller.respond("最近工作压力好大", session_id="energy-2")
+        realization = response.trace.realization
+        self.assertEqual(realization["engine"], "energy_decoder")
+        trace = realization["energy_trace"]
+        self.assertGreaterEqual(len(trace), 2)
+        self.assertLess(trace[-1]["residual_energy"], trace[0]["residual_energy"])
 
 
 if __name__ == "__main__":

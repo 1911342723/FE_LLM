@@ -15,9 +15,18 @@ if TYPE_CHECKING:
 
 
 class ActionRealizer:
-    """Turns selected actions into user-facing text."""
+    """Turns selected actions into user-facing text.
 
-    def __init__(self, use_energy_decoder: bool = False):
+    v3：answer 动作默认走 EnergyDecoder（能量递减生成），控制层的信念意图向量
+    作为生成层的目标吸引子注入；逐字能量轨迹随 realization 返回，进入 trace，
+    使"可溯源生成"真正发生在生成层而不只在策略层。
+    """
+
+    # 能量轨迹质量门控：整体残余能量必须下降（末值 < 初值 * 该比例），否则视为
+    # 生成未收敛到意图，回退到规则/模板，避免把发散输出交给用户。
+    ENERGY_DESCENT_RATIO = 0.999
+
+    def __init__(self, use_energy_decoder: bool = True):
         self._energy_chat = None
         if use_energy_decoder:
             self._try_load_energy_chat()
@@ -29,41 +38,82 @@ class ActionRealizer:
         posterior_belief: BeliefState,
         surprise: SurpriseScore,
         recalled_memories: list["MemoryCandidate"] | None = None,
-    ) -> str:
-        del posterior_belief
+    ) -> tuple[str, dict]:
         action = selected_action.action_type
         if action == ActionType.ASK_CLARIFICATION:
             if surprise.components.consistency_error > 0:
-                return "这句话里有时间或逻辑冲突，请先澄清你真正想表达的情况。"
-            return "信息还不够，请补充你想让我具体做什么。"
+                return "这句话里有时间或逻辑冲突，请先澄清你真正想表达的情况。", {"engine": "template"}
+            return "信息还不够，请补充你想让我具体做什么。", {"engine": "template"}
         if action == ActionType.RETRIEVE:
-            return "这个问题需要外部信息或实时数据，我需要先检索后再回答。"
+            return "这个问题需要外部信息或实时数据，我需要先检索后再回答。", {"engine": "template"}
         if action == ActionType.REFUSE:
-            return "这个请求可能带来风险，我不能帮助执行或提供具体方法。"
+            return "这个请求可能带来风险，我不能帮助执行或提供具体方法。", {"engine": "template"}
         if action == ActionType.UPDATE_MEMORY:
-            return "我已记录这个偏好，后续会尽量按这个方式回应。"
-        return self._answer(observation.text, recalled_memories=recalled_memories)
+            return "我已记录这个偏好，后续会尽量按这个方式回应。", {"engine": "template"}
+        return self._answer(observation.text, posterior_belief, recalled_memories=recalled_memories)
 
-    def _answer(self, text: str, recalled_memories: list["MemoryCandidate"] | None = None) -> str:
-        answer = self._base_answer(text)
+    def _answer(
+        self,
+        text: str,
+        posterior_belief: BeliefState,
+        recalled_memories: list["MemoryCandidate"] | None = None,
+    ) -> tuple[str, dict]:
+        answer, realization = self._base_answer(text, posterior_belief)
         # 记忆读回的行为闭环：历史偏好真实影响当前输出，而不是只躺在 jsonl 里。
         preference = self._applicable_preference(recalled_memories)
         if preference:
             answer = f"{answer}（已按你之前的偏好：{preference}）"
-        return answer
+            realization["applied_preference"] = preference
+        return answer, realization
 
-    def _base_answer(self, text: str) -> str:
+    def _base_answer(self, text: str, posterior_belief: BeliefState) -> tuple[str, dict]:
+        # 固定寒暄/身份白名单仍走规则快速路径：这类输出属于人格设定而非生成任务，
+        # 且当前小模型对寒暄的生成质量不稳定。其余 answer 一律走能量解码。
         rule = self._rule_answer(text)
         if rule:
-            return rule
+            return rule, {"engine": "rule"}
+        rejected_realization: dict | None = None
         if self._energy_chat is not None:
-            try:
-                out, _ = self._energy_chat.respond(text)
-                if self._looks_usable(out):
-                    return out
-            except Exception:
-                pass
-        return "我会尽量帮你处理这个问题。"
+            out, realization = self._energy_answer(text, posterior_belief)
+            if out is not None:
+                return out, realization
+            rejected_realization = realization
+        fallback: dict = {"engine": "template"}
+        if rejected_realization is not None:
+            # 保留被门控拒绝的生成轨迹，回退本身也可溯源。
+            fallback["rejected_generation"] = rejected_realization
+        return "我会尽量帮你处理这个问题。", fallback
+
+    def _energy_answer(self, text: str, posterior_belief: BeliefState) -> tuple[str | None, dict]:
+        """EnergyDecoder 生成 + 能量轨迹质量门控。文本为 None 表示需要回退。"""
+
+        try:
+            out, info = self._energy_chat.respond(
+                text,
+                record=True,
+                belief_intent=posterior_belief.intent_vector,
+            )
+        except Exception as exc:
+            return None, {"engine": "energy_decoder", "rejected": f"exception: {exc}"}
+        trace = info.get("trace", [])
+        realization = {
+            "engine": "energy_decoder",
+            "intent_source": info.get("intent_source", "prompt_only"),
+            "intent_norm": info.get("intent_norm"),
+            "n_chars": info.get("n_chars"),
+            "energy_start": trace[0]["residual_energy"] if trace else None,
+            "energy_end": trace[-1]["residual_energy"] if trace else None,
+            "energy_descent_steps": sum(1 for item in trace if item["energy_drop"] > 0),
+            "energy_trace": trace,
+        }
+        if not self._looks_usable(out):
+            realization["rejected"] = "text_not_usable"
+            return None, realization
+        if len(trace) >= 2 and trace[-1]["residual_energy"] > trace[0]["residual_energy"] * self.ENERGY_DESCENT_RATIO:
+            # 残余能量未整体下降：生成没有收敛向意图，可溯源地拒绝该输出。
+            realization["rejected"] = "energy_not_descending"
+            return None, realization
+        return out, realization
 
     @staticmethod
     def _applicable_preference(recalled_memories: list["MemoryCandidate"] | None) -> str | None:

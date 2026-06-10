@@ -55,7 +55,7 @@ class ActiveInferenceController:
     def __init__(
         self,
         use_intent_model: bool = True,
-        use_energy_decoder: bool = False,
+        use_energy_decoder: bool = True,
         policy_classifier_path: str | None = os.path.join("checkpoints", "active_inference", "policy_selector.pt"),
         policy_classifier_weight: float = 0.5,
         free_energy_calibration_path: str | None = os.path.join(
@@ -118,7 +118,8 @@ class ActiveInferenceController:
         posterior_belief = self.belief_updater.apply_action_feedback(
             posterior_belief, selected_action.action_type.value
         )
-        text_output = self.action_realizer.realize(
+        # 生成层：返回文本 + 可溯源 realization（含 EnergyDecoder 逐字能量轨迹）。
+        text_output, realization = self.action_realizer.realize(
             selected_action,
             observation,
             posterior_belief,
@@ -136,6 +137,7 @@ class ActiveInferenceController:
             action_scores=scores,
             selected_action=selected_action,
             posterior_belief=posterior_belief,
+            realization=realization,
         )
         ok, missing = self.trace_consistency.validate(trace)
         if not ok:

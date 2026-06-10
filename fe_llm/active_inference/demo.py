@@ -27,13 +27,14 @@ def main() -> None:
     ap.add_argument("prompt", nargs="*", help="Prompt to run. Omit to run built-in acceptance scenarios.")
     ap.add_argument("--json", action="store_true", help="Print full ModelResponse JSON.")
     ap.add_argument("--no-intent-model", action="store_true")
-    ap.add_argument("--use-energy-decoder", action="store_true")
-    ap.add_argument("--no-energy-decoder", action="store_true", help=argparse.SUPPRESS)
+    ap.add_argument("--use-energy-decoder", action="store_true", help=argparse.SUPPRESS)
+    ap.add_argument("--no-energy-decoder", action="store_true", help="Disable the energy decoder for answers.")
     args = ap.parse_args()
 
     controller = ActiveInferenceController(
         use_intent_model=not args.no_intent_model,
-        use_energy_decoder=args.use_energy_decoder and not args.no_energy_decoder,
+        # v3 起 answer 默认走能量递减解码器，--no-energy-decoder 可退回模板模式。
+        use_energy_decoder=not args.no_energy_decoder,
     )
     prompts = [" ".join(args.prompt)] if args.prompt else DEFAULT_TESTS
     for prompt in prompts:
