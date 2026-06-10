@@ -1,0 +1,294 @@
+[
+  {
+    "name": "vague_then_clarified_report",
+    "rows": [
+      {
+        "turn": 1,
+        "text": "帮我写一下",
+        "selected_action": "ask_clarification",
+        "expected_action": "ask_clarification",
+        "surprise": 0.325,
+        "prediction_error": {
+          "semantic_error": 0.2,
+          "intent_error": 0.65,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.9,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "信息还不够，请补充你想让我具体做什么。"
+      },
+      {
+        "turn": 2,
+        "text": "帮我写一份给老板的项目周报，大约两百字",
+        "selected_action": "answer",
+        "expected_action": "answer",
+        "surprise": 0.0397,
+        "prediction_error": {
+          "semantic_error": 0.015,
+          "intent_error": 0.1,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "我会尽量帮你处理这个问题。"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "action",
+        "turn": 1,
+        "passed": true,
+        "detail": "expected=ask_clarification selected=ask_clarification"
+      },
+      {
+        "kind": "action",
+        "turn": 2,
+        "passed": true,
+        "detail": "expected=answer selected=answer"
+      },
+      {
+        "kind": "surprise_drop",
+        "turn": 2,
+        "passed": true,
+        "detail": "prev=0.325 now=0.040 drop_ratio=87.78%"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "vague_then_clarified_translation",
+    "rows": [
+      {
+        "turn": 1,
+        "text": "帮我弄一下",
+        "selected_action": "ask_clarification",
+        "expected_action": "ask_clarification",
+        "surprise": 0.325,
+        "prediction_error": {
+          "semantic_error": 0.2,
+          "intent_error": 0.65,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.9,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "信息还不够，请补充你想让我具体做什么。"
+      },
+      {
+        "turn": 2,
+        "text": "把这段话翻译成英文：早上好，今天的会议改到三点",
+        "selected_action": "answer",
+        "expected_action": "answer",
+        "surprise": 0.0937,
+        "prediction_error": {
+          "semantic_error": 0.3854,
+          "intent_error": 0.1,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "我会尽量帮你处理这个问题。"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "action",
+        "turn": 1,
+        "passed": true,
+        "detail": "expected=ask_clarification selected=ask_clarification"
+      },
+      {
+        "kind": "action",
+        "turn": 2,
+        "passed": true,
+        "detail": "expected=answer selected=answer"
+      },
+      {
+        "kind": "surprise_drop",
+        "turn": 2,
+        "passed": true,
+        "detail": "prev=0.325 now=0.094 drop_ratio=71.17%"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "conflict_then_corrected",
+    "rows": [
+      {
+        "turn": 1,
+        "text": "我昨天明天去了北京",
+        "selected_action": "ask_clarification",
+        "expected_action": "ask_clarification",
+        "surprise": 0.3042,
+        "prediction_error": {
+          "semantic_error": 0.2,
+          "intent_error": 0.15,
+          "consistency_error": 1.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "这句话里有时间或逻辑冲突，请先澄清你真正想表达的情况。"
+      },
+      {
+        "turn": 2,
+        "text": "抱歉说错了，我是昨天去了北京，想问当地有什么好玩的",
+        "selected_action": "answer",
+        "expected_action": "answer",
+        "surprise": 0.0954,
+        "prediction_error": {
+          "semantic_error": 0.3969,
+          "intent_error": 0.1,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "我会尽量帮你处理这个问题。"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "action",
+        "turn": 1,
+        "passed": true,
+        "detail": "expected=ask_clarification selected=ask_clarification"
+      },
+      {
+        "kind": "action",
+        "turn": 2,
+        "passed": true,
+        "detail": "expected=answer selected=answer"
+      },
+      {
+        "kind": "surprise_drop",
+        "turn": 2,
+        "passed": true,
+        "detail": "prev=0.304 now=0.095 drop_ratio=68.64%"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "vague_then_still_vague",
+    "rows": [
+      {
+        "turn": 1,
+        "text": "帮我写一下",
+        "selected_action": "ask_clarification",
+        "expected_action": "ask_clarification",
+        "surprise": 0.325,
+        "prediction_error": {
+          "semantic_error": 0.2,
+          "intent_error": 0.65,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.9,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "信息还不够，请补充你想让我具体做什么。"
+      },
+      {
+        "turn": 2,
+        "text": "帮我弄一下",
+        "selected_action": "ask_clarification",
+        "expected_action": "ask_clarification",
+        "surprise": 0.3063,
+        "prediction_error": {
+          "semantic_error": 0.0,
+          "intent_error": 0.65,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.95,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "信息还不够，请补充你想让我具体做什么。"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "action",
+        "turn": 1,
+        "passed": true,
+        "detail": "expected=ask_clarification selected=ask_clarification"
+      },
+      {
+        "kind": "action",
+        "turn": 2,
+        "passed": true,
+        "detail": "expected=ask_clarification selected=ask_clarification"
+      },
+      {
+        "kind": "surprise_stay_high",
+        "turn": 2,
+        "passed": true,
+        "detail": "prev=0.325 now=0.306 drop_ratio=5.75%"
+      }
+    ],
+    "passed": true
+  },
+  {
+    "name": "memory_then_recalled",
+    "rows": [
+      {
+        "turn": 1,
+        "text": "记住我喜欢简短回答",
+        "selected_action": "update_memory",
+        "expected_action": "update_memory",
+        "surprise": 0.075,
+        "prediction_error": {
+          "semantic_error": 0.2,
+          "intent_error": 0.15,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [],
+        "response_text": "我已记录这个偏好，后续会尽量按这个方式回应。"
+      },
+      {
+        "turn": 2,
+        "text": "给我讲讲什么是自由能原理",
+        "selected_action": "answer",
+        "expected_action": "answer",
+        "surprise": 0.0471,
+        "prediction_error": {
+          "semantic_error": 0.0088,
+          "intent_error": 0.15,
+          "consistency_error": 0.0,
+          "uncertainty_error": 0.1,
+          "safety_error": 0.0
+        },
+        "recalled_memories": [
+          "记住我喜欢简短回答"
+        ],
+        "response_text": "我会尽量帮你处理这个问题。（已按你之前的偏好：记住我喜欢简短回答）"
+      }
+    ],
+    "checks": [
+      {
+        "kind": "action",
+        "turn": 1,
+        "passed": true,
+        "detail": "expected=update_memory selected=update_memory"
+      },
+      {
+        "kind": "action",
+        "turn": 2,
+        "passed": true,
+        "detail": "expected=answer selected=answer"
+      },
+      {
+        "kind": "memory_recall",
+        "turn": 2,
+        "passed": true,
+        "detail": "recalled=True applied_in_text=True"
+      }
+    ],
+    "passed": true
+  }
+]
