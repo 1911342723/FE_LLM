@@ -1,0 +1,2040 @@
+{
+  "summary": {
+    "val_pairs": 200,
+    "mean_word_f1": 0.0735,
+    "mean_char_f1": 0.583,
+    "exact_match": 0,
+    "word_f1_ge_0.5": 1,
+    "word_f1_eq_0": 134,
+    "energy_descent_rate": 1.0,
+    "mean_disagreement_rate": 0.0809
+  },
+  "rows": [
+    {
+      "zh": "他說他喜欢妈妈买给我的裙",
+      "ref": "he liked the dress mommy bought for me.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "就这里，快点",
+      "ref": "right here.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.4444,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "问题是现在停止了",
+      "ref": "that's the point. it stopped.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.0,
+      "char_f1": 0.5455,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "五号车",
+      "ref": "car 5",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.1333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "主人．您的电话",
+      "ref": "commander, they're calling you to the phone.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.4286,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "你有塑料袋吗?",
+      "ref": "aah! do you have a plastic bag?",
+      "pred": "you don't know what that means?",
+      "word_f1": 0.1538,
+      "char_f1": 0.6061,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0625
+    },
+    {
+      "zh": "你要把我关起来?",
+      "ref": "you're gonna lock me up?",
+      "pred": "you don't know what that means?",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0625
+    },
+    {
+      "zh": "豪鬼不会有事的",
+      "ref": "you'll find goki outside.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7407,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "神舟七号，就叫「神七」",
+      "ref": "we call shenzhou 7 \"sheven\".",
+      "pred": "i don't know what to do, don't you?",
+      "word_f1": 0.0,
+      "char_f1": 0.4138,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0278
+    },
+    {
+      "zh": "露西，他耍我们，他骗了我们",
+      "ref": "he set us up, lucy. the man set us up.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.4,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "不 这不会是未决审判",
+      "ref": "- no, it's not a mistrial!",
+      "pred": "international agenda",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0952
+    },
+    {
+      "zh": "等一下　請不要再光用相片來決定了",
+      "ref": "please don't choose based on photos",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.48,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "告诉我 这样更好吗?",
+      "ref": "tell me, is this...the better way?",
+      "pred": "what are you doing?",
+      "word_f1": 0.0,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "还得那么少",
+      "ref": "more than this world gives",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.16
+    },
+    {
+      "zh": "- 来点父辈的智慧，怎么样？",
+      "ref": "- some paternal wisdom. how about that?",
+      "pred": "- what are you doing?",
+      "word_f1": 0.1667,
+      "char_f1": 0.7647,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "但那是不一樣的 不一樣？",
+      "ref": "- but here, it's different?",
+      "pred": "i was just like that.",
+      "word_f1": 0.0,
+      "char_f1": 0.4444,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1818
+    },
+    {
+      "zh": "给我打得连他妈妈都不认识他",
+      "ref": "hit him for me.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.4762,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "可是人家不要你，把你赶了出来",
+      "ref": "you've been expelled!",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.3333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "也许是因为你先对我好的",
+      "ref": "- you were the spider in mywindow.",
+      "pred": "i want you to be a couple of this time.",
+      "word_f1": 0.1176,
+      "char_f1": 0.7647,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.125
+    },
+    {
+      "zh": "你要我怎么做 德拉科",
+      "ref": "- what would you have me do? draco.",
+      "pred": "you don't know what to do, do you?",
+      "word_f1": 0.25,
+      "char_f1": 0.6,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0571
+    },
+    {
+      "zh": "- 它要进水了，好了",
+      "ref": "she's going in the water. ok.",
+      "pred": "- that's what i do.",
+      "word_f1": 0.0,
+      "char_f1": 0.72,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.15
+    },
+    {
+      "zh": "父亲有一点为你担心",
+      "ref": "well, father is a little worried about you.",
+      "pred": "i want you to be a big deal.",
+      "word_f1": 0.125,
+      "char_f1": 0.7742,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1724
+    },
+    {
+      "zh": "好了好了，别围着",
+      "ref": "enough. nothing to see.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.2,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "- 她居然来了",
+      "ref": "- i can't believe she's here",
+      "pred": "- i don't know.",
+      "word_f1": 0.4,
+      "char_f1": 0.4167,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "嘿 Jer 没听你回电话",
+      "ref": "hey, jer. um, i haven't heard back.",
+      "pred": "i want you to see your secret.",
+      "word_f1": 0.1429,
+      "char_f1": 0.625,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1935
+    },
+    {
+      "zh": "杜根搬去佛罗里达了",
+      "ref": "dugan moved to florida.",
+      "pred": "i don't know.",
+      "word_f1": 0.0,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "预算年度为2005年7月1日至2006年6月30日。)",
+      "ref": "budget year is 1 july 2005 to 30 june 2006.",
+      "pred": "agenda item 112",
+      "word_f1": 0.0,
+      "char_f1": 0.5625,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0625
+    },
+    {
+      "zh": "-不，正好相反 -你们俩是夫妻吧？",
+      "ref": "no, quite the reverse.",
+      "pred": "- what are you doing?",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "我不著名。",
+      "ref": "why did you win it for?",
+      "pred": "i don't know. i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.5217,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1034
+    },
+    {
+      "zh": "让我猜猜, Jack.",
+      "ref": "that's great. let me guess, jack.",
+      "pred": "oh, that's what i say, \"so i don't know.",
+      "word_f1": 0.1429,
+      "char_f1": 0.5161,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1707
+    },
+    {
+      "zh": "我那封律师信写得很清楚",
+      "ref": "my letter of attorney states clearly",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.3478,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "安保证书方案",
+      "ref": "security certification programme",
+      "pred": "consideration of the session",
+      "word_f1": 0.0,
+      "char_f1": 0.7407,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1034
+    },
+    {
+      "zh": "像个娘们儿似的嚎什么?",
+      "ref": "why do you whine like a pussy?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.5455,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "我是我艺术品的唯一作者",
+      "ref": "walter: i am the sole creator of my art.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.1429,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "扎克 你最好了",
+      "ref": "zach, you are the best.",
+      "pred": "i want you to go out of your love.",
+      "word_f1": 0.1429,
+      "char_f1": 0.5517,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1143
+    },
+    {
+      "zh": "整天都是我们儿子？ 什么我们儿子？",
+      "ref": "what do you mean our son?",
+      "pred": "what are you doing?",
+      "word_f1": 0.4,
+      "char_f1": 0.8571,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "2. 空间法",
+      "ref": "space law",
+      "pred": "i want to see how to do this.",
+      "word_f1": 0.0,
+      "char_f1": 0.4444,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0667
+    },
+    {
+      "zh": "1. 公约草案初稿",
+      "ref": "preliminary draft convention",
+      "pred": "article 10. adoption of the agenda",
+      "word_f1": 0.0,
+      "char_f1": 0.75,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0286
+    },
+    {
+      "zh": "二位还是请回吧",
+      "ref": "guys, better leave now.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7857,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "克劳迪奥·格拉米齐，意大利（军火）",
+      "ref": "claudio gramizzi, italy (arms)",
+      "pred": "i was a big deal.",
+      "word_f1": 0.0,
+      "char_f1": 0.4444,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "看看，这恐怖的书山!",
+      "ref": "just see, that makes it a horror!",
+      "pred": "yes, i do.",
+      "word_f1": 0.0,
+      "char_f1": 0.4545,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.2727
+    },
+    {
+      "zh": "我们要为你找一所新的学校",
+      "ref": "we got to find you a new school.",
+      "pred": "i don't know what you want.",
+      "word_f1": 0.1429,
+      "char_f1": 0.7333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "来 帮你弄下领带",
+      "ref": "come here, i'ii fix your tie.",
+      "pred": "yes, i do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5217,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.2727
+    },
+    {
+      "zh": "3. 青少年中间滥用药物作为娱乐问题",
+      "ref": "recreational drug abuse among young people",
+      "pred": "international level of the session",
+      "word_f1": 0.0,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0857
+    },
+    {
+      "zh": "恶运似乎都远离了",
+      "ref": "the damn thing seems to have gone out.",
+      "pred": "i don't know. i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.069
+    },
+    {
+      "zh": "我必须告诉安理会一个例子。",
+      "ref": "i must share with the council one example.",
+      "pred": "i don't know.",
+      "word_f1": 0.1818,
+      "char_f1": 0.4615,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "细九",
+      "ref": "gale...",
+      "pred": "programme budget for the session",
+      "word_f1": 0.0,
+      "char_f1": 0.2857,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1212
+    },
+    {
+      "zh": "- 冷静，冷静",
+      "ref": "- it's everything cool.",
+      "pred": "- that's what i do.",
+      "word_f1": 0.2222,
+      "char_f1": 0.5926,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.15
+    },
+    {
+      "zh": "是么... 然后呢？",
+      "ref": "her tablewares were all lucky chuppy goods.",
+      "pred": "what are you doing?",
+      "word_f1": 0.0,
+      "char_f1": 0.6875,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.05
+    },
+    {
+      "zh": "怎么回事 或许我完蛋了",
+      "ref": "i don't know. maybe i'm done.",
+      "pred": "i was a big day, all right?",
+      "word_f1": 0.1538,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1786
+    },
+    {
+      "zh": "我的意思是，不怕 是他自己清楚。",
+      "ref": "i mean, not afraid to be himself... clearly.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.1667,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "-好样的 我定了二号球场 晚上七点 华盛顿市区",
+      "ref": "i booked court two, 7:00 p.m, downtown y.",
+      "pred": "- i want to see how to do.",
+      "word_f1": 0.1333,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "不知道 信号被切断了",
+      "ref": "i don't know, signal cut out.",
+      "pred": "i don't know, man.",
+      "word_f1": 0.6,
+      "char_f1": 0.7857,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0526
+    },
+    {
+      "zh": "我相信你会喜欢它。",
+      "ref": "i'm sure you'ii like it.",
+      "pred": "i want you to be a couple of this time.",
+      "word_f1": 0.0,
+      "char_f1": 0.6452,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.125
+    },
+    {
+      "zh": "FBT 全身抽动综合症",
+      "ref": "fbt, full body tourette's.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "你怎么还有心思? 来嘛!",
+      "ref": "well... as long as they're gonna think it.",
+      "pred": "you don't know what to do?",
+      "word_f1": 0.0,
+      "char_f1": 0.6429,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.037
+    },
+    {
+      "zh": "我估计没有 但他想往那边发展 看",
+      "ref": "he's trying, though. see?",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.4167,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "声音的家伙已经死了。",
+      "ref": "sound guy's dead.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.25,
+      "char_f1": 0.6,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "这是个临终时所作的, 他肯定看到了什么...",
+      "ref": "a desperate, dying act.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6923,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "拉丁美洲和加勒比国家： 阿根廷 塞萨尔·马约拉尔先生阁下",
+      "ref": "republic of moldova h.e. mr. vsevolod grigore",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "我看你是深情的，心烦意乱。",
+      "ref": "i see you are soulful, distracted.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.2,
+      "char_f1": 0.48,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "\"我知我可以\"",
+      "ref": "i know i could",
+      "pred": "i don't know. i know.",
+      "word_f1": 0.3333,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "我叫做庞德，詹姆斯庞德",
+      "ref": "my name's bond. james bond.",
+      "pred": "i don't know. i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.4762,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "漫画的下一集，我画好了",
+      "ref": "i drew the next part of the story.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.1538,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "这才像话各种爵士舞？",
+      "ref": "- now you're talking! - all of 'em?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.3846,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "我就是小寿星",
+      "ref": "i'm the birthday girl.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "你想180克 我的哥哥吗？",
+      "ref": "you want 180 grams, my brother.",
+      "pred": "10 a.m.-1 p.m. and 2 p.m.",
+      "word_f1": 0.0,
+      "char_f1": 0.4138,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "以神为先，其他一切都将随之而来",
+      "ref": "put god first and everything else will follow.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7742,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "(a) 查明某人的身份和下落；",
+      "ref": "(a) identification and location of persons;",
+      "pred": "(b) submitted by the committee",
+      "word_f1": 0.0,
+      "char_f1": 0.6,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0645
+    },
+    {
+      "zh": "画的真好看！",
+      "ref": "yeah, it's daddy. wow, great drawing.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.7407,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "蕾妮 这些都是治疗精神病的吧",
+      "ref": "lanie, aren't those antipsychotics?",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "他们是一见钟情 你们家人同意了这样的联姻吗?",
+      "ref": "do your people approve of the match?",
+      "pred": "i want you to get your son.",
+      "word_f1": 0.1429,
+      "char_f1": 0.4828,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1071
+    },
+    {
+      "zh": "你不是胜!",
+      "ref": "you're not sheng!",
+      "pred": "you know what i mean.",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0909
+    },
+    {
+      "zh": "显然给你留下一笔钱",
+      "ref": "and apparently left you some money.",
+      "pred": "i want you to be a couple of this time.",
+      "word_f1": 0.125,
+      "char_f1": 0.7879,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1
+    },
+    {
+      "zh": "先把课本翻开，第二课",
+      "ref": "open your books, lesson two",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.4,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "请相信我，当我告诉你",
+      "ref": "believe me when i tell you",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.1667,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "国际青年商会",
+      "ref": "junior chamber international",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.3478,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "收获爱情",
+      "ref": "gather the rose.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "或者你可以看到的... 如果",
+      "ref": "or you would... if...",
+      "pred": "i want you to go to hell.",
+      "word_f1": 0.2,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0769
+    },
+    {
+      "zh": "名单上的当事方",
+      "ref": "parties on the list",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "我们都可以把他们找出来",
+      "ref": "harris or worse, we're gonna find them.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6897,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "也许只是来自摇滚乐吧",
+      "ref": "or maybe it was just the rock 'n' roll.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6875,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "有任何突发行为 我就扣扳机 这是程序",
+      "ref": "all right, please don't move.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "这正是我要告诉他们的",
+      "ref": "that is what i tell them.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.1818,
+      "char_f1": 0.7,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "谢谢你 克拉丽斯 明天见",
+      "ref": "thank you, clarice. see you tomorrow.",
+      "pred": "i want you to go out of your son.",
+      "word_f1": 0.1333,
+      "char_f1": 0.7097,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0882
+    },
+    {
+      "zh": "见上文脚注40。",
+      "ref": "cit., supra note 40.",
+      "pred": "the committee recommends that the state party:",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0217
+    },
+    {
+      "zh": "-保罗 我不是演员",
+      "ref": "- paul, i am not an actor.",
+      "pred": "- i don't know.",
+      "word_f1": 0.3636,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "哈 利 波特 不會 生 多 比的 氣 的",
+      "ref": "harry potter mustn' t be angry with dobby.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7742,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "我会发疯。",
+      "ref": "you're blowing my mind.",
+      "pred": "i want to see how to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.16
+    },
+    {
+      "zh": "火箭？",
+      "ref": "-a rocket. a rocket?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.3529,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "很久以前我就决定不追求任何女人了",
+      "ref": "i decided long ago not to run after any girl.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.25,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "哎呀，这不是我的邻居吗？",
+      "ref": "is too good for you.",
+      "pred": "what are you doing here?",
+      "word_f1": 0.0,
+      "char_f1": 0.64,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "星期天起床",
+      "ref": "got up sunday morning.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "她是非洲的女皇",
+      "ref": "she's the queen of africa .",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.4167,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "已安排好的。",
+      "ref": "there's arrangements to be made.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "老板 , 你咋睡那儿呢",
+      "ref": "boss, you're sleeping there?",
+      "pred": "the start is a little lovely.",
+      "word_f1": 0.0,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.2667
+    },
+    {
+      "zh": "你和他提到车牌号了吗?",
+      "ref": "did you give him that license number?",
+      "pred": "you don't know what that means?",
+      "word_f1": 0.3077,
+      "char_f1": 0.7059,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0625
+    },
+    {
+      "zh": "布利克斯先生还指出",
+      "ref": "mr. blix also stated that",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "多谢了 你太好了",
+      "ref": "- thanks a lot. it was excellent.",
+      "pred": "i want you to go out of your son.",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1176
+    },
+    {
+      "zh": "所以你故意报复我",
+      "ref": "so you're trying to get back at me",
+      "pred": "i don't know what you want.",
+      "word_f1": 0.0,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "(b) 遵约问题状况",
+      "ref": "(b) status of compliance issue",
+      "pred": "(b) submitted by the committee",
+      "word_f1": 0.2,
+      "char_f1": 0.7333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0645
+    },
+    {
+      "zh": "- 哎, 哎, 乔, 乔, 嘿",
+      "ref": "hey. - come on, let's go.",
+      "pred": "- yes, sir.",
+      "word_f1": 0.2222,
+      "char_f1": 0.5217,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0833
+    },
+    {
+      "zh": "千万别搞这种事...",
+      "ref": "never do that...",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5455,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "自此以后，这个数字保持在20或更多。",
+      "ref": "since then it has stood at 20 or more.",
+      "pred": "the committee, she's a way of the money.",
+      "word_f1": 0.0,
+      "char_f1": 0.7097,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1463
+    },
+    {
+      "zh": "好吧 好吧 我们很快拆礼物",
+      "ref": "you know what? this is what we'll do.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.4286,
+      "char_f1": 0.7857,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "看来也不是免费的啊",
+      "ref": "doesn't sound free to me.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.1818,
+      "char_f1": 0.5833,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "我们邻居不时都报警的",
+      "ref": "my neighbors always call the police.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "2004年：改善公共部门的效率",
+      "ref": "2004: improving public sector effectiveness",
+      "pred": "the proposal is a religion.",
+      "word_f1": 0.0,
+      "char_f1": 0.6061,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1786
+    },
+    {
+      "zh": "我们继续尽兴",
+      "ref": "ladies and gerbils, you know the next part.",
+      "pred": "i don't know.",
+      "word_f1": 0.0,
+      "char_f1": 0.5333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0714
+    },
+    {
+      "zh": "我们能否找到足够资源？",
+      "ref": "can we raise adequate resources?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "引力塌缩的各个过程中",
+      "ref": "or various processes that involve",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.3478,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "最终上了报纸",
+      "ref": "that ended up in the paper.",
+      "pred": "i want to see how to do this.",
+      "word_f1": 0.0,
+      "char_f1": 0.7273,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1
+    },
+    {
+      "zh": "我想知道 如果你想和我一起。",
+      "ref": "i was wondering if you want to join me.",
+      "pred": "i think i thought you were a bit of thing.",
+      "word_f1": 0.2222,
+      "char_f1": 0.7879,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1163
+    },
+    {
+      "zh": "-击个掌吧",
+      "ref": "- dude, high five",
+      "pred": "- i want to be so soon.",
+      "word_f1": 0.1818,
+      "char_f1": 0.2857,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.125
+    },
+    {
+      "zh": "Rob有很多才能",
+      "ref": "the master will attend or",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.64,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "就當做受懲罰 去做飯吧",
+      "ref": "so think of it as the penalty...",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6923,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "現在我到達了幸福的彼岸",
+      "ref": "and i'm on the other side.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.0,
+      "char_f1": 0.5217,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "男人想在公平 格鬥中贏得女人",
+      "ref": "the man wants to win a woman in a fair combat.",
+      "pred": "i want to go to hell.",
+      "word_f1": 0.1333,
+      "char_f1": 0.6923,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1364
+    },
+    {
+      "zh": "就... 说声对不起吧",
+      "ref": "just say you're sorry",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6364,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "为什么不让他去服兵役?",
+      "ref": "why isn't that draft coming from the army?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "(建议4)",
+      "ref": "(recommendation 4)",
+      "pred": "(b) submitted by the committee",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0645
+    },
+    {
+      "zh": "建立特别帐户的目的，是资助各种项目、项目前和有关活动。",
+      "ref": "the special account shall be established",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.4167,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "(f) 附录",
+      "ref": "(f) appendices",
+      "pred": "(b) submitted by the committee",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0645
+    },
+    {
+      "zh": "曼谷真正的名字",
+      "ref": "that's the real name of bangkok.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "美国是一个很大的国家，不是吗？",
+      "ref": "america is a country very big, no?",
+      "pred": "i want to see you again, and what?",
+      "word_f1": 0.0,
+      "char_f1": 0.75,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.2
+    },
+    {
+      "zh": "这真的需要谨慎不是吗？",
+      "ref": "it's so tricky nowadays, don't you think?",
+      "pred": "what are you doing?",
+      "word_f1": 0.1818,
+      "char_f1": 0.7742,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.05
+    },
+    {
+      "zh": "就在你身边，这是怎么回事？",
+      "ref": "on your side, what's up?",
+      "pred": "what are you doing here?",
+      "word_f1": 0.0,
+      "char_f1": 0.8387,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "有客人穿着睡衣",
+      "ref": "a gentleman in a nightshirt was there.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.3636,
+      "char_f1": 0.6364,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "第八条 工作人员关系",
+      "ref": "article vii travel and removal expenses",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.4167,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "有最好的生活。",
+      "ref": "had the best life.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.7,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "我送你去醫院。",
+      "ref": "- no, no, no, no, no. i don't need...",
+      "pred": "i don't know what you want.",
+      "word_f1": 0.3333,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "说实话,我想收复马根达",
+      "ref": "honestly, i'd like to get magenta back.",
+      "pred": "i don't know, i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.7097,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0345
+    },
+    {
+      "zh": "- 我把声音关小",
+      "ref": "i'll turn the sound down, then.",
+      "pred": "- i don't know.",
+      "word_f1": 0.0,
+      "char_f1": 0.64,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "- 我们这里不办理火车托运",
+      "ref": "- we don't handle train baggage here.",
+      "pred": "- i don't know.",
+      "word_f1": 0.3636,
+      "char_f1": 0.6923,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "不，我不想你成为受害者.",
+      "ref": "no, and l don't like you being a martyr.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.1333,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "听说了 怎么来找我?",
+      "ref": "i heard that. why you talking to me?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.48,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "他就是爸爸",
+      "ref": "he is my father",
+      "pred": "i want to see how to do this.",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0667
+    },
+    {
+      "zh": "再等几天，好吧？",
+      "ref": "let's just wait a few days, all right?",
+      "pred": "what are you doing here?",
+      "word_f1": 0.0,
+      "char_f1": 0.75,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "看吧，你可以的",
+      "ref": "you see, you can do it.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "没有工会卡 也没有工作",
+      "ref": "if you got no union card, you don't get a job.",
+      "pred": "i was a big deal.",
+      "word_f1": 0.1333,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "那么她为什么不 刚回家",
+      "ref": "so why doesn't she just come home?",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5926,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "㈡ 托克劳问题",
+      "ref": "(ii) question of tokelau",
+      "pred": "come on.",
+      "word_f1": 0.0,
+      "char_f1": 0.3,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "新的案子",
+      "ref": "new audits. have a good day.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.1818,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "你知道，我们过去。",
+      "ref": "you know, we're in the past.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.2,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "1 《人口健康状况调查》，19971998年。",
+      "ref": "demographic health survey-1997-1998",
+      "pred": "agenda item 108",
+      "word_f1": 0.0,
+      "char_f1": 0.5455,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.125
+    },
+    {
+      "zh": "詹姆斯要开车和她一起去伦敦。",
+      "ref": "james was driving them both to london.",
+      "pred": "i don't know. i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.5517,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.069
+    },
+    {
+      "zh": "这个日子并不属于他，他遇到了强手",
+      "ref": "(reporter) it's not his day. he is beaten.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.6429,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "我做了一个的恶梦 真恐怖",
+      "ref": "i had a bad nightmare.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.1818,
+      "char_f1": 0.5833,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.08
+    },
+    {
+      "zh": "现在回去还有话好说",
+      "ref": "we can still make peace.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.64,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "你是这儿老大",
+      "ref": "you are the boss here?",
+      "pred": "you can stop the hospital.",
+      "word_f1": 0.4,
+      "char_f1": 0.64,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1852
+    },
+    {
+      "zh": "我们会淹死的",
+      "ref": "we might drown.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.5714,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "妳丈夫跟我太太才有染！",
+      "ref": "- liar! - thank you.",
+      "pred": "i don't know what you want.",
+      "word_f1": 0.0,
+      "char_f1": 0.7407,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "人已经到齐了，五分钟后准备好",
+      "ref": "we're lined up and ready in five minutes.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5517,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "电话分线装好",
+      "ref": "securing bridge clips.",
+      "pred": "i want to see how to do this.",
+      "word_f1": 0.0,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0667
+    },
+    {
+      "zh": "卡薇雅",
+      "ref": "kaavya. kaavya.",
+      "pred": "you don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.4706,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "手槍和火藥 快點走",
+      "ref": "a pistol and powder. go quickly now.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7742,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "他们都吃的不错",
+      "ref": "they've eaten a lot.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "- 她剛剛說什麼？",
+      "ref": "- what did she say? - mmm.",
+      "pred": "- what is it?",
+      "word_f1": 0.4,
+      "char_f1": 0.7619,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1429
+    },
+    {
+      "zh": "怎么回事 这种不祥的感觉",
+      "ref": "why do i have bad premonition?",
+      "pred": "i was a big bad bad brother.",
+      "word_f1": 0.3333,
+      "char_f1": 0.6897,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.2414
+    },
+    {
+      "zh": "我从不需要",
+      "ref": "i never need one, dad.",
+      "pred": "i don't know.",
+      "word_f1": 0.25,
+      "char_f1": 0.5263,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0714
+    },
+    {
+      "zh": "- 是哪里的女人？",
+      "ref": "- where were the women?",
+      "pred": "- what is it?",
+      "word_f1": 0.2222,
+      "char_f1": 0.5556,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1429
+    },
+    {
+      "zh": "(a) 全球宣传活动和分析；",
+      "ref": "(a) global advocacy and analysis;",
+      "pred": "(b) submitted by the committee",
+      "word_f1": 0.0,
+      "char_f1": 0.6207,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0645
+    },
+    {
+      "zh": "都是你 阿牛",
+      "ref": "it's all your fault mr ox.",
+      "pred": "i want you to go out of your son.",
+      "word_f1": 0.1333,
+      "char_f1": 0.7407,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0882
+    },
+    {
+      "zh": "对 对 就是她",
+      "ref": "yeah, yeah, yeah, that's her.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.5455,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "好吧 28",
+      "ref": "all right, no, no. twenty-eight.",
+      "pred": "i don't know. i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0345
+    },
+    {
+      "zh": "这里一点点钱",
+      "ref": "here's some money",
+      "pred": "i want to see you the car.",
+      "word_f1": 0.0,
+      "char_f1": 0.6087,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1481
+    },
+    {
+      "zh": "我是边界巡逻的创始人",
+      "ref": "l'm a former border patrol agent.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.1818,
+      "char_f1": 0.5,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "有几个因素造成了这种变化。",
+      "ref": "a number of factors accounted for the change.",
+      "pred": "i was a big dead.",
+      "word_f1": 0.1538,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "- 技术主管。",
+      "ref": "- by the head technician",
+      "pred": "- i don't know.",
+      "word_f1": 0.2222,
+      "char_f1": 0.4762,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "- 沙漏",
+      "ref": "- hourglass.",
+      "pred": "- i don't know.",
+      "word_f1": 0.3333,
+      "char_f1": 0.3,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "想不想親我一下？",
+      "ref": "how would you like to give me a kiss?",
+      "pred": "i was a big deal.",
+      "word_f1": 0.1429,
+      "char_f1": 0.5926,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "剛剛從監獄出來,對嗎?",
+      "ref": "just get out, did ya? hmm?",
+      "pred": "what are you doing?",
+      "word_f1": 0.0,
+      "char_f1": 0.7586,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.05
+    },
+    {
+      "zh": "-祝你好运 盖伊",
+      "ref": "- good luck, guy.",
+      "pred": "- i don't know you ask you.",
+      "word_f1": 0.1818,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1071
+    },
+    {
+      "zh": "表14. 中 断 费 索 赔 (科威特第纳尔)",
+      "ref": "(kuwaiti dinars)",
+      "pred": "(b) support services",
+      "word_f1": 0.0,
+      "char_f1": 0.56,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1905
+    },
+    {
+      "zh": "发展中国家面临的气候挑战",
+      "ref": "the climate challenge for developing countries",
+      "pred": "i was a big dead.",
+      "word_f1": 0.0,
+      "char_f1": 0.4444,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0556
+    },
+    {
+      "zh": "你并不是真正的乡村医生 你为什么来这?",
+      "ref": "you're not exactly a country doctor.",
+      "pred": "i want you to get you out of here.",
+      "word_f1": 0.0,
+      "char_f1": 0.6429,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1143
+    },
+    {
+      "zh": "现在，Kid出了这事...",
+      "ref": "now, with kid...",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.8571,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "и炳秈ㄓぃ琌盾",
+      "ref": "were in, arentt we?",
+      "pred": "oh, god.",
+      "word_f1": 0.0,
+      "char_f1": 0.1333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1111
+    },
+    {
+      "zh": "抓了很多？",
+      "ref": "caught many?",
+      "pred": "what is it?",
+      "word_f1": 0.0,
+      "char_f1": 0.4706,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "你们好吗 很好你的狗怎么样？",
+      "ref": "i'm sorry. okay, drinks for everybody.",
+      "pred": "i want you to get you out of here.",
+      "word_f1": 0.0,
+      "char_f1": 0.5806,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1143
+    },
+    {
+      "zh": "我打了十几次电话都没有找到你",
+      "ref": "- i called 14 times, but couldn't reach you.",
+      "pred": "the committee recommends that the state party:",
+      "word_f1": 0.0,
+      "char_f1": 0.7027,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0217
+    },
+    {
+      "zh": "这一招够阴的 道格",
+      "ref": "that was a dirty shot, doug.",
+      "pred": "i want to see you again.",
+      "word_f1": 0.0,
+      "char_f1": 0.7692,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.12
+    },
+    {
+      "zh": "还有你们，先生们",
+      "ref": "and you, gentlemen",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.4545,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0909
+    },
+    {
+      "zh": "你先看一下标题",
+      "ref": "you look at the title",
+      "pred": "you can stop the hospital.",
+      "word_f1": 0.4,
+      "char_f1": 0.75,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1852
+    },
+    {
+      "zh": "我们这点儿人，他们根本看不上",
+      "ref": "they couldn't care less about us",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5385,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.04
+    },
+    {
+      "zh": "所以她要我 前来四处打听。",
+      "ref": "so she wanted me to come and ask around.",
+      "pred": "i don't know.",
+      "word_f1": 0.0,
+      "char_f1": 0.5833,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0714
+    },
+    {
+      "zh": "112. 学术界对此问题的意见有所分歧。",
+      "ref": "academic opinion is divided on this issue.",
+      "pred": "1 and 2005",
+      "word_f1": 0.0,
+      "char_f1": 0.2727,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.4545
+    },
+    {
+      "zh": "见过但和你干的不一样",
+      "ref": "- no. not looking like you do.",
+      "pred": "i don't know what you want.",
+      "word_f1": 0.1538,
+      "char_f1": 0.6923,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "他们正在传递 下来从他们过去的垃圾。",
+      "ref": "they're passing down garbage from their past.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "你又没念完　没错",
+      "ref": "- you never finished. - no.",
+      "pred": "you can stop the car.",
+      "word_f1": 0.2,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1364
+    },
+    {
+      "zh": "-看到了吧,我真的曾说过",
+      "ref": "- see, i did say that.",
+      "pred": "- yes, sir.",
+      "word_f1": 0.2222,
+      "char_f1": 0.7368,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0833
+    },
+    {
+      "zh": "你最近寫什麼？",
+      "ref": "what've you been writing lately?",
+      "pred": "you don't know what that means?",
+      "word_f1": 0.1818,
+      "char_f1": 0.6875,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0938
+    },
+    {
+      "zh": "走的时候，妈妈。",
+      "ref": "time to go, mama.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.5263,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "我不是压抑或保守",
+      "ref": "i'm not inhibited or closed-minded.",
+      "pred": "i want to see how to do this.",
+      "word_f1": 0.0,
+      "char_f1": 0.6667,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0667
+    },
+    {
+      "zh": "亨利， 你別想更改報上已登了訃聞",
+      "ref": "you don't want talk. the notice in the times.",
+      "pred": "i don't know, i can't do it.",
+      "word_f1": 0.1429,
+      "char_f1": 0.7333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.069
+    },
+    {
+      "zh": "就像它被称作的， 那个\"死亡女孩\"的案子！",
+      "ref": "the \"snuff girls\" case, as it's been called.",
+      "pred": "i don't know, i know.",
+      "word_f1": 0.0,
+      "char_f1": 0.4828,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0455
+    },
+    {
+      "zh": "那么我们会很惨",
+      "ref": "then we got a very serious problem.",
+      "pred": "i don't know what to do.",
+      "word_f1": 0.0,
+      "char_f1": 0.5333,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.0
+    },
+    {
+      "zh": "好好用餐、听话、安静",
+      "ref": "eat properly, listen, be quiet, go to",
+      "pred": "the committee, stop it.",
+      "word_f1": 0.0,
+      "char_f1": 0.5185,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1667
+    },
+    {
+      "zh": "反对：",
+      "ref": "against:",
+      "pred": "consideration of the session",
+      "word_f1": 0.0,
+      "char_f1": 0.5263,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.069
+    },
+    {
+      "zh": "开始使用 脆的指甲和头发",
+      "ref": "have started ... nails and brittle hair ...",
+      "pred": "i don't know, i can't do it.",
+      "word_f1": 0.0,
+      "char_f1": 0.48,
+      "exact": false,
+      "energy_descent": true,
+      "disagreement_rate": 0.1034
+    }
+  ],
+  "probes": [
+    {
+      "zh": "你好",
+      "pred": "you are a second."
+    },
+    {
+      "zh": "我爱你",
+      "pred": "i don't know what you want."
+    },
+    {
+      "zh": "今天天气很好",
+      "pred": "i want to see you again."
+    },
+    {
+      "zh": "我有点累",
+      "pred": "i don't know."
+    },
+    {
+      "zh": "谢谢你的帮助",
+      "pred": "i don't know what you want."
+    },
+    {
+      "zh": "我们明天见",
+      "pred": "i don't know what to do."
+    }
+  ]
+}
