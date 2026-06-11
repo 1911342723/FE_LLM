@@ -155,10 +155,10 @@ class ActionRealizer:
     def _try_load_energy_chat(self) -> None:
         try:
             from fe_llm.config import get_device
-            from fe_llm.energy_lm.intent_generate import IntentChat
-            from fe_llm.energy_lm.intent_model import IntentLM
-            from fe_llm.energy_lm.intent_train import CKPT_PATH, CKPT_TOK
-            from fe_llm.energy_lm.tokenizer import CharTokenizer
+            from fe_llm.energy_lm.generation.intent_generate import IntentChat
+            from fe_llm.energy_lm.models.intent_model import IntentLM
+            from fe_llm.energy_lm.training.intent_train import CKPT_PATH, CKPT_TOK
+            from fe_llm.energy_lm.models.tokenizer import CharTokenizer
 
             if not (os.path.exists(CKPT_PATH) and os.path.exists(CKPT_TOK)):
                 return

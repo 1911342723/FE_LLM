@@ -14,6 +14,15 @@ fe_llm.energy_lm —— 最小能量对话模型（M6）
     - 经验就是省电：训练为高频对话刻出低能深沟，熟悉输入坍缩快、陌生输入坍缩慢。
     - 可溯源：每个字为何填在此——因为它让该位置能量最低，可打印。
 
-模块：tokenizer / corpus / energy_net / train / collapse / demo
-详见 kernel/docs/设计v3-M6-最小能量对话模型.md
+包结构（2026-06-11 重构，按功能分层）：
+    models/       模型定义（energy_net / seq_net / intent_model / slot_intent_model / tokenizer）
+    data/         语料与数据准备（corpus / real_data / prepare_lccc / prepare_opus100 / teacher_gen）
+    training/     训练脚本（train / seq_train / intent_train / translation_train / slot_translation_train）
+    evaluation/   评测脚本（translation_eval / slot_translation_eval / eval_by_length / ablation_per / scale_test）
+    generation/   生成入口（intent_generate）
+    diagnostics/  能量坍缩诊断（collapse / seq_collapse）
+    demos/        交互演示（demo / seq_demo / growth_demo）
+
+注：本包为"从零训练字符级模型"路线的参考实现，翻译判定两连阴性后
+（见 docs/FE-LLM预训练底座路线草案.md），新工作转入 fe_llm/backbone_lm/。
 """
