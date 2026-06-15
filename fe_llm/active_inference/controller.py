@@ -35,6 +35,8 @@ class ModelResponse:
     trace: InferenceTrace
     memory_candidate: MemoryCandidate | None = None
     recalled_memories: list[MemoryCandidate] | None = None
+    # CAPCW in-context 工作记忆取回的 value 串（query 命中已绑定时），否则 None。
+    incontext_value: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -46,6 +48,7 @@ class ModelResponse:
             "trace": self.trace.to_dict(),
             "memory_candidate": self.memory_candidate.to_dict() if self.memory_candidate else None,
             "recalled_memories": [item.to_dict() for item in self.recalled_memories or []],
+            "incontext_value": self.incontext_value,
         }
 
 
@@ -115,6 +118,11 @@ class ActiveInferenceController:
                 self.capcw_memory = CAPCWWorkingMemory.load(capcw_memory_path)
             except Exception:
                 self.capcw_memory = None
+        # in-context 绑定 NLU（轻量规则，无权重）：把活文本"现场关联"抽成 bind/query 事件喂工作记忆。
+        # 仅在 capcw_memory 已加载时于 respond() 内使用；高精度模式触发，避免劫持既有对话。
+        from fe_llm.active_inference.incontext_binding_nlu import InContextBindingNLU
+
+        self._incontext_nlu = InContextBindingNLU()
 
     def respond(self, text: str, session_id: str | None = None) -> ModelResponse:
         observation = Observation.from_text(text, session_id=session_id)
@@ -161,6 +169,26 @@ class ActiveInferenceController:
                     selected_action = cand
             except Exception:
                 pass
+        # 可选 CAPCW in-context 工作记忆（默认未加载→跳过，既有管线零影响）：
+        # 绑定 NLU 解析活文本 → bind 存入工作记忆；query 由**引擎 surprise** 裁决 ASK/ANSWER 并取回 value。
+        # 这是把已验证的 CAPCW 引擎接回 controller 招牌决策"知道何时不该答"的活文本闭环（见 capcw_memory）。
+        incontext_value: str | None = None
+        if self.capcw_memory is not None:
+            try:
+                event = self._incontext_nlu.parse(observation.text)
+                if event.kind == "bind":
+                    self.capcw_memory.bind_str(event.key, event.value)
+                    cand = self._pick_candidate(candidates, ActionType.ANSWER)  # 确认已记住
+                    if cand is not None:
+                        selected_action = cand
+                elif event.kind == "query":
+                    dec, value_str = self.capcw_memory.decide_str(event.key)
+                    cand = self._pick_candidate(candidates, dec.action)  # 引擎 surprise: bound→ANSWER/unbound→ASK
+                    if cand is not None:
+                        selected_action = cand
+                    incontext_value = value_str
+            except Exception:
+                incontext_value = None
         # 行动回写：selected action 决定下一轮 Predictor 的预期（如等待澄清）。
         posterior_belief = self.belief_updater.apply_action_feedback(
             posterior_belief, selected_action.action_type.value
@@ -200,6 +228,7 @@ class ActiveInferenceController:
             trace=trace,
             memory_candidate=memory_candidate,
             recalled_memories=recalled_memories,
+            incontext_value=incontext_value,
         )
 
     # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op）----

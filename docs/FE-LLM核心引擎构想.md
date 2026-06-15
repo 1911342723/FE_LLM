@@ -385,5 +385,39 @@ slot），或真正的多层深度 + 逐跳学习（与 Transformer 多层做多
 加载，`bind_working_memory`/`reset_working_memory`/`working_memory_decision` 为显式接口；默认 None 不
 启用 → 既有管线零影响。新增 10 测试，全量 143 全绿。诚实边界：① 工作空间需在绑定任务训练才内容寻址
 （适用受控小词表）；② 活文本自动把"现场关联"抽成 (key,value) 需一层 in-context 绑定 NLU（开放词表/
-容量受限），属下一步，故现为显式 API 接口而非 `respond()` 自动调用。报告
+容量受限），属下一步（见第 20 节），故现为显式 API 接口而非 `respond()` 自动调用。报告
 `docs/reports/capcw_controller_integration_eval.{json,md}`。
+
+## 20. 活文本闭环：in-context 绑定 NLU 接进 respond()（2026-06-15，真实系统集成）
+
+把第 19 节的"接回 controller"从**显式 API** 推进到**活文本自动**——用户用自然语言陈述/查询现场关联，
+controller 经绑定 NLU 把关联喂 CAPCW 工作记忆，**引擎 surprise** 在真实对话里驱动 ASK/ANSWER + 取回 value。
+
+- **绑定 NLU**（`active_inference/incontext_binding_nlu.py`，高精度规则、无权重）：
+  bind（记住X是Y / X对应Y / X设为Y / X等于Y / X的{密码|工号|编号|…}是Y）、
+  query（X是多少 / 是什么 / 对应什么 / 等于几）、none（其余）。**查询先于绑定**消解"X的密码是多少"歧义；
+  **裸"X是Y"与寒暄不触发**（仿学习式 NLU 窄触发教训，避免劫持既有对话）。
+- **字符串工作记忆**（`CAPCWWorkingMemory.bind_str/decide_str`）：per-session str↔id 表把活文本任意
+  key/value 串映射到工作空间符号 id（工作空间学的是**符号无关**的内容寻址路由，任意串分配不同 id 即可
+  绑定/取回）；未见 key 平凡 unbound→ASK。
+- **接进 `respond()`**（仿 `context_policy` override、默认关、零回归）：加载工作记忆时解析本轮文本，bind
+  存入、query 由引擎 surprise 覆盖动作；`ModelResponse.incontext_value` 暴露取回值。
+
+脚本会话实录（`world_model/capcw_incontext_dialogue_eval.py`）：
+
+| 用户输入 | 动作 | in-context 取回 |
+|---|---|---|
+| 记住会议室是B302 | answer（已记住） | — |
+| 项目代号对应X9 | answer（已记住） | — |
+| 会议室是多少 | **answer** | **B302** |
+| 项目代号是什么 | **answer** | **X9** |
+| 门禁卡是多少 | **ask_clarification**（未绑定→该问） | — |
+| 你好 | answer（未被劫持） | — |
+
+聚合（多段随机会话）：决策 balanced acc **1.000**、内容取回 value acc **1.000**、寒暄劫持率 **0.000**
+→ **PASS**。引擎 surprise 让"知道何时不该答 + 内容取回"在**真实 controller 的活文本路径**上从机制涌现。
+新增 15 测试，全量 158 全绿。
+
+诚实边界：① 绑定 NLU 是高精度规则、覆盖标记式表达（非全开放实体抽取）；② 工作记忆当前是 controller
+级单一工作集（多会话需 `reset_working_memory()` 或 per-session WM，接口已留）；③ value 词表上限由
+n_keys/n_vals 约束。报告 `docs/reports/capcw_incontext_dialogue_eval.{json,md}`。

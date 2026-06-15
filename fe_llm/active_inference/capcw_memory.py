@@ -103,10 +103,18 @@ class CAPCWWorkingMemory:
         self.device = device or "cpu"
         self.net = _BindingWorkspace(n_keys, n_vals, d, n_slots, iters).to(self.device)
         self._bindings: dict[int, int] = {}         # 当前会话累积的 (key id → value id)
+        # per-session 字符串↔id 表：把活文本里的任意 key/value 字符串映射到工作空间的符号 id
+        # （工作空间学到的是符号无关的内容寻址路由，故任意串分配不同 id 即可绑定/取回）。
+        self._key_ids: dict[str, int] = {}
+        self._val_ids: dict[str, int] = {}
+        self._val_rev: dict[int, str] = {}
 
     # ---- 在线工作记忆：累积/重置 in-context 绑定 ----
     def reset(self) -> None:
         self._bindings.clear()
+        self._key_ids.clear()
+        self._val_ids.clear()
+        self._val_rev.clear()
 
     def bind(self, key: int, value: int) -> None:
         """绑定一个 in-context 关联（key→value）。后写覆盖（同 key 取新值）。"""
@@ -141,6 +149,38 @@ class CAPCWWorkingMemory:
             action=ActionType.ANSWER if bound else ActionType.ASK_CLARIFICATION,
             value=value, surprise=surprise, match=match, bound=bound,
         )
+
+    # ---- 字符串接口（供 in-context 绑定 NLU / controller 用活文本的 key/value 字符串）----
+    def bind_str(self, key: str, value: str) -> None:
+        """绑定一个文本 in-context 关联（key 串→value 串），自动分配 per-session 符号 id。"""
+        key, value = str(key).strip(), str(value).strip()
+        if not key or not value:
+            return
+        if key not in self._key_ids:
+            if len(self._key_ids) >= self.n_keys:
+                raise ValueError(f"in-context key 词表已满（上限 {self.n_keys}），请 reset 或扩容")
+            self._key_ids[key] = len(self._key_ids)
+        if value not in self._val_ids:
+            if len(self._val_ids) >= self.n_vals:
+                raise ValueError(f"in-context value 词表已满（上限 {self.n_vals}），请 reset 或扩容")
+            vid = len(self._val_ids)
+            self._val_ids[value] = vid
+            self._val_rev[vid] = value
+        self.bind(self._key_ids[key], self._val_ids[value])
+
+    def decide_str(self, query_key: str) -> tuple[MemoryDecision, str | None]:
+        """对文本查询键裁决。返回 (MemoryDecision, value 串|None)。
+
+        - 从未在本会话出现过的 key 串：平凡 unbound → ASK（显然不知道，不必跑引擎）；
+        - 出现过的 key 串：由引擎 surprise 裁决 bound/unbound，bound 时把取回的 value id 映回字符串。
+        """
+        key = str(query_key).strip()
+        if key not in self._key_ids:
+            return MemoryDecision(action=ActionType.ASK_CLARIFICATION, value=None,
+                                  surprise=1.0, match=0.0, bound=False), None
+        dec = self.decide(self._key_ids[key])
+        value_str = self._val_rev.get(dec.value) if dec.value is not None else None
+        return dec, value_str
 
     # ---- 训练 / 持久化 ----
     def train_on_binding(self, *, k_pairs: int = 5, n_train: int = 8000, epochs: int = 40,
