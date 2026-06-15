@@ -37,6 +37,8 @@ class ModelResponse:
     recalled_memories: list[MemoryCandidate] | None = None
     # CAPCW in-context 工作记忆取回的 value 串（query 命中已绑定时），否则 None。
     incontext_value: str | None = None
+    # CAPCW in-context query 的引擎 surprise（=1-路由匹配度；query 时给出，可溯源）。
+    incontext_surprise: float | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -49,6 +51,7 @@ class ModelResponse:
             "memory_candidate": self.memory_candidate.to_dict() if self.memory_candidate else None,
             "recalled_memories": [item.to_dict() for item in self.recalled_memories or []],
             "incontext_value": self.incontext_value,
+            "incontext_surprise": self.incontext_surprise,
         }
 
 
@@ -173,6 +176,7 @@ class ActiveInferenceController:
         # 绑定 NLU 解析活文本 → bind 存入工作记忆；query 由**引擎 surprise** 裁决 ASK/ANSWER 并取回 value。
         # 这是把已验证的 CAPCW 引擎接回 controller 招牌决策"知道何时不该答"的活文本闭环（见 capcw_memory）。
         incontext_value: str | None = None
+        incontext_surprise: float | None = None  # WM query 的引擎 surprise（可溯源，主动推理用）
         incontext_reply: str | None = None       # 由引擎取回内容生成的 grounded 回答（可溯源）
         if self.capcw_memory is not None:
             try:
@@ -189,11 +193,13 @@ class ActiveInferenceController:
                     if cand is not None:
                         selected_action = cand
                     incontext_value = value_str
+                    incontext_surprise = dec.surprise        # 暴露 surprise：未绑定高→追问、绑定后降→回答
                     # grounded 生成：bound 时回答扎根于引擎取回的 value（可溯源），unbound 走常规追问文本。
                     if value_str is not None:
                         incontext_reply = f"{event.key}是{value_str}"
             except Exception:
                 incontext_value = None
+                incontext_surprise = None
                 incontext_reply = None
         # 行动回写：selected action 决定下一轮 Predictor 的预期（如等待澄清）。
         posterior_belief = self.belief_updater.apply_action_feedback(
@@ -238,6 +244,7 @@ class ActiveInferenceController:
             memory_candidate=memory_candidate,
             recalled_memories=recalled_memories,
             incontext_value=incontext_value,
+            incontext_surprise=incontext_surprise,
         )
 
     # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op）----

@@ -90,6 +90,18 @@ class WorkingMemoryStringInterfaceTests(unittest.TestCase):
 class ControllerInContextLoopTests(unittest.TestCase):
     """controller 活文本闭环：绑定 NLU→工作记忆→引擎 surprise 驱动 ASK/ANSWER+取回，不劫持寒暄。"""
 
+    @classmethod
+    def setUpClass(cls) -> None:
+        wm = CAPCWWorkingMemory(n_keys=10, n_vals=12, d=32, n_slots=6, ask_threshold=0.5)
+        wm.train_on_binding(k_pairs=4, n_train=4000, epochs=25, seed=0)
+        cls._tmp = tempfile.TemporaryDirectory()
+        cls.ckpt = os.path.join(cls._tmp.name, "wm.pt")
+        wm.save(cls.ckpt)
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        cls._tmp.cleanup()
+
     def test_default_controller_no_incontext(self) -> None:
         from fe_llm.active_inference.controller import ActiveInferenceController
 
@@ -100,22 +112,34 @@ class ControllerInContextLoopTests(unittest.TestCase):
     def test_live_text_bind_query_loop(self) -> None:
         from fe_llm.active_inference.controller import ActiveInferenceController
 
-        wm = CAPCWWorkingMemory(n_keys=10, n_vals=12, d=32, n_slots=6, ask_threshold=0.5)
-        wm.train_on_binding(k_pairs=4, n_train=4000, epochs=25, seed=0)
-        with tempfile.TemporaryDirectory() as td:
-            path = os.path.join(td, "wm.pt")
-            wm.save(path)
-            controller = ActiveInferenceController(capcw_memory_path=path)
-            controller.reset_working_memory()
-            controller.respond("记住会议室是B302", session_id="t")
-            bound = controller.respond("会议室是多少", session_id="t")
-            self.assertEqual(bound.selected_action_type, ActionType.ANSWER)
-            self.assertEqual(bound.incontext_value, "B302")
-            self.assertIn("B302", bound.text)          # grounded 生成：回答扎根于取回的 value
-            unbound = controller.respond("门禁卡是多少", session_id="t")
-            self.assertEqual(unbound.selected_action_type, ActionType.ASK_CLARIFICATION)
-            chit = controller.respond("你好", session_id="t")   # 寒暄不被劫持
-            self.assertIsNone(chit.incontext_value)
+        controller = ActiveInferenceController(capcw_memory_path=self.ckpt)
+        controller.reset_working_memory()
+        controller.respond("记住会议室是B302", session_id="t")
+        bound = controller.respond("会议室是多少", session_id="t")
+        self.assertEqual(bound.selected_action_type, ActionType.ANSWER)
+        self.assertEqual(bound.incontext_value, "B302")
+        self.assertIn("B302", bound.text)              # grounded 生成：回答扎根于取回的 value
+        unbound = controller.respond("门禁卡是多少", session_id="t")
+        self.assertEqual(unbound.selected_action_type, ActionType.ASK_CLARIFICATION)
+        chit = controller.respond("你好", session_id="t")   # 寒暄不被劫持
+        self.assertIsNone(chit.incontext_value)
+
+    def test_active_inference_surprise_drop_after_clarification(self) -> None:
+        # 主动推理闭环：问未绑定(高 surprise→ASK) → 用户补绑定 → 再问(surprise 降→grounded 答)。
+        # 体现蓝图"对外行动(追问)改变环境从而降低未来自由能"。
+        from fe_llm.active_inference.controller import ActiveInferenceController
+
+        controller = ActiveInferenceController(capcw_memory_path=self.ckpt)
+        controller.reset_working_memory()
+        ask = controller.respond("工号是多少", session_id="ai")          # 未绑定 → 该问
+        self.assertEqual(ask.selected_action_type, ActionType.ASK_CLARIFICATION)
+        controller.respond("记住工号是1024", session_id="ai")            # 用户补绑定（满足追问）
+        ans = controller.respond("工号是多少", session_id="ai")          # 再问 → 该答
+        self.assertEqual(ans.selected_action_type, ActionType.ANSWER)
+        self.assertEqual(ans.incontext_value, "1024")
+        self.assertIsNotNone(ask.incontext_surprise)
+        self.assertIsNotNone(ans.incontext_surprise)
+        self.assertLess(ans.incontext_surprise, ask.incontext_surprise)  # surprise 下降=自由能平复
 
 
 if __name__ == "__main__":

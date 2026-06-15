@@ -63,7 +63,9 @@ def _scripted_demo(controller: ActiveInferenceController) -> list[dict]:
         ("项目代号对应X9", "bind"),
         ("会议室是多少", "query_bound"),       # 期望 ANSWER + B302
         ("项目代号是什么", "query_bound"),     # 期望 ANSWER + X9
-        ("门禁卡是多少", "query_unbound"),     # 从未提过 → 期望 ASK
+        ("门禁卡是多少", "query_unbound"),     # 从未提过 → 期望 ASK（高 surprise）
+        ("记住门禁卡是8821", "bind"),          # 主动推理：用户补绑定（满足追问）
+        ("门禁卡是多少", "query_bound"),       # 再问 → ANSWER + 8821（surprise 下降=自由能平复）
         ("你好", "chitchat"),                  # 不劫持
     ]
     log = []
@@ -72,7 +74,8 @@ def _scripted_demo(controller: ActiveInferenceController) -> list[dict]:
         log.append({"text": text, "kind": kind,
                     "action": resp.selected_action_type.value,
                     "reply": resp.text,                       # grounded 回答（取回内容入生成）
-                    "incontext_value": resp.incontext_value})
+                    "incontext_value": resp.incontext_value,
+                    "incontext_surprise": resp.incontext_surprise})
     return log
 
 
@@ -131,14 +134,23 @@ def run(args: argparse.Namespace) -> dict:
         agg = _aggregate(controller, n=args.n_eval, k=args.k, seed=args.seed + 7000)
 
     for t in demo:
-        print(f"[incontext] 用户「{t['text']}」 → 动作={t['action']} 回答「{t['reply']}」 取回={t['incontext_value']}", flush=True)
+        s = t["incontext_surprise"]
+        s_str = f"{s:.3f}" if isinstance(s, (int, float)) else "—"
+        print(f"[incontext] 用户「{t['text']}」 → 动作={t['action']} 回答「{t['reply']}」 取回={t['incontext_value']} surprise={s_str}", flush=True)
 
-    # 判定（含 grounded 生成：回答文本须扎根于取回的 value）
+    # 判定（含 grounded 生成 + 主动推理 surprise 下降）
+    closure_ok = (
+        demo[4]["action"] == "ask_clarification"                  # 未绑定→该问（高 surprise）
+        and demo[6]["action"] == "answer" and demo[6]["incontext_value"] == "8821"  # 补绑定后→该答
+        and isinstance(demo[4]["incontext_surprise"], (int, float))
+        and isinstance(demo[6]["incontext_surprise"], (int, float))
+        and demo[6]["incontext_surprise"] < demo[4]["incontext_surprise"]           # surprise 下降=自由能平复
+    )
     demo_ok = (
         demo[2]["action"] == "answer" and demo[2]["incontext_value"] == "B302" and "B302" in (demo[2]["reply"] or "")
         and demo[3]["action"] == "answer" and demo[3]["incontext_value"] == "X9" and "X9" in (demo[3]["reply"] or "")
-        and demo[4]["action"] == "ask_clarification"
-        and demo[5]["incontext_value"] is None
+        and closure_ok
+        and demo[7]["incontext_value"] is None        # 寒暄不被劫持
     )
     h_decision = agg["decision_balanced_acc"] >= 0.80
     h_value = agg["value_retrieval_acc"] >= 0.60
@@ -160,7 +172,8 @@ def run(args: argparse.Namespace) -> dict:
         "demo_ok": demo_ok,
         "verdict": verdict,
         "note": "绑定 NLU 高精度规则触发（记住/对应/设为/等于/的{属性}是 + 查询词），裸'X是Y'与寒暄不触发；"
-                "工作记忆决策由引擎 query 路由 surprise 涌现（无动作监督）；value 由取回的符号 id 映回字符串。",
+                "工作记忆决策由引擎 query 路由 surprise 涌现（无动作监督）；value 由取回的符号 id 映回字符串；"
+                "回答 grounded（取回内容入生成，可溯源）；主动推理：问未绑定→高 surprise→追问，用户补绑定后再问→surprise 下降→grounded 回答（自由能平复）。",
     }
     os.makedirs(os.path.dirname(args.report_json), exist_ok=True)
     with open(args.report_json, "w", encoding="utf-8") as f:
@@ -171,13 +184,15 @@ def run(args: argparse.Namespace) -> dict:
         f"- 判定：**{verdict}**",
         f"- 工作空间绑定训练准确率：{bind_acc:.4f}",
         "",
-        "## 脚本会话实录（grounded 回答=取回内容入生成）",
+        "## 脚本会话实录（grounded 回答=取回内容入生成；surprise=引擎 query 路由）",
         "",
-        "| 用户输入 | 动作 | 回答（grounded） | in-context 取回 |",
-        "|---|---|---|---|",
+        "| 用户输入 | 动作 | 回答（grounded） | 取回 | surprise |",
+        "|---|---|---|---|---:|",
     ]
     for t in demo:
-        lines.append(f"| {t['text']} | {t['action']} | {t['reply'] or '—'} | {t['incontext_value'] or '—'} |")
+        s = t["incontext_surprise"]
+        s_str = f"{s:.3f}" if isinstance(s, (int, float)) else "—"
+        lines.append(f"| {t['text']} | {t['action']} | {t['reply'] or '—'} | {t['incontext_value'] or '—'} | {s_str} |")
     lines += [
         "",
         "## 聚合指标（多段随机会话）",
