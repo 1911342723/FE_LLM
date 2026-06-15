@@ -1,18 +1,18 @@
 # CAPCW 活文本闭环 · 绑定 NLU → 工作记忆 → 引擎 surprise 驱动 controller
 
 - 判定：**PASS: 活文本闭环成立——绑定 NLU 把现场关联喂工作记忆，引擎 surprise 在 controller 里正确驱动 ANSWER(取回 value)/ASK，且不劫持寒暄。CAPCW 引擎接回真实 controller 活文本路径。**
-- 工作空间绑定训练准确率：0.9323
+- 工作空间绑定训练准确率：0.9316
 
-## 脚本会话实录
+## 脚本会话实录（grounded 回答=取回内容入生成）
 
-| 用户输入 | 动作 | in-context 取回 |
-|---|---|---|
-| 记住会议室是B302 | answer | — |
-| 项目代号对应X9 | answer | — |
-| 会议室是多少 | answer | B302 |
-| 项目代号是什么 | answer | X9 |
-| 门禁卡是多少 | ask_clarification | — |
-| 你好 | answer | — |
+| 用户输入 | 动作 | 回答（grounded） | in-context 取回 |
+|---|---|---|---|
+| 记住会议室是B302 | answer | 好的，已记住会议室是B302 | — |
+| 项目代号对应X9 | answer | 好的，已记住项目代号是X9 | — |
+| 会议室是多少 | answer | 会议室是B302 | B302 |
+| 项目代号是什么 | answer | 项目代号是X9 | X9 |
+| 门禁卡是多少 | ask_clarification | 信息还不够，请补充你想让我具体做什么。 | — |
+| 你好 | answer | 你好，我在。 | — |
 
 ## 聚合指标（多段随机会话）
 

@@ -111,6 +111,7 @@ class ControllerInContextLoopTests(unittest.TestCase):
             bound = controller.respond("会议室是多少", session_id="t")
             self.assertEqual(bound.selected_action_type, ActionType.ANSWER)
             self.assertEqual(bound.incontext_value, "B302")
+            self.assertIn("B302", bound.text)          # grounded 生成：回答扎根于取回的 value
             unbound = controller.respond("门禁卡是多少", session_id="t")
             self.assertEqual(unbound.selected_action_type, ActionType.ASK_CLARIFICATION)
             chit = controller.respond("你好", session_id="t")   # 寒暄不被劫持

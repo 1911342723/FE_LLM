@@ -71,6 +71,7 @@ def _scripted_demo(controller: ActiveInferenceController) -> list[dict]:
         resp = controller.respond(text, session_id=sid)
         log.append({"text": text, "kind": kind,
                     "action": resp.selected_action_type.value,
+                    "reply": resp.text,                       # grounded 回答（取回内容入生成）
                     "incontext_value": resp.incontext_value})
     return log
 
@@ -130,12 +131,12 @@ def run(args: argparse.Namespace) -> dict:
         agg = _aggregate(controller, n=args.n_eval, k=args.k, seed=args.seed + 7000)
 
     for t in demo:
-        print(f"[incontext] 用户「{t['text']}」 → 动作={t['action']} 取回={t['incontext_value']}", flush=True)
+        print(f"[incontext] 用户「{t['text']}」 → 动作={t['action']} 回答「{t['reply']}」 取回={t['incontext_value']}", flush=True)
 
-    # 判定
+    # 判定（含 grounded 生成：回答文本须扎根于取回的 value）
     demo_ok = (
-        demo[2]["action"] == "answer" and demo[2]["incontext_value"] == "B302"
-        and demo[3]["action"] == "answer" and demo[3]["incontext_value"] == "X9"
+        demo[2]["action"] == "answer" and demo[2]["incontext_value"] == "B302" and "B302" in (demo[2]["reply"] or "")
+        and demo[3]["action"] == "answer" and demo[3]["incontext_value"] == "X9" and "X9" in (demo[3]["reply"] or "")
         and demo[4]["action"] == "ask_clarification"
         and demo[5]["incontext_value"] is None
     )
@@ -170,13 +171,13 @@ def run(args: argparse.Namespace) -> dict:
         f"- 判定：**{verdict}**",
         f"- 工作空间绑定训练准确率：{bind_acc:.4f}",
         "",
-        "## 脚本会话实录",
+        "## 脚本会话实录（grounded 回答=取回内容入生成）",
         "",
-        "| 用户输入 | 动作 | in-context 取回 |",
-        "|---|---|---|",
+        "| 用户输入 | 动作 | 回答（grounded） | in-context 取回 |",
+        "|---|---|---|---|",
     ]
     for t in demo:
-        lines.append(f"| {t['text']} | {t['action']} | {t['incontext_value'] or '—'} |")
+        lines.append(f"| {t['text']} | {t['action']} | {t['reply'] or '—'} | {t['incontext_value'] or '—'} |")
     lines += [
         "",
         "## 聚合指标（多段随机会话）",

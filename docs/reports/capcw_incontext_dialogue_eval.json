@@ -5,43 +5,49 @@
     "n_vals": 12,
     "k": 4,
     "n_eval": 40,
-    "binding_train_acc": 0.9323
+    "binding_train_acc": 0.9316
   },
   "scripted_demo": [
     {
       "text": "记住会议室是B302",
       "kind": "bind",
       "action": "answer",
+      "reply": "好的，已记住会议室是B302",
       "incontext_value": null
     },
     {
       "text": "项目代号对应X9",
       "kind": "bind",
       "action": "answer",
+      "reply": "好的，已记住项目代号是X9",
       "incontext_value": null
     },
     {
       "text": "会议室是多少",
       "kind": "query_bound",
       "action": "answer",
+      "reply": "会议室是B302",
       "incontext_value": "B302"
     },
     {
       "text": "项目代号是什么",
       "kind": "query_bound",
       "action": "answer",
+      "reply": "项目代号是X9",
       "incontext_value": "X9"
     },
     {
       "text": "门禁卡是多少",
       "kind": "query_unbound",
       "action": "ask_clarification",
+      "reply": "信息还不够，请补充你想让我具体做什么。",
       "incontext_value": null
     },
     {
       "text": "你好",
       "kind": "chitchat",
       "action": "answer",
+      "reply": "你好，我在。",
       "incontext_value": null
     }
   ],

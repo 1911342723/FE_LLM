@@ -173,6 +173,7 @@ class ActiveInferenceController:
         # 绑定 NLU 解析活文本 → bind 存入工作记忆；query 由**引擎 surprise** 裁决 ASK/ANSWER 并取回 value。
         # 这是把已验证的 CAPCW 引擎接回 controller 招牌决策"知道何时不该答"的活文本闭环（见 capcw_memory）。
         incontext_value: str | None = None
+        incontext_reply: str | None = None       # 由引擎取回内容生成的 grounded 回答（可溯源）
         if self.capcw_memory is not None:
             try:
                 event = self._incontext_nlu.parse(observation.text)
@@ -181,14 +182,19 @@ class ActiveInferenceController:
                     cand = self._pick_candidate(candidates, ActionType.ANSWER)  # 确认已记住
                     if cand is not None:
                         selected_action = cand
+                    incontext_reply = f"好的，已记住{event.key}是{event.value}"
                 elif event.kind == "query":
                     dec, value_str = self.capcw_memory.decide_str(event.key)
                     cand = self._pick_candidate(candidates, dec.action)  # 引擎 surprise: bound→ANSWER/unbound→ASK
                     if cand is not None:
                         selected_action = cand
                     incontext_value = value_str
+                    # grounded 生成：bound 时回答扎根于引擎取回的 value（可溯源），unbound 走常规追问文本。
+                    if value_str is not None:
+                        incontext_reply = f"{event.key}是{value_str}"
             except Exception:
                 incontext_value = None
+                incontext_reply = None
         # 行动回写：selected action 决定下一轮 Predictor 的预期（如等待澄清）。
         posterior_belief = self.belief_updater.apply_action_feedback(
             posterior_belief, selected_action.action_type.value
@@ -201,6 +207,9 @@ class ActiveInferenceController:
             surprise,
             recalled_memories=recalled_memories,
         )
+        # grounded 生成：in-context 绑定/取回命中时，回答扎根于引擎取回的内容（可溯源），覆盖通用模板文本。
+        if incontext_reply is not None:
+            text_output = incontext_reply
         trace = self.trace_recorder.record(
             observation=observation,
             observation_state=observation_state,
