@@ -1,0 +1,52 @@
+{
+  "task": "binding capacity vs slot count (CAPCW_PC), fixed K",
+  "config": {
+    "k": 5,
+    "m_list": [
+      2,
+      3,
+      4,
+      5,
+      7
+    ],
+    "d": 32,
+    "n_keys": 10,
+    "n_vals": 12,
+    "epochs": 40,
+    "seeds": 2,
+    "random_baseline": 0.0833
+  },
+  "acc_by_m": {
+    "2": {
+      "mean": 0.397,
+      "std": 0.0075
+    },
+    "3": {
+      "mean": 0.649,
+      "std": 0.0615
+    },
+    "4": {
+      "mean": 0.7545,
+      "std": 0.0055
+    },
+    "5": {
+      "mean": 0.8853,
+      "std": 0.0428
+    },
+    "7": {
+      "mean": 0.8935,
+      "std": 0.0115
+    }
+  },
+  "acc_under_k_mean": 0.6002,
+  "acc_over_k_mean": 0.8894,
+  "transition_over_minus_under": 0.2892,
+  "grow_hook": {
+    "suggested_m_for_K": 8,
+    "k": 5,
+    "base_free_energy_at_m2": 8.7422,
+    "threshold": 4.3711
+  },
+  "verdict": "PASS: slot 数即绑定容量（M<K 低、M≥K 跳升），穷则变（自由能高→长到 M≥K）机制成立",
+  "note": "固定 K 扫 slot 数 M；M<K 装不下→自由能高→绑定失败，M≥K 能解。这条前提成立，穷则变（自由能高就加 slot 长到 M≥K）才是对的结构成长机制。grow 钩子从自由能检测所需 slot 数。"
+}

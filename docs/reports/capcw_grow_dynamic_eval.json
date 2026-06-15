@@ -1,0 +1,38 @@
+{
+  "task": "CAPCW dynamic growth: auto-calibrated slot allocation per binding load K",
+  "config": {
+    "k_list": [
+      2,
+      4,
+      6
+    ],
+    "max_slots": 8,
+    "d": 32,
+    "min_rel_gain": 0.15,
+    "n_keys": 12,
+    "n_vals": 12,
+    "epochs": 40,
+    "seeds": 2
+  },
+  "by_k": {
+    "2": {
+      "grow_m_mean": 3.5,
+      "acc_grow_mean": 0.954,
+      "acc_max_mean": 0.9763
+    },
+    "4": {
+      "grow_m_mean": 6.5,
+      "acc_grow_mean": 0.9148,
+      "acc_max_mean": 0.9373
+    },
+    "6": {
+      "grow_m_mean": 7.0,
+      "acc_grow_mean": 0.8308,
+      "acc_max_mean": 0.8733
+    }
+  },
+  "grow_m_monotone_in_k": true,
+  "max_acc_drop_grow_vs_max": 0.0425,
+  "verdict": "PASS: 生长准则自校准——grow_m 随 K 增长且精度保持(按需分配 slot)",
+  "note": "自校准生长=相对边际增益(加 slot 降自由能 <min_rel_gain 即停)；训练 max_slots、推理按 K 用 grow_m。grow_m 随 K 增长=按需分配；acc@grow≈acc@max=省 slot 不掉精度。"
+}

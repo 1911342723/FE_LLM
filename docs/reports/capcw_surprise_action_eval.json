@@ -1,0 +1,17 @@
+{
+  "task": "surprise->action: threshold CAPCW query-routing to decide ASK(unbound)/ANSWER(bound), no action supervision",
+  "config": {
+    "k": 5,
+    "d": 32,
+    "n_keys": 10,
+    "n_vals": 12,
+    "epochs": 40,
+    "seeds": 2
+  },
+  "surprise_action_balanced_acc": 0.726,
+  "match_bound_mean": 0.7171,
+  "match_unbound_mean": 0.468,
+  "separation": 0.2491,
+  "verdict": "PARTIAL: surprise 有区分力但偏弱",
+  "note": "模型只在绑定取值任务上训练，从未见 ASK/ANSWER 标签；用 query→slot 最大路由权重作匹配度、其补=surprise，单阈值判动作。bound 匹配高(低 surprise=该答)、unbound 匹配低(高 surprise=该问)。"
+}
