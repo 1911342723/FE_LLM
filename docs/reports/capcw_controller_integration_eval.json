@@ -1,0 +1,23 @@
+{
+  "task": "CAPCW working-memory wired into controller decision: engine surprise -> ASK/ANSWER + value retrieval",
+  "config": {
+    "n_keys": 10,
+    "n_vals": 12,
+    "k": 5,
+    "d": 32,
+    "ask_threshold": 0.5,
+    "n_eval": 2000,
+    "p_bound": 0.5,
+    "epochs": 40,
+    "random_value_baseline": 0.0833
+  },
+  "binding_train_acc": 0.8941,
+  "ask_answer_balanced_acc": 0.829,
+  "value_retrieval_acc_bound": 0.9188,
+  "fe_task_success": 0.7925,
+  "baseline_task_success": 0.043,
+  "fe_unbound_hallucination_rate": 0.2551,
+  "baseline_unbound_hallucination_rate": 1.0,
+  "verdict": "PASS: CAPCW 引擎接回 controller 决策成立——引擎 surprise 无动作监督即正确分开该答(bound)/该问(unbound)，且取回 value 正确；任务成功率远超无记忆基线、几乎不胡答。",
+  "note": "FE-agent=CAPCW 工作记忆(引擎 surprise 裁决 ASK/ANSWER + 内容取回，无动作监督)；baseline=无 in-context 记忆、永远直答(bound 随机猜、unbound 胡编)。决策从引擎 surprise 涌现，对应 controller 招牌'知道何时不该答'，且 value 取回对应 B2c 的'内容/grounding'价值。"
+}

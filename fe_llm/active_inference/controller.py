@@ -62,6 +62,10 @@ class ActiveInferenceController:
             "checkpoints", "active_inference", "free_energy_weights.json"
         ),
         memory_candidate_path: str | None = os.path.join("data", "active_inference", "memory_candidates.jsonl"),
+        use_learned_nlu: bool = True,
+        learned_nlu_path: str | None = os.path.join("checkpoints", "active_inference", "slot_intent_nlu.pt"),
+        context_policy_path: str | None = None,
+        capcw_memory_path: str | None = None,
     ):
         self.perception_encoder = PerceptionEncoder(use_intent_model=use_intent_model)
         self.state_store = BeliefStateStore(vector_dim=self.perception_encoder.vector_dim)
@@ -79,6 +83,38 @@ class ActiveInferenceController:
         self.trace_recorder = TraceRecorder()
         self.trace_consistency = TraceConsistencyScorer()
         self.memory_manager = MemoryManager(candidate_path=memory_candidate_path)
+        # 启动自动加载学习式意图 NLU（若 checkpoint 存在）：高置信 + 感知层"无其它信号"门控，
+        # 仅在关键词漏判时补意图，不改既有 weather/记忆/拒答/寒暄 行为。
+        if use_learned_nlu and learned_nlu_path and os.path.exists(learned_nlu_path):
+            try:
+                from fe_llm.active_inference.nlu.slot_intent_nlu import SlotIntentNLU
+                from fe_llm.active_inference.observation import set_learned_nlu
+
+                set_learned_nlu(SlotIntentNLU.load(learned_nlu_path), conf_threshold=0.9)
+            except Exception:
+                pass
+        # 可选：学习式上下文感知 policy（utterance + belief → action）。默认 None 不启用，
+        # 既有 EFE+分类器+规则管线不变；启用时由它覆盖动作选择（任务型多轮）。
+        self._context_policy = None
+        if context_policy_path and os.path.exists(context_policy_path):
+            try:
+                from fe_llm.active_inference.context_policy import ContextAwarePolicy
+
+                self._context_policy = ContextAwarePolicy.load(context_policy_path)
+            except Exception:
+                self._context_policy = None
+        # 可选：CAPCW 内容寻址工作记忆（in-context 任意键值绑定 + 引擎 surprise 驱动 ASK/ANSWER）。
+        # 默认 None 不启用 → 既有管线零影响。启用时由 bind_working_memory / working_memory_decision 使用，
+        # 让"知道何时不该答 + 内容取回"从 CAPCW 引擎 surprise 涌现（见 capcw_memory.py / capcw_controller_integration_eval）。
+        # 诚实边界：活文本自动把"现场关联"抽成 (key,value) 需 in-context 绑定 NLU（下一步），故为显式 API 接口。
+        self.capcw_memory = None
+        if capcw_memory_path and os.path.exists(capcw_memory_path):
+            try:
+                from fe_llm.active_inference.capcw_memory import CAPCWWorkingMemory
+
+                self.capcw_memory = CAPCWWorkingMemory.load(capcw_memory_path)
+            except Exception:
+                self.capcw_memory = None
 
     def respond(self, text: str, session_id: str | None = None) -> ModelResponse:
         observation = Observation.from_text(text, session_id=session_id)
@@ -114,6 +150,17 @@ class ActiveInferenceController:
             # 澄清刚被满足时，单轮 MLP 缺乏多轮上下文，交由可解释公式主导。
             fusion_scale=0.0 if clarification_fulfilled else 1.0,
         )
+        # 槽位级 belief 决策：所需槽位已知→直接回答，未知→追问；仅在请求带 requires_slot 时生效。
+        selected_action = self._apply_slot_belief(selected_action, candidates, observation, posterior_belief)
+        # 可选学习式上下文 policy 覆盖（启用时）：用 utterance + belief 直接选动作。
+        if self._context_policy is not None:
+            try:
+                pred = self._context_policy.predict(observation.text, posterior_belief.known_slots)
+                cand = self._pick_candidate(candidates, ActionType(pred))
+                if cand is not None:
+                    selected_action = cand
+            except Exception:
+                pass
         # 行动回写：selected action 决定下一轮 Predictor 的预期（如等待澄清）。
         posterior_belief = self.belief_updater.apply_action_feedback(
             posterior_belief, selected_action.action_type.value
@@ -154,3 +201,85 @@ class ActiveInferenceController:
             memory_candidate=memory_candidate,
             recalled_memories=recalled_memories,
         )
+
+    # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op）----
+    def bind_working_memory(self, key: int, value: int) -> bool:
+        """把一个 in-context (key→value) 绑定写入 CAPCW 工作记忆。未加载工作记忆时返回 False（no-op）。"""
+        if self.capcw_memory is None:
+            return False
+        self.capcw_memory.bind(key, value)
+        return True
+
+    def reset_working_memory(self) -> None:
+        """清空 CAPCW 工作记忆的当前绑定（换会话/换话题时用）。未加载时为 no-op。"""
+        if self.capcw_memory is not None:
+            self.capcw_memory.reset()
+
+    def working_memory_decision(self, query_key: int):
+        """用 CAPCW 引擎 surprise 裁决一个查询键：bound→ANSWER+取回 value / unbound→ASK_CLARIFICATION。
+
+        返回 `MemoryDecision`（含 action: ActionType、value、surprise）；未加载工作记忆时返回 None。
+        这是把已验证的 CAPCW 引擎 surprise 接回 controller 招牌决策"知道何时不该答"的接口（见 capcw_memory）。
+        """
+        if self.capcw_memory is None:
+            return None
+        return self.capcw_memory.decide(query_key)
+
+    @staticmethod
+    def _pick_candidate(candidates, action_type: ActionType):
+        for action in candidates:
+            if action.action_type == action_type:
+                return action
+        return None
+
+    def _apply_slot_belief(self, selected_action, candidates, observation, belief):
+        """槽位级 belief 决策：请求需要的槽位已知→ANSWER，未知→ASK_CLARIFICATION。
+
+        仅在观测带 requires_slot（如订票需要 route）时触发，不影响 weather/greeting
+        等非槽位输入——因此不改动既有 weather→retrieve 等已验证行为。
+        """
+        # B2d 优先：领域未明示的"裸槽位值跟进句"——本轮没有领域关键词、但有活跃领域且提供了槽位值
+        # （且无其它信号），用活跃领域的必需槽位跨轮检查完整性，实现"不必复述领域"的多槽位主动补全。
+        # 必须前置于 required 分支：因为学习式 NLU 会把裸值（"北京"/"明天"）高置信误判出 required_slots，
+        # 这里用活跃领域语境覆盖那个误判。（真实数据 CrossWOZ 验证 belief 价值在领域追踪，见 经验.md B2 系列。）
+        inherited = self._inherited_required_slots(observation, belief)
+        if inherited:
+            missing = [slot for slot in inherited if slot not in belief.known_slots]
+            target = ActionType.ASK_CLARIFICATION if missing else ActionType.ANSWER
+            return self._pick_candidate(candidates, target) or selected_action
+        # 既有：显式请求自带 required_slots（如订票需要 route）。不影响 weather/greeting 等。
+        required = observation.features.get("required_slots") or []
+        if required:
+            # 多槽位：所有必需槽位都已知才回答；任一缺失则追问。
+            missing = [slot for slot in required if slot not in belief.known_slots]
+            target = ActionType.ASK_CLARIFICATION if missing else ActionType.ANSWER
+            return self._pick_candidate(candidates, target) or selected_action
+        return selected_action
+
+    @staticmethod
+    def _inherited_required_slots(observation, belief) -> list[str]:
+        """B2d 窄门控：仅当「有活跃领域 + 本轮是裸槽位值跟进句 + 无其它信号」时，
+        返回活跃领域的必需槽位；否则返回空（不接管）。
+
+        三重保险（仿 learned-NLU 门控）守住既有行为：寒暄/天气/记忆/安全/逻辑冲突
+        任一信号在场即不触发；非裸值（显式领域关键词请求）也不触发，避免劫持。
+        """
+        active = getattr(belief, "active_domain", None)
+        if not active:
+            return []
+        feats = observation.features
+        if not feats.get("is_bare_slot_value"):
+            return []
+        other_signal = (
+            feats.get("needs_external_info")
+            or feats.get("has_memory_request")
+            or feats.get("has_safety_risk")
+            or feats.get("has_consistency_conflict")
+            or feats.get("is_greeting")
+            or feats.get("is_thanks")
+        )
+        if other_signal:
+            return []
+        from fe_llm.active_inference.nlu.taxonomy import LEGACY_REQUIRED_SLOTS
+
+        return list(LEGACY_REQUIRED_SLOTS.get(active, []))
