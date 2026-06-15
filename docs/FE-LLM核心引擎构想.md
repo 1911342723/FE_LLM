@@ -332,3 +332,29 @@ head × content-addressed copy 两步合一）。
 尚未测，留作后续。② 任务用了与 capcw_binding 同口径的无歧义生成（bigram 起点偶数不重叠 + filler
 不含任何 a）——清理对四臂公平、no-adj 臂仍≈随机，是去噪不是偏袒（含噪版 capcw_adj 0.34、清理版
 0.64，机制方向一致）。报告 `docs/reports/capcw_induction_seq_eval.{json,md}`。
+
+## 18. 多跳链式推理负结果：迭代读出 ≠ 链式组合（2026-06-15，边界）
+
+第 17 节让 CAPCW 做 1 跳 induction。继续测**多跳**（链 c0→c1→…→cH，查 c0 答 cH，需现场链式组合多个
+绑定——in-context 组合推理的原型，也是 Transformer 靠**多层/多头**做多跳的能力）。脚本
+`world_model/capcw_multihop_eval.py`。三臂唯一变量=读出结构（同序列相邻算子 + 同预算；
+capcw_1read/iter **同 seed 初始化** → 1 跳严格相等作 sanity）：flat 单向量 / capcw_1read 单次内容寻址
+读出 / capcw_iter H 次迭代读出（读出值 → to_next → 下一跳 query）。hop 1/2/3、3 seed、随机基线 0.05：
+
+| n_hops（跳数） | flat | capcw_1read | capcw_iter |
+|---:|---:|---:|---:|
+| 1 | 0.100 | **0.423** | **0.423** |
+| 2 | 0.059 | 0.131 | 0.117 |
+| 3 | 0.057 | 0.079 | 0.133 |
+
+H1 iter−flat 多跳均值 **+0.067**、**H2 iter−1read 多跳均值 +0.020≈0** → **FAIL（诚实负结果）**。
+
+**结论（边界细化）**：CAPCW 主场=**单跳** in-context 绑定（1 跳 0.42 ≫ flat 0.10）；**多跳链式不成立**。
+关键证据 **H2≈0**——对**固定 slot** 反复读（迭代读出）并不能链式组合（单读 ≈ 多读）；slot 工作空间比
+单向量略好（多跳 ~0.12 vs ~0.06）但远不解多跳。
+
+诊断与下一关：每跳读回的是**纠缠的整 slot 向量**，`to_next` 在 d=32 下无法把"中间符号 c_i"干净地再
+注入为"下一跳的键查询"（显式 key/value 读出反而更差，1 跳 0.56→0.32）。多跳链式很可能需要的不是
+"多读"，而是把中间结果**作为新观测重新写入 / 重弛豫工作空间**（迭代**更新 slot 本身**，而非只读固定
+slot），或真正的多层深度 + 逐跳学习（与 Transformer 多层做多跳同构）——应作为独立判定实验（先定
+任务 + 判据），不在本轮硬凑。报告 `docs/reports/capcw_multihop_eval.{json,md}`。
