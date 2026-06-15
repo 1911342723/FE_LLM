@@ -11,9 +11,9 @@ class CAPCWWorkingMemoryTests(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls) -> None:
-        # 训一个小工作记忆（固定 seed，快）：够学出内容寻址路由即可。
-        cls.wm = CAPCWWorkingMemory(n_keys=6, n_vals=8, d=32, n_slots=5, ask_threshold=0.5)
-        cls.acc = cls.wm.train_on_binding(k_pairs=3, n_train=3000, epochs=25, seed=0)
+        # 训一个工作记忆（固定 seed，可复现）。配置对齐已验证可用的集成 eval 区间，保证 surprise 分离稳健。
+        cls.wm = CAPCWWorkingMemory(n_keys=10, n_vals=12, d=32, n_slots=6, ask_threshold=0.5)
+        cls.acc = cls.wm.train_on_binding(k_pairs=4, n_train=6000, epochs=40, seed=0)
 
     def test_training_learns_binding(self) -> None:
         # 训练后绑定取值应明显高于随机(1/8=0.125)。
@@ -70,6 +70,33 @@ class CAPCWWorkingMemoryTests(unittest.TestCase):
         self.assertIsInstance(dec, MemoryDecision)
         self.assertIn(dec.action, (ActionType.ANSWER, ActionType.ASK_CLARIFICATION))
 
+    def test_grow_disabled_by_default(self) -> None:
+        # grow=False（默认）：decide 不自校准 slot，grew_slots 为 None（既有行为）。
+        self.wm.reset()
+        self.wm.bind(2, 7)
+        self.wm.bind(4, 3)
+        self.assertFalse(self.wm.grow)
+        self.assertIsNone(self.wm.decide(2).grew_slots)
+
+    def test_grow_m_adapts_to_binding_load(self) -> None:
+        # 穷则变（自我成长）机制：grow=True 时 grow_m 随绑定数按需增长（绑定多→slot 不减）。
+        wm = CAPCWWorkingMemory(n_keys=12, n_vals=14, d=32, n_slots=9, ask_threshold=0.5,
+                                grow=True, min_rel_gain=0.1)
+        wm.train_on_binding(k_pairs=8, n_train=4000, epochs=25, seed=0)
+        wm.reset()
+        for i in range(2):
+            wm.bind(i, i)
+        g_small = wm.decide(0).grew_slots
+        wm.reset()
+        for i in range(7):
+            wm.bind(i, i)
+        g_large = wm.decide(0).grew_slots
+        self.assertIsNotNone(g_small)
+        self.assertIsNotNone(g_large)
+        self.assertGreaterEqual(g_small, 2)
+        self.assertLessEqual(g_large, 9)
+        self.assertLessEqual(g_small, g_large)        # 按需分配：绑定多→grow_m 不小于绑定少
+
     def test_save_load_roundtrip(self) -> None:
         import os
         import tempfile
@@ -105,8 +132,8 @@ class ControllerWorkingMemoryHookTests(unittest.TestCase):
 
         from fe_llm.active_inference.controller import ActiveInferenceController
 
-        wm = CAPCWWorkingMemory(n_keys=6, n_vals=8, d=32, n_slots=5, ask_threshold=0.5)
-        wm.train_on_binding(k_pairs=3, n_train=3000, epochs=25, seed=0)
+        wm = CAPCWWorkingMemory(n_keys=10, n_vals=12, d=32, n_slots=6, ask_threshold=0.5)
+        wm.train_on_binding(k_pairs=4, n_train=6000, epochs=40, seed=0)
         with tempfile.TemporaryDirectory() as td:
             path = os.path.join(td, "wm.pt")
             wm.save(path)

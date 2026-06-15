@@ -57,12 +57,14 @@ class _BindingWorkspace(nn.Module):
         self.head = nn.Sequential(nn.Linear(d, d), nn.GELU(), nn.Linear(d, n_vals))
         self.d = d
 
-    def _slots(self, pk, pv):
-        pairs = self.pair(torch.cat([self.key_emb(pk), self.val_emb(pv)], dim=-1))  # (B,K,d)
-        return self.ws(pairs).slots                                                  # (B,M,d)
+    def _pairs(self, pk, pv):
+        return self.pair(torch.cat([self.key_emb(pk), self.val_emb(pv)], dim=-1))    # (B,K,d)
 
-    def forward(self, pk, pv, qk):
-        slots = self._slots(pk, pv)
+    def _slots(self, pk, pv, n_slots=None):
+        return self.ws(self._pairs(pk, pv), n_slots=n_slots).slots                   # (B,M,d)
+
+    def forward(self, pk, pv, qk, n_slots=None):
+        slots = self._slots(pk, pv, n_slots=n_slots)
         q = self.to_q(self.key_emb(qk))
         score = torch.einsum("bmd,bd->bm", slots, q) / math.sqrt(self.d)
         attn = score.softmax(dim=1).unsqueeze(-1)
@@ -70,12 +72,17 @@ class _BindingWorkspace(nn.Module):
         return self.head(read)
 
     @torch.no_grad()
-    def query_match(self, pk, pv, qk):
+    def query_match(self, pk, pv, qk, n_slots=None):
         """query→slot 最大路由权重：bound 高 / unbound 低。其补 = surprise。"""
-        slots = self._slots(pk, pv)
+        slots = self._slots(pk, pv, n_slots=n_slots)
         q = self.to_q(self.key_emb(qk))
         score = torch.einsum("bmd,bd->bm", slots, q) / math.sqrt(self.d)
         return score.softmax(dim=1).max(dim=1).values
+
+    @torch.no_grad()
+    def free_energy(self, pk, pv, n_slots):
+        """当前绑定在 n_slots 个 slot 下弛豫后的自由能（穷则变生长准则用）。"""
+        return float(self.ws(self._pairs(pk, pv), n_slots=n_slots).free_energy)
 
 
 @dataclass
@@ -87,19 +94,25 @@ class MemoryDecision:
     surprise: float             # 1 - query 路由匹配度（高=该问）
     match: float                # query 路由匹配度（高=该答）
     bound: bool                 # surprise 是否低于阈值
+    grew_slots: int | None = None  # 穷则变：本次按绑定负载自校准选用的 slot 数（grow=True 时给出）
 
 
 class CAPCWWorkingMemory:
     """CAPCW 内容寻址工作记忆适配器：bind 累积绑定、query/decide 由引擎 surprise 驱动 ASK/ANSWER。"""
 
     def __init__(self, n_keys: int, n_vals: int, d: int = 32, n_slots: int = 6, iters: int = 3,
-                 ask_threshold: float = 0.5, device: str | None = None):
+                 ask_threshold: float = 0.5, device: str | None = None,
+                 grow: bool = False, min_rel_gain: float = 0.15):
         self.n_keys = n_keys
         self.n_vals = n_vals
         self.d = d
-        self.n_slots = n_slots
+        self.n_slots = n_slots                      # 工作空间（最大）slot 容量
         self.iters = iters
         self.ask_threshold = ask_threshold          # surprise ≥ 阈值 → ASK；否则 ANSWER
+        # 穷则变（自我成长）：grow=True 时按当前绑定负载用"相对边际增益"准则自校准 slot 数（grow_m≤n_slots）。
+        # 默认 False = 固定用 n_slots（既有行为，零回归）；grow=True 需用 grow-capable 训练（vary_k=True）。
+        self.grow = grow
+        self.min_rel_gain = min_rel_gain
         self.device = device or "cpu"
         self.net = _BindingWorkspace(n_keys, n_vals, d, n_slots, iters).to(self.device)
         self._bindings: dict[int, int] = {}         # 当前会话累积的 (key id → value id)
@@ -131,23 +144,45 @@ class CAPCWWorkingMemory:
         vals = torch.tensor([[v for _, v in items]], device=self.device)
         return keys, vals
 
+    def _pick_grow_m(self, pk, pv) -> int:
+        """穷则变自校准：从 m=2 起，若 m→m+1 自由能相对下降 ≥ min_rel_gain 则继续长，否则停（≤ n_slots）。"""
+        prev = self.net.free_energy(pk, pv, 2)
+        m = 2
+        for cand in range(3, self.n_slots + 1):
+            cur = self.net.free_energy(pk, pv, cand)
+            gain = (prev - cur) / max(prev, 1e-8)
+            if gain >= self.min_rel_gain:
+                m, prev = cand, cur
+            else:
+                break
+        return m
+
     @torch.no_grad()
     def decide(self, query_key: int) -> MemoryDecision:
-        """对一个查询键：用引擎 surprise 裁决 ASK/ANSWER（bound 时取回 value）。"""
+        """对一个查询键：用引擎 surprise 裁决 ASK/ANSWER（bound 时取回 value）。
+
+        grow=True 时先按当前绑定负载自校准 slot 数（穷则变/按需分配），再在该 slot 数下做 query 路由。
+        """
         self.net.eval()
         pk, pv = self._packed()
         qk = torch.tensor([int(query_key)], device=self.device)
-        match = float(self.net.query_match(pk, pv, qk)[0])
+        # 穷则变：按当前绑定数自校准 slot 数（grow=True 且绑定数 ≥2 才需要长；否则用 n_slots）。
+        grew_slots = None
+        n_slots = None
+        if self.grow and len(self._bindings) >= 2 and self.n_slots > 2:
+            grew_slots = self._pick_grow_m(pk, pv)
+            n_slots = grew_slots
+        match = float(self.net.query_match(pk, pv, qk, n_slots=n_slots)[0])
         surprise = 1.0 - match
         if not self._bindings:
             surprise, match = 1.0, 0.0               # 空记忆：必然该问
         bound = surprise < self.ask_threshold
         value = None
         if bound:
-            value = int(self.net(pk, pv, qk).argmax(-1)[0])
+            value = int(self.net(pk, pv, qk, n_slots=n_slots).argmax(-1)[0])
         return MemoryDecision(
             action=ActionType.ANSWER if bound else ActionType.ASK_CLARIFICATION,
-            value=value, surprise=surprise, match=match, bound=bound,
+            value=value, surprise=surprise, match=match, bound=bound, grew_slots=grew_slots,
         )
 
     # ---- 字符串接口（供 in-context 绑定 NLU / controller 用活文本的 key/value 字符串）----
@@ -184,19 +219,29 @@ class CAPCWWorkingMemory:
 
     # ---- 训练 / 持久化 ----
     def train_on_binding(self, *, k_pairs: int = 5, n_train: int = 8000, epochs: int = 40,
-                         lr: float = 2e-3, batch: int = 128, seed: int = 42) -> float:
-        """在符号化绑定任务上训练工作空间（学到内容寻址路由，泛化到未见绑定）。返回末步训练准确率。"""
+                         lr: float = 2e-3, batch: int = 128, seed: int = 42, vary_k: bool = False) -> float:
+        """在符号化绑定任务上训练工作空间（学到内容寻址路由，泛化到未见绑定）。返回末步训练准确率。
+
+        vary_k=True：每例绑定数在 [2, k_pairs] 间随机（少绑定用 0 填充 query 外的占位）——让工作空间
+        对**变化的绑定负载**鲁棒，是穷则变(grow=True)按需分配 slot 的训练前提。
+        """
         rng = np.random.default_rng(seed)
+        # 固定种子并重建 net，使 net 初始化也确定（d=32 训练高方差，否则同 seed 不同 RNG 状态结果漂、测试 flaky）。
         torch.manual_seed(seed)
+        self.net = _BindingWorkspace(self.n_keys, self.n_vals, self.d, self.n_slots, self.iters).to(self.device)
         pk = np.zeros((n_train, k_pairs), dtype=np.int64)
         pv = np.zeros((n_train, k_pairs), dtype=np.int64)
         qk = np.zeros((n_train,), dtype=np.int64)
         y = np.zeros((n_train,), dtype=np.int64)
         for i in range(n_train):
-            keys = rng.choice(self.n_keys, size=k_pairs, replace=False)
-            vals = rng.choice(self.n_vals, size=k_pairs, replace=False)
-            pk[i], pv[i] = keys, vals
-            qi = int(rng.integers(k_pairs))
+            kk = int(rng.integers(2, k_pairs + 1)) if vary_k else k_pairs
+            keys = rng.choice(self.n_keys, size=kk, replace=False)
+            vals = rng.choice(self.n_vals, size=kk, replace=False)
+            # 不足 k_pairs 的位置用第一个 (key,value) 重复填充（不引入新键，query 仍来自真实绑定）。
+            pk[i, :kk], pv[i, :kk] = keys, vals
+            if kk < k_pairs:
+                pk[i, kk:], pv[i, kk:] = keys[0], vals[0]
+            qi = int(rng.integers(kk))
             qk[i], y[i] = keys[qi], vals[qi]
         pk_t, pv_t, qk_t, y_t = (torch.tensor(a, device=self.device) for a in (pk, pv, qk, y))
         opt = torch.optim.AdamW(self.net.parameters(), lr=lr, weight_decay=1e-4)
@@ -221,7 +266,8 @@ class CAPCWWorkingMemory:
         torch.save({
             "state_dict": self.net.state_dict(),
             "config": {"n_keys": self.n_keys, "n_vals": self.n_vals, "d": self.d,
-                       "n_slots": self.n_slots, "iters": self.iters, "ask_threshold": self.ask_threshold},
+                       "n_slots": self.n_slots, "iters": self.iters, "ask_threshold": self.ask_threshold,
+                       "grow": self.grow, "min_rel_gain": self.min_rel_gain},
         }, path)
 
     @classmethod
@@ -229,7 +275,8 @@ class CAPCWWorkingMemory:
         ckpt = torch.load(path, map_location=device or "cpu")
         cfg = ckpt["config"]
         wm = cls(n_keys=cfg["n_keys"], n_vals=cfg["n_vals"], d=cfg["d"], n_slots=cfg["n_slots"],
-                 iters=cfg["iters"], ask_threshold=cfg["ask_threshold"], device=device)
+                 iters=cfg["iters"], ask_threshold=cfg["ask_threshold"], device=device,
+                 grow=cfg.get("grow", False), min_rel_gain=cfg.get("min_rel_gain", 0.15))
         wm.net.load_state_dict(ckpt["state_dict"])
         wm.net.eval()
         return wm
