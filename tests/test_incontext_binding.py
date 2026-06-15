@@ -83,8 +83,8 @@ class WorkingMemoryStringInterfaceTests(unittest.TestCase):
         self.wm.reset()
         self.wm.bind_str("会议室", "B302")
         self.wm.reset()
-        self.assertEqual(len(self.wm._key_ids), 0)
-        self.assertEqual(len(self.wm._val_ids), 0)
+        self.assertEqual(len(self.wm._sess(None)["key_ids"]), 0)
+        self.assertEqual(len(self.wm._sess(None)["val_ids"]), 0)
 
 
 class ControllerInContextLoopTests(unittest.TestCase):
@@ -123,6 +123,19 @@ class ControllerInContextLoopTests(unittest.TestCase):
         self.assertEqual(unbound.selected_action_type, ActionType.ASK_CLARIFICATION)
         chit = controller.respond("你好", session_id="t")   # 寒暄不被劫持
         self.assertIsNone(chit.incontext_value)
+
+    def test_per_session_isolation(self) -> None:
+        # per-session 隔离：会话 A 记住的关联不串到会话 B（B 问→该问），A 自身仍能答。
+        from fe_llm.active_inference.controller import ActiveInferenceController
+
+        controller = ActiveInferenceController(capcw_memory_path=self.ckpt)
+        controller.respond("记住会议室是B302", session_id="A")
+        b = controller.respond("会议室是多少", session_id="B")        # B 未记 → 该问
+        self.assertEqual(b.selected_action_type, ActionType.ASK_CLARIFICATION)
+        self.assertIsNone(b.incontext_value)
+        a = controller.respond("会议室是多少", session_id="A")        # A 记过 → 该答
+        self.assertEqual(a.selected_action_type, ActionType.ANSWER)
+        self.assertEqual(a.incontext_value, "B302")
 
     def test_active_inference_surprise_drop_after_clarification(self) -> None:
         # 主动推理闭环：问未绑定(高 surprise→ASK) → 用户补绑定 → 再问(surprise 降→grounded 答)。

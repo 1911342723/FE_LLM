@@ -5,7 +5,7 @@
     "n_vals": 12,
     "k": 4,
     "n_eval": 40,
-    "binding_train_acc": 0.933
+    "binding_train_acc": 0.9106
   },
   "scripted_demo": [
     {
@@ -30,7 +30,7 @@
       "action": "answer",
       "reply": "会议室是B302",
       "incontext_value": "B302",
-      "incontext_surprise": 0.18232309818267822
+      "incontext_surprise": 0.061253249645233154
     },
     {
       "text": "项目代号是什么",
@@ -38,7 +38,7 @@
       "action": "answer",
       "reply": "项目代号是X9",
       "incontext_value": "X9",
-      "incontext_surprise": 0.10400396585464478
+      "incontext_surprise": 0.032848060131073
     },
     {
       "text": "门禁卡是多少",
@@ -62,7 +62,7 @@
       "action": "answer",
       "reply": "门禁卡是8821",
       "incontext_value": "8821",
-      "incontext_surprise": 0.05734366178512573
+      "incontext_surprise": 0.08550137281417847
     },
     {
       "text": "你好",

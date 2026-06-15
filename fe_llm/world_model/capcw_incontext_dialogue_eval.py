@@ -56,8 +56,8 @@ def _train_wm(path: str, *, n_keys: int, n_vals: int, k: int, epochs: int, seed:
 
 def _scripted_demo(controller: ActiveInferenceController) -> list[dict]:
     """一段可读会话实录，串起 存绑定 / 答已绑定 / 问未绑定 / 不劫持寒暄。"""
-    controller.reset_working_memory()
     sid = "incontext-demo"
+    controller.reset_working_memory(session_id=sid)
     turns = [
         ("记住会议室是B302", "bind"),
         ("项目代号对应X9", "bind"),
@@ -85,9 +85,9 @@ def _aggregate(controller: ActiveInferenceController, n: int, k: int, seed: int)
     pred_answer, is_bound = [], []
     value_correct, value_total = 0, 0
     hijack = 0
+    sid = "agg"
     for _ in range(n):
-        controller.reset_working_memory()
-        sid = f"agg-{rng.integers(1_000_000)}"
+        controller.reset_working_memory(session_id=sid)        # 每段会话清空该 sid，避免跨段串话
         keys = list(rng.choice(KEYS, size=k, replace=False))
         vals = list(rng.choice(VALS, size=k, replace=False))
         for key, val in zip(keys, vals):

@@ -54,7 +54,7 @@ class CAPCWWorkingMemoryTests(unittest.TestCase):
         self.wm.reset()
         self.wm.bind(2, 7)
         self.wm.bind(2, 1)                     # 同 key 后写覆盖
-        self.assertEqual(self.wm._bindings[2], 1)
+        self.assertEqual(self.wm._sess(None)["bindings"][2], 1)
 
     def test_bind_validation(self) -> None:
         self.wm.reset()
@@ -69,6 +69,15 @@ class CAPCWWorkingMemoryTests(unittest.TestCase):
         dec = self.wm.decide(2)
         self.assertIsInstance(dec, MemoryDecision)
         self.assertIn(dec.action, (ActionType.ANSWER, ActionType.ASK_CLARIFICATION))
+
+    def test_session_isolation(self) -> None:
+        # per-session 隔离：会话 s1 的绑定不串到 s2（s2 空 → 必然 ASK），s1 自身仍可答。
+        self.wm.reset("*")
+        self.wm.bind(2, 7, session_id="s1")
+        dec_s2 = self.wm.decide(2, session_id="s2")        # s2 从未绑定 → 该问
+        self.assertEqual(dec_s2.action, ActionType.ASK_CLARIFICATION)
+        dec_s1 = self.wm.decide(2, session_id="s1")        # s1 有绑定 → 该答
+        self.assertEqual(dec_s1.action, ActionType.ANSWER)
 
     def test_grow_disabled_by_default(self) -> None:
         # grow=False（默认）：decide 不自校准 slot，grew_slots 为 None（既有行为）。

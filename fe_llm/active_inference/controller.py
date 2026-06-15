@@ -182,13 +182,13 @@ class ActiveInferenceController:
             try:
                 event = self._incontext_nlu.parse(observation.text)
                 if event.kind == "bind":
-                    self.capcw_memory.bind_str(event.key, event.value)
+                    self.capcw_memory.bind_str(event.key, event.value, session_id=session_id)
                     cand = self._pick_candidate(candidates, ActionType.ANSWER)  # 确认已记住
                     if cand is not None:
                         selected_action = cand
                     incontext_reply = f"好的，已记住{event.key}是{event.value}"
                 elif event.kind == "query":
-                    dec, value_str = self.capcw_memory.decide_str(event.key)
+                    dec, value_str = self.capcw_memory.decide_str(event.key, session_id=session_id)
                     cand = self._pick_candidate(candidates, dec.action)  # 引擎 surprise: bound→ANSWER/unbound→ASK
                     if cand is not None:
                         selected_action = cand
@@ -247,20 +247,20 @@ class ActiveInferenceController:
             incontext_surprise=incontext_surprise,
         )
 
-    # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op）----
-    def bind_working_memory(self, key: int, value: int) -> bool:
-        """把一个 in-context (key→value) 绑定写入 CAPCW 工作记忆。未加载工作记忆时返回 False（no-op）。"""
+    # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op；按 session 隔离）----
+    def bind_working_memory(self, key: int, value: int, session_id: str | None = None) -> bool:
+        """把一个 in-context (key→value) 绑定写入 CAPCW 工作记忆（按会话）。未加载时返回 False（no-op）。"""
         if self.capcw_memory is None:
             return False
-        self.capcw_memory.bind(key, value)
+        self.capcw_memory.bind(key, value, session_id=session_id)
         return True
 
-    def reset_working_memory(self) -> None:
-        """清空 CAPCW 工作记忆的当前绑定（换会话/换话题时用）。未加载时为 no-op。"""
+    def reset_working_memory(self, session_id: str | None = None) -> None:
+        """清空 CAPCW 工作记忆某会话的绑定（换话题时用；session_id='*' 清全部）。未加载时为 no-op。"""
         if self.capcw_memory is not None:
-            self.capcw_memory.reset()
+            self.capcw_memory.reset(session_id=session_id)
 
-    def working_memory_decision(self, query_key: int):
+    def working_memory_decision(self, query_key: int, session_id: str | None = None):
         """用 CAPCW 引擎 surprise 裁决一个查询键：bound→ANSWER+取回 value / unbound→ASK_CLARIFICATION。
 
         返回 `MemoryDecision`（含 action: ActionType、value、surprise）；未加载工作记忆时返回 None。
@@ -268,7 +268,7 @@ class ActiveInferenceController:
         """
         if self.capcw_memory is None:
             return None
-        return self.capcw_memory.decide(query_key)
+        return self.capcw_memory.decide(query_key, session_id=session_id)
 
     @staticmethod
     def _pick_candidate(candidates, action_type: ActionType):

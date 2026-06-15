@@ -115,29 +115,38 @@ class CAPCWWorkingMemory:
         self.min_rel_gain = min_rel_gain
         self.device = device or "cpu"
         self.net = _BindingWorkspace(n_keys, n_vals, d, n_slots, iters).to(self.device)
-        self._bindings: dict[int, int] = {}         # 当前会话累积的 (key id → value id)
-        # per-session 字符串↔id 表：把活文本里的任意 key/value 字符串映射到工作空间的符号 id
-        # （工作空间学到的是符号无关的内容寻址路由，故任意串分配不同 id 即可绑定/取回）。
-        self._key_ids: dict[str, int] = {}
-        self._val_ids: dict[str, int] = {}
-        self._val_rev: dict[int, str] = {}
+        # per-session 隔离：绑定状态按 session_id 分桶，不同会话互不串话（默认桶 "__default__" 向后兼容）。
+        # 每会话维护：bindings(key id→value id) + 字符串↔id 表（活文本任意 key/value 串映射到符号 id；
+        # 工作空间学的是符号无关的内容寻址路由，任意串分配不同 id 即可绑定/取回）。
+        self._sessions: dict[str, dict] = {}
 
-    # ---- 在线工作记忆：累积/重置 in-context 绑定 ----
-    def reset(self) -> None:
-        self._bindings.clear()
-        self._key_ids.clear()
-        self._val_ids.clear()
-        self._val_rev.clear()
+    DEFAULT_SESSION = "__default__"
 
-    def bind(self, key: int, value: int) -> None:
+    def _sess(self, session_id: str | None) -> dict:
+        sid = session_id or self.DEFAULT_SESSION
+        s = self._sessions.get(sid)
+        if s is None:
+            s = {"bindings": {}, "key_ids": {}, "val_ids": {}, "val_rev": {}}
+            self._sessions[sid] = s
+        return s
+
+    # ---- 在线工作记忆：累积/重置 in-context 绑定（按会话隔离）----
+    def reset(self, session_id: str | None = None) -> None:
+        """清空某会话的绑定（session_id=None 清默认会话；传 '*' 清全部会话）。"""
+        if session_id == "*":
+            self._sessions.clear()
+            return
+        self._sessions.pop(session_id or self.DEFAULT_SESSION, None)
+
+    def bind(self, key: int, value: int, session_id: str | None = None) -> None:
         """绑定一个 in-context 关联（key→value）。后写覆盖（同 key 取新值）。"""
         if not (0 <= key < self.n_keys and 0 <= value < self.n_vals):
             raise ValueError("key/value 超出词表范围")
-        self._bindings[int(key)] = int(value)
+        self._sess(session_id)["bindings"][int(key)] = int(value)
 
-    def _packed(self):
-        """把当前绑定打成 (pk,pv) 张量（至少 1 对，空时用占位 key=0,val=0 但会被判 unbound）。"""
-        items = list(self._bindings.items())
+    def _packed(self, session_id: str | None = None):
+        """把会话当前绑定打成 (pk,pv) 张量（至少 1 对，空时用占位 key=0,val=0 但会被判 unbound）。"""
+        items = list(self._sess(session_id)["bindings"].items())
         if not items:
             items = [(0, 0)]                          # 占位（任何 query 都将 unbound）
         keys = torch.tensor([[k for k, _ in items]], device=self.device)
@@ -158,23 +167,24 @@ class CAPCWWorkingMemory:
         return m
 
     @torch.no_grad()
-    def decide(self, query_key: int) -> MemoryDecision:
-        """对一个查询键：用引擎 surprise 裁决 ASK/ANSWER（bound 时取回 value）。
+    def decide(self, query_key: int, session_id: str | None = None) -> MemoryDecision:
+        """对一个查询键：用引擎 surprise 裁决 ASK/ANSWER（bound 时取回 value）。按会话隔离。
 
         grow=True 时先按当前绑定负载自校准 slot 数（穷则变/按需分配），再在该 slot 数下做 query 路由。
         """
         self.net.eval()
-        pk, pv = self._packed()
+        bindings = self._sess(session_id)["bindings"]
+        pk, pv = self._packed(session_id)
         qk = torch.tensor([int(query_key)], device=self.device)
         # 穷则变：按当前绑定数自校准 slot 数（grow=True 且绑定数 ≥2 才需要长；否则用 n_slots）。
         grew_slots = None
         n_slots = None
-        if self.grow and len(self._bindings) >= 2 and self.n_slots > 2:
+        if self.grow and len(bindings) >= 2 and self.n_slots > 2:
             grew_slots = self._pick_grow_m(pk, pv)
             n_slots = grew_slots
         match = float(self.net.query_match(pk, pv, qk, n_slots=n_slots)[0])
         surprise = 1.0 - match
-        if not self._bindings:
+        if not bindings:
             surprise, match = 1.0, 0.0               # 空记忆：必然该问
         bound = surprise < self.ask_threshold
         value = None
@@ -186,35 +196,38 @@ class CAPCWWorkingMemory:
         )
 
     # ---- 字符串接口（供 in-context 绑定 NLU / controller 用活文本的 key/value 字符串）----
-    def bind_str(self, key: str, value: str) -> None:
-        """绑定一个文本 in-context 关联（key 串→value 串），自动分配 per-session 符号 id。"""
+    def bind_str(self, key: str, value: str, session_id: str | None = None) -> None:
+        """绑定一个文本 in-context 关联（key 串→value 串），自动分配该会话的符号 id。"""
         key, value = str(key).strip(), str(value).strip()
         if not key or not value:
             return
-        if key not in self._key_ids:
-            if len(self._key_ids) >= self.n_keys:
+        s = self._sess(session_id)
+        key_ids, val_ids, val_rev = s["key_ids"], s["val_ids"], s["val_rev"]
+        if key not in key_ids:
+            if len(key_ids) >= self.n_keys:
                 raise ValueError(f"in-context key 词表已满（上限 {self.n_keys}），请 reset 或扩容")
-            self._key_ids[key] = len(self._key_ids)
-        if value not in self._val_ids:
-            if len(self._val_ids) >= self.n_vals:
+            key_ids[key] = len(key_ids)
+        if value not in val_ids:
+            if len(val_ids) >= self.n_vals:
                 raise ValueError(f"in-context value 词表已满（上限 {self.n_vals}），请 reset 或扩容")
-            vid = len(self._val_ids)
-            self._val_ids[value] = vid
-            self._val_rev[vid] = value
-        self.bind(self._key_ids[key], self._val_ids[value])
+            vid = len(val_ids)
+            val_ids[value] = vid
+            val_rev[vid] = value
+        self.bind(key_ids[key], val_ids[value], session_id=session_id)
 
-    def decide_str(self, query_key: str) -> tuple[MemoryDecision, str | None]:
-        """对文本查询键裁决。返回 (MemoryDecision, value 串|None)。
+    def decide_str(self, query_key: str, session_id: str | None = None) -> tuple[MemoryDecision, str | None]:
+        """对文本查询键裁决（按会话隔离）。返回 (MemoryDecision, value 串|None)。
 
         - 从未在本会话出现过的 key 串：平凡 unbound → ASK（显然不知道，不必跑引擎）；
         - 出现过的 key 串：由引擎 surprise 裁决 bound/unbound，bound 时把取回的 value id 映回字符串。
         """
         key = str(query_key).strip()
-        if key not in self._key_ids:
+        s = self._sess(session_id)
+        if key not in s["key_ids"]:
             return MemoryDecision(action=ActionType.ASK_CLARIFICATION, value=None,
                                   surprise=1.0, match=0.0, bound=False), None
-        dec = self.decide(self._key_ids[key])
-        value_str = self._val_rev.get(dec.value) if dec.value is not None else None
+        dec = self.decide(s["key_ids"][key], session_id=session_id)
+        value_str = s["val_rev"].get(dec.value) if dec.value is not None else None
         return dec, value_str
 
     # ---- 训练 / 持久化 ----
