@@ -87,6 +87,14 @@ class InContextBindingNLU:
 # 高精度结构匹配：要求 ≥2 个"的<关系>"段 + 明确查询词收尾；rel 段不含 的/是/?（避免吞掉查询词）。
 _MULTIHOP_QUERY = re.compile(r"^(.+?)((?:的[^的是？?]+){2,})是(?:多少|谁|什么|啥|几)[？?]?$")
 
+# 开放关系绑定「X的R是Y」（免"记住"标记，单跳关系事实）：key=X的R（**恰一个 的**=原子关系边），value=Y。
+# 高精度窄触发（仿 B2e/学习式 NLU 教训，避免劫持寒暄/形容词谓语）：
+#   ① key 必须是"X的R"（恰 1 个 的，2~12 字）——把"今天是周一"(无 的) 这类 copula 排除；
+#   ② value 须"实体化"：1~10 字、不含 的/是/标点、不以语气词结尾——把"…是好的/对的/错的/不错的"等形容词谓语排除；
+#   ③ 查询词收尾的（…是多少/谁/什么）由查询模式先行截获，不会落到这里。
+_OPEN_REL_BIND = re.compile(r"^([^是，。！？、\s]+的[^是的，。！？、\s]+)是([^是的，。！？、\s]{1,10})$")
+_VALUE_TAIL_PARTICLES = ("了", "吗", "呢", "啊", "吧", "嘛", "哦", "呀", "啦", "诶")
+
 
 @dataclass
 class MultiHopEvent:
@@ -129,4 +137,22 @@ class MultiHopBindingNLU:
             if sep and tail and "的" not in tail:           # "X的R" → base=X, rels=[R]（单跳关系查询）
                 return MultiHopEvent(kind="query", base=head, rels=[tail])
             return MultiHopEvent(kind="query", base=e.key, rels=[])   # 原子键直查（无关系链）
+        # 单跳 NLU 未命中 → 尝试开放关系绑定「X的R是Y」（免"记住"标记，高精度窄触发）。
+        rel = self._open_relation_bind(t)
+        if rel is not None:
+            return rel
         return MultiHopEvent(kind="none")
+
+    def _open_relation_bind(self, t: str) -> "MultiHopEvent | None":
+        """高精度开放关系绑定：key=X的R（恰 1 个 的）、value=实体化 Y（非形容词谓语/语气词）。否则 None。"""
+        m = _OPEN_REL_BIND.match(t)
+        if not m:
+            return None
+        key, value = _clean(m.group(1)), _clean(m.group(2))
+        if not key or not value:
+            return None
+        if key.count("的") != 1:                              # 恰一个 的=原子关系边；多/零 的 不在此触发
+            return None
+        if value.endswith(_VALUE_TAIL_PARTICLES):             # 形容词谓语/语气收尾（…是好的已被 的 排除；这里挡 …了/吗）
+            return None
+        return MultiHopEvent(kind="bind", key=key, value=value)

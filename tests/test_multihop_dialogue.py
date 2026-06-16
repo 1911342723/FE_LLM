@@ -48,6 +48,27 @@ class MultiHopBindingNLUTests(unittest.TestCase):
         for text in ("你好", "我有点累", "谢谢你", "帮我订票"):
             self.assertEqual(self.nlu.parse(text).kind, "none", text)
 
+    def test_open_relation_bind_markerless(self) -> None:
+        # 开放关系绑定：免"记住"标记的 "X的R是Y"（恰 1 个 的 + 实体化 value）。
+        e = self.nlu.parse("A的经理是张三")
+        self.assertEqual((e.kind, e.key, e.value), ("bind", "A的经理", "张三"))
+        e2 = self.nlu.parse("服务器的IP是10.0.0.7")
+        self.assertEqual((e2.kind, e2.key, e2.value), ("bind", "服务器的IP", "10.0.0.7"))
+
+    def test_open_relation_high_precision(self) -> None:
+        # 窄触发：copula(今天是周一)/形容词谓语(…是好的/对的/充足的)/寒暄 都不应误绑。
+        for text in ("今天是周一", "这个是错的", "今天的心情是好的", "项目的预算是充足的", "我觉得这样是对的"):
+            self.assertEqual(self.nlu.parse(text).kind, "none", text)
+
+    def test_open_relation_query_precedence(self) -> None:
+        # 查询词收尾仍判 query（先于开放绑定）。
+        self.assertEqual(self.nlu.parse("A的经理是多少").kind, "query")
+        self.assertEqual(self.nlu.parse("A的经理的工位是多少").kind, "query")
+
+    def test_open_relation_only_single_de(self) -> None:
+        # 多个 的 的复合陈述不在开放绑定触发（保持原子关系边模型，复合需"记住"）。
+        self.assertEqual(self.nlu.parse("A的项目的经理是张三").kind, "none")
+
 
 class CAPCWChainPathTests(unittest.TestCase):
     """复合所有格链式取回 decide_path_str + controller 活文本多步推理（默认关零回归 + 端到端）。"""
@@ -145,6 +166,23 @@ class CAPCWChainPathTests(unittest.TestCase):
         self.assertIsNotNone(ask.incontext_surprise)
         self.assertIsNotNone(ans.incontext_surprise)
         self.assertLess(ans.incontext_surprise, ask.incontext_surprise)          # surprise 下降=自由能平复
+
+    def test_live_text_markerless_relation_multihop(self) -> None:
+        # 开放关系绑定接活文本多跳：免"记住"标记直接陈述关系事实 → 复合所有格多跳取回。
+        from fe_llm.active_inference.controller import ActiveInferenceController
+
+        controller = ActiveInferenceController(capcw_chain_memory_path=self.ckpt)
+        sid = "ml"
+        controller.reset_chain_working_memory(session_id=sid)
+        controller.respond("项目甲的经理是张三", session_id=sid)        # 免"记住"
+        controller.respond("张三的工位是B302", session_id=sid)
+        resp = controller.respond("项目甲的经理的工位是多少", session_id=sid)
+        self.assertEqual(resp.selected_action_type, ActionType.ANSWER)
+        self.assertEqual(resp.incontext_value, "B302")
+        self.assertEqual(resp.incontext_chain, ["张三", "B302"])
+        chit = controller.respond("今天的心情是好的", session_id=sid)    # 形容词谓语不被误绑/劫持
+        self.assertIsNone(chit.incontext_chain)
+        self.assertIsNone(chit.incontext_value)
 
 
 if __name__ == "__main__":
