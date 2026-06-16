@@ -67,6 +67,7 @@ FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成
 | 开放关系 NLU（免"记住"标记绑定） | ✅ PASS（高精度窄触发） | §29 + `test_multihop_dialogue.py` |
 | 自我成长（穷则变接活 WM） | 🟡 机制成立、小 WM 不划算 | `capcw_wm_growth_eval.md` |
 | 小 d 绑定稳定性 | ✅ 已稳（iters=3 最优） | `capcw_binding_stability_eval.md` |
+| 推理基元·比较/计数（检索之外） | ⛔ 诚实负·边界 | `capcw_reasoning_primitives_eval.md`（compare 优势=容量效应非新推理、count 无 headroom；CAPCW=内容寻址引擎，非算术聚合器） |
 
 一句话：CAPCW 是 FE-LLM **第一个有系统实证的核心引擎**——内容寻址绑定/induction、接回真实 controller 活
 文本主动推理闭环、对内多步推理（CoT 链式 + 可溯源 trace）都成立；多跳"关键"经 2×2 析因定位为**中间监督**
