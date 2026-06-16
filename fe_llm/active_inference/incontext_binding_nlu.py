@@ -44,6 +44,9 @@ _BIND_PATTERNS = [
 # 末尾语气/标点清理。
 _STRIP = " 　\t\r\n，,。.！!？?；;：:"
 
+# 指代代词（高精度有限集）：活文本里"他/她/它…的R"回指上文刚提到的实体（见 controller 指代消解）。
+PRONOUNS = frozenset({"他", "她", "它", "他们", "她们", "它们", "其", "ta", "Ta", "TA"})
+
 
 @dataclass
 class BindingEvent:

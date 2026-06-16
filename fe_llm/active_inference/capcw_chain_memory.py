@@ -144,7 +144,8 @@ class CAPCWChainMemory:
         sid = session_id or self.DEFAULT_SESSION
         s = self._sessions.get(sid)
         if s is None:
-            s = {"pairs": {}, "sym_ids": {}, "sym_rev": {}}
+            # order: 符号串按插入顺序的 FIFO 队列（有界工作记忆：词表满时淘汰最旧符号，而非崩）。
+            s = {"pairs": {}, "sym_ids": {}, "sym_rev": {}, "order": []}
             self._sessions[sid] = s
         return s
 
@@ -198,14 +199,24 @@ class CAPCWChainMemory:
 
     # ---- 字符串接口（key/value 共享一张符号表）----
     def _intern(self, s: str, sess: dict) -> int:
-        sym_ids, sym_rev = sess["sym_ids"], sess["sym_rev"]
+        """把符号串映射到 id；**有界工作记忆**：词表满时 FIFO 淘汰最旧符号（连其绑定）并复用其 id，不崩。"""
+        sym_ids, sym_rev, order = sess["sym_ids"], sess["sym_rev"], sess["order"]
         s = str(s).strip()
-        if s not in sym_ids:
-            if len(sym_ids) >= self.n_sym:
-                raise ValueError(f"符号词表已满（上限 {self.n_sym}），请 reset 或扩容")
-            sym_ids[s] = len(sym_ids)
-            sym_rev[sym_ids[s]] = s
-        return sym_ids[s]
+        if s in sym_ids:
+            return sym_ids[s]
+        if len(sym_ids) >= self.n_sym:
+            # 词表满：淘汰最旧符号（工作记忆=有界，忘最旧而非报错），连带删它参与的绑定、释放其 id 复用。
+            old = order.pop(0)
+            oid = sym_ids.pop(old)
+            sym_rev.pop(oid, None)
+            pairs = sess["pairs"]
+            for k in [k for k, v in pairs.items() if k == oid or v == oid]:
+                pairs.pop(k, None)
+        new_id = next(i for i in range(self.n_sym) if i not in sym_rev)   # 复用空闲 id
+        sym_ids[s] = new_id
+        sym_rev[new_id] = s
+        order.append(s)
+        return new_id
 
     def bind_str(self, key: str, value: str, session_id: str | None = None) -> None:
         """绑定一条文本边（key 串→value 串），自动分配会话内共享符号 id。"""

@@ -100,6 +100,23 @@ class CAPCWChainMemoryTests(unittest.TestCase):
         self.assertEqual(dec.action, ActionType.ASK_CLARIFICATION)
         self.assertIsNone(val)
 
+    def test_bounded_working_memory_evicts_oldest(self) -> None:
+        # 有界工作记忆：字符串词表满（>n_sym=12）时 FIFO 淘汰最旧符号，不崩；最近可取、最旧被忘。
+        mem = CAPCWChainMemory(n_sym=8, d=32, n_slots=6, ask_threshold=0.5, cot=True)
+        mem.train_on_chain(max_hops=2, n_pairs=4, n_train=2000, epochs=15, seed=0)
+        mem.reset("b")
+        for i in range(1, 6):                         # 5 条边=10 符号 > n_sym=8 → 必触发淘汰
+            mem.bind_str(f"a{i}", f"v{i}", session_id="b")
+        sess = mem._sess("b")
+        self.assertLessEqual(len(sess["sym_ids"]), 8)  # 词表有界，不超 n_sym（不崩）
+        self.assertNotIn("a1", sess["sym_ids"])        # 最旧被淘汰（FIFO）
+        self.assertIn("a5", sess["sym_ids"])           # 最近的保留（未被淘汰）
+        self.assertIn("v5", sess["sym_ids"])
+        # 已忘的最旧 key → 平凡 unseen → ASK（不崩；不依赖取回训练质量）。
+        d_old, val_old, _ = mem.decide_chain_str("a1", 1, session_id="b")
+        self.assertEqual(d_old.action, ActionType.ASK_CLARIFICATION)
+        self.assertIsNone(val_old)
+
     def test_session_isolation(self) -> None:
         # per-session 隔离：会话 s1 的链不串到 s2。
         self.mem.reset("*")

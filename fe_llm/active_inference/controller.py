@@ -144,6 +144,8 @@ class ActiveInferenceController:
         # 多跳（复合所有格）NLU：仅在 capcw_chain_memory 已加载时于 respond() 内使用，把活文本多步推理
         # （"A的经理的工位是多少"）抽成 base+关系链喂链式工作记忆（见 capcw_chain_memory.decide_path_str）。
         self._multihop_nlu = MultiHopBindingNLU()
+        # 指代消解：按会话记最近提到的实体（上一条绑定的 value=刚引入的实体），供"他/她/它的R"回指。
+        self._mh_last_entity: dict[str, str] = {}
 
     def respond(self, text: str, session_id: str | None = None) -> ModelResponse:
         observation = Observation.from_text(text, session_id=session_id)
@@ -225,14 +227,26 @@ class ActiveInferenceController:
         # 把已验证的「多跳要 CoT」机制（capcw_multihop_*_eval）接回 controller 的活文本多步推理（见 capcw_chain_memory）。
         if self.capcw_chain_memory is not None:
             try:
+                from fe_llm.active_inference.incontext_binding_nlu import PRONOUNS
+
                 ev = self._multihop_nlu.parse(observation.text)
-                if ev.kind == "bind":
+                sid_key = session_id or "__default__"
+                last_ent = self._mh_last_entity.get(sid_key)
+                if ev.kind == "bind" and ev.key:
+                    # 指代消解：键的主体是代词（他/她/它的R）→ 替换为最近实体；再更新最近实体=本次 value。
+                    head, sep, rest = ev.key.partition("的")
+                    if sep and head in PRONOUNS and last_ent:
+                        ev.key = f"{last_ent}的{rest}"
                     self.capcw_chain_memory.bind_str(ev.key, ev.value, session_id=session_id)
+                    if ev.value:
+                        self._mh_last_entity[sid_key] = ev.value      # 刚引入的实体=后续代词回指对象
                     cand = self._pick_candidate(candidates, ActionType.ANSWER)   # 确认已记住
                     if cand is not None:
                         selected_action = cand
                     incontext_reply = f"好的，已记住{ev.key}是{ev.value}"
                 elif ev.kind == "query":
+                    if ev.base in PRONOUNS and last_ent:              # 指代消解：查询主体是代词→替换
+                        ev.base = last_ent
                     dec, value_str, chain_str = self.capcw_chain_memory.decide_path_str(
                         ev.base, ev.rels or [], session_id=session_id)
                     cand = self._pick_candidate(candidates, dec.action)          # 引擎裁决 ANSWER/ASK
@@ -330,6 +344,11 @@ class ActiveInferenceController:
         """清空 CAPCW 链式工作记忆某会话的绑定（session_id='*' 清全部）。未加载时为 no-op。"""
         if self.capcw_chain_memory is not None:
             self.capcw_chain_memory.reset(session_id=session_id)
+        # 同步清指代消解的最近实体（换话题不串指代）。
+        if session_id == "*":
+            self._mh_last_entity.clear()
+        else:
+            self._mh_last_entity.pop(session_id or "__default__", None)
 
     def chain_working_memory_decision(self, start_key: int, n_hops: int, session_id: str | None = None):
         """用 CAPCW 引擎做多跳链式取回：从 start_key 链式取回 n_hops 跳（decode→re-embed 潜在 CoT）。

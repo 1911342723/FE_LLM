@@ -1,0 +1,33 @@
+{
+  "task": "read (entity,relation,value) triples from a FLAT token sequence, retrieve value by (e,r) (flat vs CAPCW)",
+  "design": "var = world structure (flat single-vector vs CAPCW slots); same d/sequence-frontend/budget; sweep K.",
+  "config": {
+    "n_sym": 36,
+    "K_list": [
+      3,
+      6,
+      9
+    ],
+    "d": 32,
+    "epochs": 60,
+    "seeds": 2,
+    "random_baseline": 0.0278
+  },
+  "by_K": {
+    "3": {
+      "flat": 0.3303,
+      "capcw": 0.3083
+    },
+    "6": {
+      "flat": 0.1548,
+      "capcw": 0.633
+    },
+    "9": {
+      "flat": 0.1103,
+      "capcw": 0.7598
+    }
+  },
+  "capcw_minus_flat_highK": 0.5639,
+  "verdict": "PASS: CAPCW 把内容寻址取回扩到**从序列读出的关系**——多 K(≥6) CAPCW−flat +0.5639（≥+0.10）。即关系以扁平 token 序列给出（更贴近真语言）时，slot 工作空间仍按 (实体·关系) 内容寻址取回值，显著胜单向量。内容寻址不限于显式 pair。",
+  "note": "关系以扁平 3K token 序列给出（[e r v]×K），序列前端(符号+角色嵌入+三元组读出)读出 K 个三元组；world=flat 均值 / CAPCW slot；按 (查询实体·关系) 内容寻址取回 v。唯一变量=world 结构。更贴近真语言输入。"
+}

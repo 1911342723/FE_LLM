@@ -8,7 +8,7 @@
 
 ## 0. 一句话结论
 
-FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成长）已从 0 自建、端到端打通、并在合成任务型数据上证明有强价值；全量 **198 个回归测试**守护。
+FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成长）已从 0 自建、端到端打通、并在合成任务型数据上证明有强价值；全量 **200 个回归测试**守护。
 **核心引擎的"开放问"已有正面答案**：CAPCW（内容寻址预测编码工作空间）借鉴 Transformer 内核（内容寻址路由），在容量受限区间决定性胜单向量、接回真实 controller 活文本主动推理闭环，并已做到**对内多步推理**（复合所有格链式取回 + 可溯源 CoT trace）。详见第 2.5 节、`docs/FE-LLM核心引擎构想.md`(§9-29)、`docs/FE-LLM阶段总结.md`(§5.1)。
 "是否只缺规模"的答案：**不是**——开放闲聊 belief 弱(0.655)、合成任务型极强(歧义子集 +0.5)，缺的首先是**对的任务**，其次理解层要学习化（已做）。规模能放大，但前提是任务对、理解学习化。
 真实数据修正（B2 系列，2026-06-15）：在真实人标任务对话(CrossWOZ)上，belief 的价值精确定位在**状态/领域追踪与回复内容 grounding**（未明示跟进句 +0.15~+0.19），而非动作类型选择（−0.02，真实数据动作由当前 utterance 决定）。早期"belief 决定动作"的合成强结论部分是构造特性，已诚实修正；belief 机制在真实数据上的价值得到正面坐实，只是在"语境/内容"维而非"动作"维。
@@ -70,6 +70,8 @@ FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成
 | 推理基元·比较/计数（检索之外） | ⛔ 诚实负·边界 | `capcw_reasoning_primitives_eval.md`（compare 优势=容量效应非新推理、count 无 headroom；CAPCW=内容寻址引擎，非算术聚合器） |
 | 规则归纳·直面"连连看"（in-context 规则外推） | ✅ PASS(超连连看) | `capcw_rule_induction_eval.md`（UNSEEN 规则外推 0.97≫随机：不止查表、会归纳规则外推到未见输入；规则归纳=readout 之功，内容寻址负责取回/绑定） |
 | 容量扩展曲线·"裸增 d 能否到好效果" | ⛔ 裸增 d 不抬反降 | `capcw_capacity_scaling_eval.md`（CAPCW 0.82@d16→0.07@d128，d≥64 弛豫塌缩非欠训；要 scale 须架构工程=重建标准大模型/按纪律不走；机制结论与 d 无关） |
+| 从序列读关系（更像真语言） | ✅ PASS | `capcw_sequence_relation_eval.md`（扁平 token 序列读 (实体·关系→值) 三元组并取回，多 K≥6 CAPCW−flat +0.564；内容寻址不限于显式 pair） |
+| 活文本工程加固：指代消解 + 有界工作记忆 | ✅ | 他/她/它→上文实体=自然录入链；链式 WM 词表满 FIFO 淘汰不崩=优雅降级（`test_multihop_dialogue.py`/`test_capcw_chain_memory.py`，§34） |
 
 一句话：CAPCW 是 FE-LLM **第一个有系统实证的核心引擎**——内容寻址绑定/induction、接回真实 controller 活
 文本主动推理闭环、对内多步推理（CoT 链式 + 可溯源 trace）都成立；多跳"关键"经 2×2 析因定位为**中间监督**
@@ -113,7 +115,7 @@ FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成
 
 ## 6. 复现
 
-- 全量回归：`python -m pytest -q`（**198 tests**，含 CAPCW 引擎/工作记忆/活文本闭环/会话隔离/多跳链式/活文本多跳/开放关系 NLU）。
+- 全量回归：`python -m pytest -q`（**200 tests**，含 CAPCW 引擎/工作记忆/活文本闭环/会话隔离/多跳链式/活文本多跳/开放关系 NLU/指代消解/有界 WM）。
 - 端到端 demo：`fe_llm_demo`（实录）、`fe_llm_demo_web`（HTML）、`fe_llm_cli`（交互）、`fe_llm_web_server`（网页）、`fe_llm_multidomain_demo`（多域 belief 追踪）。
 - 控制层各 eval：`fe_llm/active_inference/experiments/*.py --run`。
 - CAPCW 核心引擎各 eval：`fe_llm/world_model/capcw_*.py --run`（绑定/induction/接控制层/多跳 CoT/接回 controller/活文本多跳/2×2 析因/自蒸馏/校准）。

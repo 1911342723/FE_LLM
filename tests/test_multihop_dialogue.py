@@ -184,6 +184,21 @@ class CAPCWChainPathTests(unittest.TestCase):
         self.assertIsNone(chit.incontext_chain)
         self.assertIsNone(chit.incontext_value)
 
+    def test_coreference_resolution_multihop(self) -> None:
+        # 指代消解：代词"他"回指上一条引入的实体(value)，自然录入链 + 多跳查询。
+        from fe_llm.active_inference.controller import ActiveInferenceController
+
+        controller = ActiveInferenceController(capcw_chain_memory_path=self.ckpt)
+        sid = "coref"
+        controller.reset_chain_working_memory(session_id=sid)
+        controller.respond("记住张三的经理是李四", session_id=sid)         # 引入李四(value)
+        r2 = controller.respond("他的工位是C302", session_id=sid)          # 他=李四 → 李四的工位=C302
+        self.assertIn("李四的工位", r2.text)                               # 代词已被替换为李四
+        ans = controller.respond("张三的经理的工位是多少", session_id=sid)  # 张三的经理=李四→李四的工位=C302
+        self.assertEqual(ans.selected_action_type, ActionType.ANSWER)
+        self.assertEqual(ans.incontext_value, "C302")
+        self.assertEqual(ans.incontext_chain, ["李四", "C302"])
+
 
 if __name__ == "__main__":
     unittest.main()
