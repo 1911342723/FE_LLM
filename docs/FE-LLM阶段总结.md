@@ -123,6 +123,6 @@ controller 活文本主动推理闭环都成立；多跳推理的关键被定位
 ## 7. 复现
 
 - 全量回归：`python -m pytest -q`（**200 tests**，含 CAPCW 引擎/工作记忆/活文本闭环/会话隔离/多跳链式/活文本多跳/开放关系 NLU/指代消解/有界 WM）。
-- 端到端 demo：`fe_llm_demo` / `fe_llm_demo_web` / `fe_llm_cli` / `fe_llm_multidomain_demo`。
+- 端到端 demo：`fe_llm_demo` / `fe_llm_demo_web` / `fe_llm_cli` / `fe_llm_multidomain_demo`；**统一活大脑 demo `fe_llm_brain_demo`**（Linear 风浅色 HTML：一段对话串起 知道何时不该答 + 多跳推理(可溯源思维链) + 指代消解 + grounded 回答 + surprise 平复 + 工作记忆成长，输出 `docs/reports/fe_llm_brain_demo.html`）。
 - CAPCW 引擎/接回 controller：`fe_llm/world_model/capcw_*.py --run`、`capcw_incontext_dialogue_eval.py --run`。
 - 各裁决/评测：`fe_llm/**/experiments/*.py --run`、`fe_llm/world_model/*.py --run`。

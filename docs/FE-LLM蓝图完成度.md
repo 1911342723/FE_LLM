@@ -116,6 +116,6 @@ FE-LLM 的**主动推理控制闭环**（知道何时不该答 + 为何 + 会成
 ## 6. 复现
 
 - 全量回归：`python -m pytest -q`（**200 tests**，含 CAPCW 引擎/工作记忆/活文本闭环/会话隔离/多跳链式/活文本多跳/开放关系 NLU/指代消解/有界 WM）。
-- 端到端 demo：`fe_llm_demo`（实录）、`fe_llm_demo_web`（HTML）、`fe_llm_cli`（交互）、`fe_llm_web_server`（网页）、`fe_llm_multidomain_demo`（多域 belief 追踪）。
+- 端到端 demo：`fe_llm_demo`（实录）、`fe_llm_demo_web`（HTML）、`fe_llm_cli`（交互）、`fe_llm_web_server`（网页）、`fe_llm_multidomain_demo`（多域 belief 追踪）、**`fe_llm_brain_demo`（统一活大脑 · Linear 风浅色 HTML：知道何时不该答+多跳推理+可溯源思维链+指代+grounded+surprise 平复+成长 一段对话全展示）**。
 - 控制层各 eval：`fe_llm/active_inference/experiments/*.py --run`。
 - CAPCW 核心引擎各 eval：`fe_llm/world_model/capcw_*.py --run`（绑定/induction/接控制层/多跳 CoT/接回 controller/活文本多跳/2×2 析因/自蒸馏/校准）。

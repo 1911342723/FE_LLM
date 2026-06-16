@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FE-LLM · 活大脑 Demo</title>
+<style>
+  :root {
+    --bg:#fbfbfc; --card:#ffffff; --ink:#1c1c28; --sub:#6b6f76; --line:#ececf1;
+    --accent:#5e6ad2; --muted:#9a9ea6; --chip:#f4f4f7;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased; line-height:1.55; }
+  .wrap { max-width:760px; margin:0 auto; padding:56px 24px 96px; }
+  .title { font-size:26px; font-weight:680; letter-spacing:-0.02em; margin:0 0 6px; }
+  .lede { color:var(--sub); font-size:14.5px; margin:0 0 8px; }
+  .meta { color:var(--muted); font-size:12.5px; margin:0 0 40px; }
+  .meta b { color:var(--accent); font-weight:600; }
+  .turn { margin:0 0 30px; }
+  .msg { display:flex; margin:2px 0; }
+  .msg.user { justify-content:flex-end; }
+  .bubble { max-width:80%; padding:9px 14px; border-radius:13px; font-size:14.5px; }
+  .user .bubble { background:var(--accent); color:#fff; border-bottom-right-radius:4px; }
+  .bot-bubble { background:var(--card); border:1px solid var(--line); color:var(--ink); border-bottom-left-radius:4px; }
+  .shows { text-align:right; color:var(--muted); font-size:11.5px; margin:3px 2px 8px; }
+  .brain { background:var(--card); border:1px solid var(--line); border-radius:11px; padding:11px 14px; margin:8px 0; }
+  .brow { display:flex; align-items:center; gap:14px; }
+  .badge { color:#fff; font-size:11.5px; font-weight:600; padding:2px 10px; border-radius:20px; flex:0 0 auto; }
+  .why { display:flex; align-items:center; gap:8px; flex:1; font-size:12px; color:var(--sub); }
+  .why-label { color:var(--muted); }
+  .track { flex:1; max-width:200px; height:6px; background:#eef0f4; border-radius:3px; overflow:hidden; }
+  .fill { display:block; height:100%; border-radius:3px; }
+  .sval { color:var(--sub); font-variant-numeric:tabular-nums; }
+  .cot { margin-top:10px; display:flex; align-items:center; gap:7px; flex-wrap:wrap; }
+  .cot-label { color:var(--muted); font-size:11.5px; }
+  .step { background:#eef0fb; color:var(--accent); border:1px solid #dfe2f7; font-size:12px; padding:2px 9px; border-radius:7px; }
+  .arrow { color:var(--muted); font-size:12px; }
+  .wm { margin-top:10px; display:flex; gap:8px; align-items:baseline; }
+  .wm-label { color:var(--muted); font-size:11.5px; flex:0 0 auto; }
+  .chips { display:flex; flex-wrap:wrap; gap:6px; }
+  .chip { background:var(--chip); border:1px solid var(--line); color:#3c4049; font-size:12px; padding:2px 9px; border-radius:7px; }
+  .chip .eq { color:var(--muted); }
+  .muted { color:var(--muted); }
+  .foot { color:var(--muted); font-size:12px; margin-top:44px; border-top:1px solid var(--line); padding-top:18px; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="title">FE-LLM · 活大脑</div>
+    <p class="lede">一段对话，串起这颗从 0 自建的"脑子"的全部本事——知道何时不该答、多跳推理、指代消解、可溯源回答、主动推理与成长。</p>
+    <p class="meta">全程真实 <b>controller.respond()</b>，非写死输出 · 内容寻址工作记忆(CAPCW) · 思维链可溯源 · <b>200</b> 回归测试守护</p>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">你好</div></div>
+        <div class="shows">寒暄：正常回应，不被记忆/多跳劫持</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="muted">—</span></span>
+          </div>
+          
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip muted">（空）</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">你好，我在。</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">记住张三的经理是李四</div></div>
+        <div class="shows">录入事实（in-context 绑定）</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="muted">—</span></span>
+          </div>
+          
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">好的，已记住张三的经理是李四</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">他的工位是B302</div></div>
+        <div class="shows">指代消解：他=李四（自然录入链）</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="muted">—</span></span>
+          </div>
+          
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span><span class="chip">李四的工位 <span class="eq">=</span> B302</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">好的，已记住李四的工位是B302</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">张三的经理的工位是多少</div></div>
+        <div class="shows">多跳推理 + 可溯源思维链（链式取回链尾）</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="track"><span class="fill" style="width:42%;background:#d99a2b"></span></span><span class="sval">0.425</span></span>
+          </div>
+          <div class="cot"><span class="cot-label">思维链</span><span class="step">李四</span><span class="arrow">→</span><span class="step">B302</span></div>
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span><span class="chip">李四的工位 <span class="eq">=</span> B302</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">张三的经理的工位是B302</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">张三的经理的电话是多少</div></div>
+        <div class="shows">知道何时不该答：链断（缺李四的电话）→追问（高 surprise）</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#d99a2b">追问</span>
+            <span class="why"><span class="why-label">surprise</span><span class="track"><span class="fill" style="width:100%;background:#d6564a"></span></span><span class="sval">1.000</span></span>
+          </div>
+          <div class="cot"><span class="cot-label">思维链</span><span class="step">李四</span></div>
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span><span class="chip">李四的工位 <span class="eq">=</span> B302</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">信息还不够，请补充你想让我具体做什么。</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">记住李四的电话是139800</div></div>
+        <div class="shows">用户补充缺失的那一边（对外行动改变环境）</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="muted">—</span></span>
+          </div>
+          
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span><span class="chip">李四的工位 <span class="eq">=</span> B302</span><span class="chip">李四的电话 <span class="eq">=</span> 139800</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">好的，已记住李四的电话是139800</div></div>
+      </div>
+
+      <div class="turn">
+        <div class="msg user"><div class="bubble">张三的经理的电话是多少</div></div>
+        <div class="shows">主动推理：再问→多跳取回，surprise 平复</div>
+        <div class="brain">
+          <div class="brow">
+            <span class="badge" style="background:#3fa66a">回答</span>
+            <span class="why"><span class="why-label">surprise</span><span class="track"><span class="fill" style="width:59%;background:#d99a2b"></span></span><span class="sval">0.590</span></span>
+          </div>
+          <div class="cot"><span class="cot-label">思维链</span><span class="step">李四</span><span class="arrow">→</span><span class="step">139800</span></div>
+          <div class="wm"><span class="wm-label">工作记忆</span><span class="chips"><span class="chip">张三的经理 <span class="eq">=</span> 李四</span><span class="chip">李四的工位 <span class="eq">=</span> B302</span><span class="chip">李四的电话 <span class="eq">=</span> 139800</span></span></div>
+        </div>
+        <div class="msg bot"><div class="bubble bot-bubble">张三的经理的电话是139800</div></div>
+      </div>
+    <div class="foot">每轮：<b>用户</b>→（脑内：动作 / surprise / 思维链 / 工作记忆）→<b>回答</b>。surprise 越低越笃定；追问=知道何时不该答；思维链=多跳的中间步可溯源；工作记忆逐轮累积=成长。</div>
+  </div>
+</body>
+</html>
