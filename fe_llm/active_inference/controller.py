@@ -39,6 +39,8 @@ class ModelResponse:
     incontext_value: str | None = None
     # CAPCW in-context query 的引擎 surprise（=1-路由匹配度；query 时给出，可溯源）。
     incontext_surprise: float | None = None
+    # CAPCW 多跳链式取回的中间符号链（可溯源 CoT trace；多跳 query 时给出，含链尾），否则 None。
+    incontext_chain: list[str] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -52,6 +54,7 @@ class ModelResponse:
             "recalled_memories": [item.to_dict() for item in self.recalled_memories or []],
             "incontext_value": self.incontext_value,
             "incontext_surprise": self.incontext_surprise,
+            "incontext_chain": self.incontext_chain,
         }
 
 
@@ -135,9 +138,12 @@ class ActiveInferenceController:
                 self.capcw_chain_memory = None
         # in-context 绑定 NLU（轻量规则，无权重）：把活文本"现场关联"抽成 bind/query 事件喂工作记忆。
         # 仅在 capcw_memory 已加载时于 respond() 内使用；高精度模式触发，避免劫持既有对话。
-        from fe_llm.active_inference.incontext_binding_nlu import InContextBindingNLU
+        from fe_llm.active_inference.incontext_binding_nlu import InContextBindingNLU, MultiHopBindingNLU
 
         self._incontext_nlu = InContextBindingNLU()
+        # 多跳（复合所有格）NLU：仅在 capcw_chain_memory 已加载时于 respond() 内使用，把活文本多步推理
+        # （"A的经理的工位是多少"）抽成 base+关系链喂链式工作记忆（见 capcw_chain_memory.decide_path_str）。
+        self._multihop_nlu = MultiHopBindingNLU()
 
     def respond(self, text: str, session_id: str | None = None) -> ModelResponse:
         observation = Observation.from_text(text, session_id=session_id)
@@ -190,6 +196,7 @@ class ActiveInferenceController:
         incontext_value: str | None = None
         incontext_surprise: float | None = None  # WM query 的引擎 surprise（可溯源，主动推理用）
         incontext_reply: str | None = None       # 由引擎取回内容生成的 grounded 回答（可溯源）
+        incontext_chain: list[str] | None = None  # 多跳链式取回的中间符号链（可溯源 CoT trace）
         if self.capcw_memory is not None:
             try:
                 event = self._incontext_nlu.parse(observation.text)
@@ -213,6 +220,34 @@ class ActiveInferenceController:
                 incontext_value = None
                 incontext_surprise = None
                 incontext_reply = None
+        # 可选 CAPCW 多跳链式工作记忆（默认未加载→跳过，既有管线零影响）：把"对内多步推理"接进活文本——
+        # 多跳 NLU 解析复合所有格（"A的经理的工位是多少"）→ decode→re-embed 逐跳链式取回 + 可溯源 CoT trace。
+        # 把已验证的「多跳要 CoT」机制（capcw_multihop_*_eval）接回 controller 的活文本多步推理（见 capcw_chain_memory）。
+        if self.capcw_chain_memory is not None:
+            try:
+                ev = self._multihop_nlu.parse(observation.text)
+                if ev.kind == "bind":
+                    self.capcw_chain_memory.bind_str(ev.key, ev.value, session_id=session_id)
+                    cand = self._pick_candidate(candidates, ActionType.ANSWER)   # 确认已记住
+                    if cand is not None:
+                        selected_action = cand
+                    incontext_reply = f"好的，已记住{ev.key}是{ev.value}"
+                elif ev.kind == "query":
+                    dec, value_str, chain_str = self.capcw_chain_memory.decide_path_str(
+                        ev.base, ev.rels or [], session_id=session_id)
+                    cand = self._pick_candidate(candidates, dec.action)          # 引擎裁决 ANSWER/ASK
+                    if cand is not None:
+                        selected_action = cand
+                    incontext_value = value_str
+                    incontext_surprise = dec.surprise
+                    incontext_chain = [c for c in chain_str if c is not None] or None
+                    # grounded 生成：链式取回成功→回答扎根于链尾 value（含可溯源中间链），断链→走常规追问文本。
+                    if value_str is not None:
+                        rels = ev.rels or []
+                        phrase = f"{ev.base}的{'的'.join(rels)}" if rels else (ev.base or "")
+                        incontext_reply = f"{phrase}是{value_str}"
+            except Exception:
+                pass
         # 行动回写：selected action 决定下一轮 Predictor 的预期（如等待澄清）。
         posterior_belief = self.belief_updater.apply_action_feedback(
             posterior_belief, selected_action.action_type.value
@@ -257,6 +292,7 @@ class ActiveInferenceController:
             recalled_memories=recalled_memories,
             incontext_value=incontext_value,
             incontext_surprise=incontext_surprise,
+            incontext_chain=incontext_chain,
         )
 
     # ---- CAPCW 内容寻址工作记忆接口（可选组件；默认未加载时为 no-op；按 session 隔离）----

@@ -80,3 +80,53 @@ class InContextBindingNLU:
                 if key and value:
                     return BindingEvent(kind="bind", key=key, value=value)
         return BindingEvent(kind="none")
+
+
+# ---- 多跳（复合所有格）绑定 NLU：把"对内多步推理"的活文本接进 CAPCW 链式工作记忆 ----
+# 复合所有格查询「X的R1的R2…的Rn是多少/是谁/是什么」（n≥2）→ base=X、rels=[R1..Rn]，逐跳链式取回。
+# 高精度结构匹配：要求 ≥2 个"的<关系>"段 + 明确查询词收尾；rel 段不含 的/是/?（避免吞掉查询词）。
+_MULTIHOP_QUERY = re.compile(r"^(.+?)((?:的[^的是？?]+){2,})是(?:多少|谁|什么|啥|几)[？?]?$")
+
+
+@dataclass
+class MultiHopEvent:
+    """多跳解析结果：kind ∈ {bind, query, none}。
+
+    - bind：key/value（复用单跳绑定语义，含"记住X的R是Y"标记式）。
+    - query：base + rels（关系链）。rels 为空=原子直查；len≥1=逐跳链式（"cur的r"逐跳取回）。
+    """
+
+    kind: str
+    key: str | None = None
+    value: str | None = None
+    base: str | None = None
+    rels: list[str] | None = None
+
+
+class MultiHopBindingNLU:
+    """复合所有格多跳 NLU：先识别 ≥2 跳查询，其余复用单跳 NLU（绑定 + 单跳/原子查询统一成 base+rels）。"""
+
+    def __init__(self) -> None:
+        self._base = InContextBindingNLU()
+
+    def parse(self, text: str) -> MultiHopEvent:
+        t = _clean(text)
+        if not t:
+            return MultiHopEvent(kind="none")
+        # 先匹配 ≥2 跳复合所有格查询（X的R1的R2…是多少）。
+        m = _MULTIHOP_QUERY.match(t)
+        if m:
+            base = _clean(m.group(1))
+            rels = [r for r in m.group(2).split("的") if r]
+            if base and len(rels) >= 2:
+                return MultiHopEvent(kind="query", base=base, rels=rels)
+        # 其余复用单跳 NLU：绑定原样；单跳/原子查询拆成 base+rels（统一由 decide_path_str 处理）。
+        e = self._base.parse(t)
+        if e.kind == "bind":
+            return MultiHopEvent(kind="bind", key=e.key, value=e.value)
+        if e.kind == "query" and e.key:
+            head, sep, tail = e.key.partition("的")
+            if sep and tail and "的" not in tail:           # "X的R" → base=X, rels=[R]（单跳关系查询）
+                return MultiHopEvent(kind="query", base=head, rels=[tail])
+            return MultiHopEvent(kind="query", base=e.key, rels=[])   # 原子键直查（无关系链）
+        return MultiHopEvent(kind="none")

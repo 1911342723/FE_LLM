@@ -534,3 +534,46 @@ cot 绝对值（多跳 0.41）受 d=32 容量限制；中间监督是 CoT 式（
 诚实边界：本组件处理**原子符号链**（取回的 value 直接作下一跳 key）；活文本「复合所有格」（A的经理的工位）
 那种"value 拼下一属性再查"的链式属于上层 NLU 分解，是下一步（活文本多跳 respond()）。报告
 `docs/reports/capcw_multihop_controller_eval.{json,md}`。全量 **177 测试全绿**（163→177，零回归）。
+
+## 25. 活文本多跳闭环：复合所有格 → 链式工作记忆 → 逐跳取回（2026-06-16，真实系统集成）
+
+承接第 24 节的 controller **显式 API**，把它推进到**活文本自动多步推理**——用户用自然语言陈述多条关联、
+用**复合所有格**提问，controller 自动解析、链式取回、grounded 回答，并输出**可溯源 CoT trace**。这与单跳
+从"接回 controller(第 19 节)"到"活文本 respond()(第 20 节)"的推进同构。
+
+- **多跳 NLU `incontext_binding_nlu.py::MultiHopBindingNLU`**（高精度结构匹配、无权重）：复合所有格查询
+  「X的R1的R2…的Rn是多少/是谁/是什么」(n≥2) → `base=X, rels=[R1..Rn]`；其余复用单跳 NLU——绑定"记住X的R是Y"
+  原样、单跳/原子查询统一拆成 base+rels（rels 为空=原子直查）。要求 ≥2 个"的<关系>"段 + 查询词收尾，
+  rel 段不含 的/是/?（避免吞查询词、误触寒暄）。
+- **字符串层 decode→re-embed `CAPCWChainMemory.decide_path_str(base, rels)`**：cur=base，逐跳
+  key=f"{cur}的{r}" 单跳内容寻址取回 → cur=value（取回的中间 value **显式解码成离散符号串、与下一关系拼成
+  下一跳 key 再检索**——这是潜在 CoT 在字符串层最直接的落地）。任一跳未绑定→断链→ASK（多跳版"知道何时
+  不该答"，可溯源到断点）。返回链尾 value + 中间链(CoT trace)。
+- **接进 `respond()`**（默认关、零回归）：`capcw_chain_memory` 加载时，多跳 NLU 解析本轮——bind 存入、
+  复合所有格 query 由 `decide_path_str` 链式取回；`ModelResponse.incontext_chain` 暴露 CoT trace，回答 grounded
+  （"项目甲的经理的工位是B302"）。
+
+脚本会话实录（`world_model/capcw_multihop_dialogue_eval.py`）——**grounded 多跳生成 + 主动推理 surprise 平复**：
+
+| 用户输入 | 动作 | 回答（grounded） | CoT trace | surprise |
+|---|---|---|---|---:|
+| 记住项目甲的经理是张三 | answer | 好的，已记住项目甲的经理是张三 | — | — |
+| 记住张三的工位是B302 | answer | 好的，已记住张三的工位是B302 | — | — |
+| 记住部门乙的组长是李四 | answer | 好的，已记住部门乙的组长是李四 | — | — |
+| 项目甲的经理的工位是多少 | **answer** | **项目甲的经理的工位是B302** | **张三→B302** | 0.194 |
+| 部门乙的组长的工位是多少 | **ask_clarification**（断链→该问） | 信息还不够… | 李四 | **1.000** |
+| 记住李四的工位是C13 | answer | 好的，已记住李四的工位是C13 | — | — |
+| 部门乙的组长的工位是多少 | **answer** | **部门乙的组长的工位是C13** | **李四→C13** | **0.121** |
+| 你好 | answer（未被劫持） | 你好，我在。 | — | — |
+
+**主动推理闭环**：断链(部门乙的组长的工位)→surprise **1.000** 追问 → 用户补缺失边(李四的工位)→再问→surprise
+降到 **0.121**→grounded 链式回答（对外行动改变环境从而降低未来自由能，与单跳第 20 节同构）。聚合(多段随机
+2 跳会话)：决策 balanced acc **1.000**、链尾 value 取回 **1.000**、寒暄劫持率 **0.000** → **PASS**。
+
+**核心结论（活文本集成级）**：「**对内多步推理**」在真实 controller 活文本路径成立——复合所有格经多跳 NLU +
+链式工作记忆 **decode→re-embed 逐跳取回**，引擎正确驱动 ANSWER(链尾 value + 可溯源 CoT trace)/ASK(断链)，
+不劫持寒暄。**字符串层的"解码中间符号串→拼下一属性→再检索"是「LLM 多跳要 CoT」在活系统里最直接的落地**
+（每跳 emit 一个离散中间结论再据它继续）。诚实边界：① 多跳 NLU 是高精度规则、覆盖复合所有格式（非全开放
+关系抽取）；② 绑定用"记住X的R是Y"标记式（关系无 _ATTR 限制时需 记住 前缀，避免裸"X的R是Y"误触）；③ 链尾
+绝对取回受 d=32 容量限制（与小 d 容量结论一致）。报告 `docs/reports/capcw_multihop_dialogue_eval.{json,md}`。
+新增 16 测试（多跳 NLU 8 + 链式路径/controller 8），全量 **193 测试全绿**（177→193，零回归）。
