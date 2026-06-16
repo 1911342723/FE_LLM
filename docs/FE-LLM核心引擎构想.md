@@ -494,3 +494,43 @@ warmup 也崩。
 链式就成立——**独立复现了"LLM 多跳要 CoT"：思维链不是提示技巧，是多跳组合的机制必需**。诚实边界：
 cot 绝对值（多跳 0.41）受 d=32 容量限制；中间监督是 CoT 式（教 emit 中间符号），纯涌现潜 CoT 更难、留后续。
 报告 `docs/reports/capcw_multihop_v2_eval.{json,md}` / `capcw_multihop_cot_eval.{json,md}`。
+
+## 24. 多跳 CoT 接回真实 controller：对内多步推理 + 可溯源 CoT trace（2026-06-16，集成里程碑）
+
+第 23 节在受控合成 eval 证到「多跳要 CoT」的**机制**（decode→re-embed + 中间监督）。本轮照搬单跳的
+成功集成路径（引擎 eval → 工作记忆适配器 → controller 决策框架，见第 19 节）把它接回真实 controller
+的**对内多步推理**——现场把多条 in-context 绑定**链式组合**取回，并把每跳解码的中间符号输出为
+**可溯源的 CoT trace**（蓝图「对内推理 + 可溯源」）。
+
+- **适配器 `active_inference/capcw_chain_memory.py::CAPCWChainMemory`**（与单跳 `CAPCWWorkingMemory` 并列、
+  不改单跳=零回归）：`_ChainWorkspace` 与 `capcw_multihop_cot_eval.CAPCWChain` 同形（已验证机制），但
+  **key/value 共享一张 `sym_emb`**——使某跳取回的 value 能 re-embed 成下一跳 query key（链式组合的前提）；
+  喂的是工作记忆的**显式 (key,value) pair**（无需序列相邻算子去扫 token）。`decide_chain(start, H)`：首跳
+  路由 surprise 决定 ASK/ANSWER，decode→re-embed 逐跳取回链尾 value，`chain` 字段=各跳解码的中间符号
+  （CoT trace，可溯源）。`bind_str`/`decide_chain_str`（key/value 共享符号表）、per-session 隔离、save/load。
+- **接回 controller（加法式、默认关、零回归）**：`ActiveInferenceController(capcw_chain_memory_path=...)` 可选
+  加载；`bind_chain_working_memory`/`reset_chain_working_memory`/`chain_working_memory_decision(start, H)` 为
+  显式接口；默认 None → 既有管线零影响（与单跳 `capcw_memory_path` 并存、互不干扰）。
+
+集成 eval（`world_model/capcw_multihop_controller_eval.py`，n_sym=20/d=32/n_pairs=5/H∈{1,2,3}）——
+三臂唯一变量=读出结构：**FE-agent(cot, decode→re-embed)** vs **baseline(同模型只读 1 跳=无链式组合)** vs
+**latent 消融(cot=False, 潜读出+仅末跳监督)**：
+
+| n_hops | cot 任务成功 | cot 链尾取回 | cot balacc | baseline(单跳) 成功 | latent 链尾取回 |
+|---:|---:|---:|---:|---:|---:|
+| 1 | 0.877 | 0.973 | 0.890 | 0.877 | 0.683 |
+| 2 | 0.862 | 0.934 | 0.892 | 0.443 | 0.663 |
+| 3 | 0.839 | 0.890 | 0.884 | 0.474 | 0.704 |
+
+- ASK/ANSWER balanced acc（首跳 surprise，无动作监督）均值 **0.889**（≥0.80）；
+- 多跳(H≥2) cot 链尾取回 **0.912**（≥0.50，且≥0.6 无容量 caveat）；
+- 多跳 cot − baseline(单跳) 任务成功 **+0.392**（链式组合的增量，1 跳够不到链尾）；
+- 多跳 cot − latent(held-out 链尾取回) **+0.228** → **PASS**。
+
+**核心结论（集成级）**：① 第 23 节的「多跳要 CoT」机制成功接回 controller——**对内多步推理（链式取回）+
+知道何时不该答（首跳 surprise→ASK/ANSWER）+ 可溯源 CoT trace** 在 controller 决策框架内成立；② 1 跳 sanity
+通过（cot==baseline），≥2 跳只有链式组合够得到链尾；③ **held-out 上 cot − latent +0.228 再次坐实「显式解码
+中间符号」对链式的必要性**——即便在工作记忆的**干净显式 pair**（比扫描序列更易）上，潜读出仍泛化更差。
+诚实边界：本组件处理**原子符号链**（取回的 value 直接作下一跳 key）；活文本「复合所有格」（A的经理的工位）
+那种"value 拼下一属性再查"的链式属于上层 NLU 分解，是下一步（活文本多跳 respond()）。报告
+`docs/reports/capcw_multihop_controller_eval.{json,md}`。全量 **177 测试全绿**（163→177，零回归）。

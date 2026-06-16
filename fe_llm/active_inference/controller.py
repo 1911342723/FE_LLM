@@ -72,6 +72,7 @@ class ActiveInferenceController:
         learned_nlu_path: str | None = os.path.join("checkpoints", "active_inference", "slot_intent_nlu.pt"),
         context_policy_path: str | None = None,
         capcw_memory_path: str | None = None,
+        capcw_chain_memory_path: str | None = None,
     ):
         self.perception_encoder = PerceptionEncoder(use_intent_model=use_intent_model)
         self.state_store = BeliefStateStore(vector_dim=self.perception_encoder.vector_dim)
@@ -121,6 +122,17 @@ class ActiveInferenceController:
                 self.capcw_memory = CAPCWWorkingMemory.load(capcw_memory_path)
             except Exception:
                 self.capcw_memory = None
+        # 可选：CAPCW 多跳链式工作记忆（decode→re-embed 潜在 CoT，对内多步推理）。默认 None 不启用 →
+        # 既有管线零影响。启用时由 bind_chain_working_memory / chain_working_memory_decision 使用，把已验证的
+        # 「多跳要 CoT」机制接回 controller 决策框架（见 capcw_chain_memory.py / capcw_multihop_controller_eval）。
+        self.capcw_chain_memory = None
+        if capcw_chain_memory_path and os.path.exists(capcw_chain_memory_path):
+            try:
+                from fe_llm.active_inference.capcw_chain_memory import CAPCWChainMemory
+
+                self.capcw_chain_memory = CAPCWChainMemory.load(capcw_chain_memory_path)
+            except Exception:
+                self.capcw_chain_memory = None
         # in-context 绑定 NLU（轻量规则，无权重）：把活文本"现场关联"抽成 bind/query 事件喂工作记忆。
         # 仅在 capcw_memory 已加载时于 respond() 内使用；高精度模式触发，避免劫持既有对话。
         from fe_llm.active_inference.incontext_binding_nlu import InContextBindingNLU
@@ -269,6 +281,29 @@ class ActiveInferenceController:
         if self.capcw_memory is None:
             return None
         return self.capcw_memory.decide(query_key, session_id=session_id)
+
+    # ---- CAPCW 多跳链式工作记忆接口（可选组件；默认未加载时为 no-op；按 session 隔离）----
+    def bind_chain_working_memory(self, key: int, value: int, session_id: str | None = None) -> bool:
+        """把一条 in-context 边 (key→value) 写入 CAPCW 链式工作记忆（按会话）。未加载时返回 False。"""
+        if self.capcw_chain_memory is None:
+            return False
+        self.capcw_chain_memory.bind(key, value, session_id=session_id)
+        return True
+
+    def reset_chain_working_memory(self, session_id: str | None = None) -> None:
+        """清空 CAPCW 链式工作记忆某会话的绑定（session_id='*' 清全部）。未加载时为 no-op。"""
+        if self.capcw_chain_memory is not None:
+            self.capcw_chain_memory.reset(session_id=session_id)
+
+    def chain_working_memory_decision(self, start_key: int, n_hops: int, session_id: str | None = None):
+        """用 CAPCW 引擎做多跳链式取回：从 start_key 链式取回 n_hops 跳（decode→re-embed 潜在 CoT）。
+
+        返回 `ChainDecision`（含 action、链尾 value、可溯源 CoT trace chain、首跳 surprise）；未加载时返回 None。
+        把已验证的「多跳要 CoT」机制（capcw_multihop_cot_eval）接回 controller 的对内多步推理决策。
+        """
+        if self.capcw_chain_memory is None:
+            return None
+        return self.capcw_chain_memory.decide_chain(start_key, n_hops, session_id=session_id)
 
     @staticmethod
     def _pick_candidate(candidates, action_type: ActionType):

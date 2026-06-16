@@ -1,0 +1,82 @@
+{
+  "task": "multi-hop chained retrieval (decode->re-embed CoT) wired into controller decision framework",
+  "design": "FE-agent=CAPCW chain memory(cot, decode->re-embed + intermediate sup); baseline=same model read 1 hop only(no chaining); latent=cot=False ablation(final-only sup).",
+  "config": {
+    "n_sym": 20,
+    "n_pairs": 5,
+    "hop_list": [
+      1,
+      2,
+      3
+    ],
+    "d": 32,
+    "ask_threshold": 0.5,
+    "n_eval": 1500,
+    "p_bound": 0.5,
+    "epochs": 60,
+    "random_baseline": 0.05,
+    "cot_train_acc": 0.8863,
+    "latent_train_acc": 0.715
+  },
+  "by_n_hops": {
+    "1": {
+      "cot": {
+        "balacc": 0.8895,
+        "task_success": 0.8767,
+        "value_acc_bound": 0.9727
+      },
+      "baseline_single_hop": {
+        "balacc": 0.8895,
+        "task_success": 0.8767,
+        "value_acc_bound": 0.9727
+      },
+      "latent": {
+        "balacc": 0.7236,
+        "task_success": 0.5927,
+        "value_acc_bound": 0.6833
+      }
+    },
+    "2": {
+      "cot": {
+        "balacc": 0.892,
+        "task_success": 0.862,
+        "value_acc_bound": 0.9335
+      },
+      "baseline_single_hop": {
+        "balacc": 0.892,
+        "task_success": 0.4433,
+        "value_acc_bound": 0.0059
+      },
+      "latent": {
+        "balacc": 0.7363,
+        "task_success": 0.5973,
+        "value_acc_bound": 0.6629
+      }
+    },
+    "3": {
+      "cot": {
+        "balacc": 0.8842,
+        "task_success": 0.8393,
+        "value_acc_bound": 0.8903
+      },
+      "baseline_single_hop": {
+        "balacc": 0.8842,
+        "task_success": 0.474,
+        "value_acc_bound": 0.0065
+      },
+      "latent": {
+        "balacc": 0.7308,
+        "task_success": 0.608,
+        "value_acc_bound": 0.7044
+      }
+    }
+  },
+  "ask_answer_balanced_acc_mean": 0.8886,
+  "cot_multihop_task_success": 0.8507,
+  "cot_multihop_value_acc": 0.9119,
+  "baseline_multihop_task_success": 0.4587,
+  "cot_minus_baseline_multihop": 0.392,
+  "cot_minus_latent_multihop_value": 0.2282,
+  "verdict": "PASS: 多跳 CoT 链式取回接回 controller 成立——start 绑定→ANSWER + 链式取回链尾 value、未绑定→ASK（balacc 0.889）；多跳链尾取回 0.912，比只读 1 跳的baseline 任务成功率高 +0.3920（**链式组合的增量**）。对内多步推理 + 知道何时不该答 + 可溯源 CoT trace 在 controller 决策框架内成立。cot−latent(held-out 多跳取回)=+0.2282（显式解码中间符号的作用）。",
+  "note": "决策从引擎首跳路由 surprise 涌现（无动作监督）；链式由 decode→re-embed（潜在 CoT）实现，每跳解码的中间符号=可溯源 CoT trace；baseline 只读 1 跳故够不到链尾（H≥2），凸显链式组合的增量。"
+}
