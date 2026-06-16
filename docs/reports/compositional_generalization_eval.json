@@ -1,0 +1,60 @@
+{
+  "task": "compositional generalization (compare), unseen (A,B) combos",
+  "config": {
+    "task": "compare",
+    "n_values": 6,
+    "length": 8,
+    "n_filler": 10,
+    "n_test_combos": 10,
+    "per_combo": 150,
+    "intent_dim": 64,
+    "dim": 128,
+    "depth": 2,
+    "relax": 5,
+    "epochs": 60,
+    "seeds": 3
+  },
+  "arms": {
+    "flat (relax0)": {
+      "seen_mean": 1.0,
+      "seen_std": 0.0,
+      "unseen_mean": 0.6517,
+      "unseen_std": 0.083,
+      "unseen_per_seed": [
+        0.6,
+        0.5863,
+        0.7688
+      ]
+    },
+    "hierarchical (relax5)": {
+      "seen_mean": 1.0,
+      "seen_std": 0.0,
+      "unseen_mean": 0.6375,
+      "unseen_std": 0.1233,
+      "unseen_per_seed": [
+        0.5088,
+        0.6,
+        0.8037
+      ]
+    },
+    "hier_full concat (relax5)": {
+      "seen_mean": 1.0,
+      "seen_std": 0.0,
+      "unseen_mean": 0.6,
+      "unseen_std": 0.0816,
+      "unseen_per_seed": [
+        0.6,
+        0.5,
+        0.7
+      ]
+    }
+  },
+  "headline": {
+    "flat_unseen": 0.6517,
+    "hier_unseen": 0.6375,
+    "hier_full_unseen": 0.6,
+    "best_hier_minus_flat": -0.0142
+  },
+  "verdict": "FAIL: 分层连理论主场(组合泛化)都没赢扁平——本规模下分层是过度设计，应封存",
+  "note": "唯一变量=分层机制(relax_steps)；seen=训练组合留出样本、unseen=未见组合。组合泛化是分层/结构被理论认为不可替代的好处，故为公平裁决（非凑 headroom）。"
+}

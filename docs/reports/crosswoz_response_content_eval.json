@@ -1,0 +1,22 @@
+{
+  "dataset": "CrossWOZ (real human-annotated task dialogue)",
+  "task": "response content proxy: predict system primary informed (domain·slot)",
+  "data": "data\\crosswoz\\train.json.zip",
+  "n_dialogues": 5012,
+  "n_samples": 33300,
+  "n_labels": 33,
+  "underspecified_frac": 0.2449,
+  "underspecified_count_val": 2021,
+  "overall": {
+    "context_blind": 0.8165,
+    "context_aware": 0.8977,
+    "delta": 0.0812
+  },
+  "underspecified_subset": {
+    "context_blind": 0.6707,
+    "context_aware": 0.825,
+    "delta": 0.1544
+  },
+  "verdict": "PARTIAL: belief 对回复内容有正向 headroom",
+  "note": "回复内容代理=系统主告知 (领域·槽位)；唯一变量=belief(活跃领域)。跟进句里槽位常在 utterance、领域不在，故 belief 补领域→帮系统说对内容。与 B2/B2b 合成 belief 价值地图：动作类型(无)、状态/领域追踪(强)、回复内容 grounding(本实验)。"
+}

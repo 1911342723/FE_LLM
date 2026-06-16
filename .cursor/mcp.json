@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "Cursor伟哥续命良药 · FE-LLM": {
+      "command": "node",
+      "args": [
+        "--disable-warning=ExperimentalWarning",
+        "--unhandled-rejections=warn",
+        "c:\\Users\\XiuJian\\.cursor\\extensions\\local.cursor-keepalive-9.3.1\\dist\\mcp-server.mjs"
+      ],
+      "env": {
+        "MESSENGER_DATA_DIR": "C:\\Users\\XiuJian\\.moyu-message\\ef2021072873",
+        "MESSENGER_WORKSPACE_NAME": "FE-LLM",
+        "MESSENGER_HEARTBEAT_INTERVAL_MS": "8000",
+        "MESSENGER_MAX_WAIT_MS": "300000",
+        "MESSENGER_KEEPALIVE_PATTERNS": "你好",
+        "NODE_NO_WARNINGS": "1"
+      }
+    }
+  }
+}

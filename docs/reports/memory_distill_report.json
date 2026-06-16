@@ -1,0 +1,10 @@
+{
+  "audit_total": 3,
+  "distilled_count": 1,
+  "distilled_texts": [
+    "记住我喜欢简短回答"
+  ],
+  "verdict": "PASS: 仅 confirmed 记忆回流训练集，candidate 被正确排除",
+  "distill_out": "docs\\reports\\memory_distill_dataset.jsonl",
+  "note": "离线结构成长：只有审计确认（confirmed）的稳定记忆进入再训练集，一次性候选不进（穷则变）。"
+}

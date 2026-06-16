@@ -1,0 +1,14 @@
+{
+  "dialogues": 3000,
+  "vocab_size": 1452,
+  "epochs": 40,
+  "batch": 128,
+  "relax_steps": 5,
+  "v1_params_m": 5.84,
+  "v2_params_m": 6.16,
+  "v1_decode_loss": 1.6981,
+  "v2_decode_loss": 1.878,
+  "ratio_v2_over_v1": 1.1059,
+  "verdict": "FAIL: v2 明显劣于 v1",
+  "note": "架构级对照（v2 解码器多 slot cross-attention），非单变量消融。"
+}

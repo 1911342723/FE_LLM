@@ -1,0 +1,22 @@
+{
+  "n_dialogue": 3000,
+  "n_policy": 4000,
+  "judgment2a_intent": {
+    "z_global_action_bal_acc": 0.1819,
+    "z_local_action_bal_acc": 0.1885,
+    "pass": false
+  },
+  "judgment2b_local": {
+    "z_local_token_acc": 0.7005,
+    "z_global_token_acc": 0.0092,
+    "pass": true
+  },
+  "judgment3_surprise": {
+    "free_energy_normal": 25.4892,
+    "free_energy_shuffle": 25.4456,
+    "free_energy_mash": 25.4725,
+    "pass_mash_gt_shuffle": true
+  },
+  "hierarchy_earns_its_keep": false,
+  "note": "判定一(decode_loss)已 FAIL；本组若全过，说明分层用 decode_loss 代价换来了更干净的意图+可定位 surprise，代价值得。"
+}

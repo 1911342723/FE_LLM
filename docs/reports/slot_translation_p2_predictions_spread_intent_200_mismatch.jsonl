@@ -1,0 +1,600 @@
+{"group": "A", "zh": "他說他喜欢妈妈买给我的裙", "ref": "he liked the dress mommy bought for me.", "pred": "He said he liked my mother's dress.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "他說他喜欢妈妈买给我的裙", "ref": "he liked the dress mommy bought for me.", "pred": "He said he liked my mother's dress.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "他說他喜欢妈妈买给我的裙", "ref": "he liked the dress mommy bought for me.", "pred": "He said he liked my mother's dress.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "就这里，快点", "ref": "right here.", "pred": "Just here, hurry up", "disagreement_rate": 0.0}
+{"group": "B", "zh": "就这里，快点", "ref": "right here.", "pred": "Just here, hurry up", "disagreement_rate": 0.0}
+{"group": "C", "zh": "就这里，快点", "ref": "right here.", "pred": "Just here, hurry up", "disagreement_rate": 0.0}
+{"group": "A", "zh": "问题是现在停止了", "ref": "that's the point. it stopped.", "pred": "问题现在停止了", "disagreement_rate": 0.0}
+{"group": "B", "zh": "问题是现在停止了", "ref": "that's the point. it stopped.", "pred": "It is now stopped.", "disagreement_rate": 0.1667}
+{"group": "C", "zh": "问题是现在停止了", "ref": "that's the point. it stopped.", "pred": "问题现在停止了", "disagreement_rate": 0.0}
+{"group": "A", "zh": "五号车", "ref": "car 5", "pred": "5th car", "disagreement_rate": 0.0}
+{"group": "B", "zh": "五号车", "ref": "car 5", "pred": "5th car", "disagreement_rate": 0.0}
+{"group": "C", "zh": "五号车", "ref": "car 5", "pred": "5th car", "disagreement_rate": 0.0}
+{"group": "A", "zh": "主人．您的电话", "ref": "commander, they're calling you to the phone.", "pred": "What's your name?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "主人．您的电话", "ref": "commander, they're calling you to the phone.", "pred": "What's your name?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "主人．您的电话", "ref": "commander, they're calling you to the phone.", "pred": "What's your name?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你有塑料袋吗?", "ref": "aah! do you have a plastic bag?", "pred": "Do you have a plastic bag?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你有塑料袋吗?", "ref": "aah! do you have a plastic bag?", "pred": "Do you have a plastic bag?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你有塑料袋吗?", "ref": "aah! do you have a plastic bag?", "pred": "Do you have a plastic bag?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你要把我关起来?", "ref": "you're gonna lock me up?", "pred": "You want me to be locked up?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你要把我关起来?", "ref": "you're gonna lock me up?", "pred": "You want me to be locked up?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你要把我关起来?", "ref": "you're gonna lock me up?", "pred": "You want me to be locked up?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "豪鬼不会有事的", "ref": "you'll find goki outside.", "pred": "There is no danger for the ghost", "disagreement_rate": 0.0}
+{"group": "B", "zh": "豪鬼不会有事的", "ref": "you'll find goki outside.", "pred": "There is no danger for the ghost", "disagreement_rate": 0.0}
+{"group": "C", "zh": "豪鬼不会有事的", "ref": "you'll find goki outside.", "pred": "There is no danger for the ghost", "disagreement_rate": 0.0}
+{"group": "A", "zh": "神舟七号，就叫「神七」", "ref": "we call shenzhou 7 \"sheven\".", "pred": "The Shenzhou VII, also called 'Shenzhou VII', was the", "disagreement_rate": 0.0}
+{"group": "B", "zh": "神舟七号，就叫「神七」", "ref": "we call shenzhou 7 \"sheven\".", "pred": "The Shenzhou VII, also called 'Shenzhou VII', was the", "disagreement_rate": 0.0}
+{"group": "C", "zh": "神舟七号，就叫「神七」", "ref": "we call shenzhou 7 \"sheven\".", "pred": "The Shenzhou VII, also called 'Shenzhou VII', was the", "disagreement_rate": 0.0}
+{"group": "A", "zh": "露西，他耍我们，他骗了我们", "ref": "he set us up, lucy. the man set us up.", "pred": "He played tricks on us, he fooled us", "disagreement_rate": 0.0}
+{"group": "B", "zh": "露西，他耍我们，他骗了我们", "ref": "he set us up, lucy. the man set us up.", "pred": "He played tricks on us, he fooled us", "disagreement_rate": 0.0}
+{"group": "C", "zh": "露西，他耍我们，他骗了我们", "ref": "he set us up, lucy. the man set us up.", "pred": "He played tricks on us, he fooled us", "disagreement_rate": 0.0}
+{"group": "A", "zh": "不 这不会是未决审判", "ref": "- no, it's not a mistrial!", "pred": "This is not a final judgment", "disagreement_rate": 0.0}
+{"group": "B", "zh": "不 这不会是未决审判", "ref": "- no, it's not a mistrial!", "pred": "This is not a final judgment", "disagreement_rate": 0.0}
+{"group": "C", "zh": "不 这不会是未决审判", "ref": "- no, it's not a mistrial!", "pred": "This is not a final judgment", "disagreement_rate": 0.0}
+{"group": "A", "zh": "等一下　請不要再光用相片來決定了", "ref": "please don't choose based on photos", "pred": "Okay, I'm sorry, but please don't use photos to decide.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "等一下　請不要再光用相片來決定了", "ref": "please don't choose based on photos", "pred": "Okay, I'm sorry, but please don't use photos to decide.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "等一下　請不要再光用相片來決定了", "ref": "please don't choose based on photos", "pred": "Okay, I'm sorry, but please don't use photos to decide.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "告诉我 这样更好吗?", "ref": "tell me, is this...the better way?", "pred": "I'm sorry, but I can't help you with that. It's not", "disagreement_rate": 0.0}
+{"group": "B", "zh": "告诉我 这样更好吗?", "ref": "tell me, is this...the better way?", "pred": "I'm sorry, but I can't help you with that. It's not", "disagreement_rate": 0.0}
+{"group": "C", "zh": "告诉我 这样更好吗?", "ref": "tell me, is this...the better way?", "pred": "I'm sorry, but I can't help you with that. It's not", "disagreement_rate": 0.0}
+{"group": "A", "zh": "还得那么少", "ref": "more than this world gives", "pred": "Still have to go a long way", "disagreement_rate": 0.0}
+{"group": "B", "zh": "还得那么少", "ref": "more than this world gives", "pred": "Still have to go a long way", "disagreement_rate": 0.0}
+{"group": "C", "zh": "还得那么少", "ref": "more than this world gives", "pred": "Still have to go a long way", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 来点父辈的智慧，怎么样？", "ref": "- some paternal wisdom. how about that?", "pred": "- How do you think of your parents' wisdom?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 来点父辈的智慧，怎么样？", "ref": "- some paternal wisdom. how about that?", "pred": "- How do you think of your parents' wisdom?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 来点父辈的智慧，怎么样？", "ref": "- some paternal wisdom. how about that?", "pred": "- How do you think of your parents' wisdom?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "但那是不一樣的 不一樣？", "ref": "- but here, it's different?", "pred": "But that's not the same as it is.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "但那是不一樣的 不一樣？", "ref": "- but here, it's different?", "pred": "But that's not the same as it is.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "但那是不一樣的 不一樣？", "ref": "- but here, it's different?", "pred": "But that's not the same as it is.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "给我打得连他妈妈都不认识他", "ref": "hit him for me.", "pred": "I'm going to beat him up, and he's not even my mother's", "disagreement_rate": 0.0}
+{"group": "B", "zh": "给我打得连他妈妈都不认识他", "ref": "hit him for me.", "pred": "I'm going to beat him up, and he's not even my mother's", "disagreement_rate": 0.0}
+{"group": "C", "zh": "给我打得连他妈妈都不认识他", "ref": "hit him for me.", "pred": "I'm going to beat him up, and he's not even my mother's", "disagreement_rate": 0.0}
+{"group": "A", "zh": "可是人家不要你，把你赶了出来", "ref": "you've been expelled!", "pred": "But they don't want you, so you're out of the way", "disagreement_rate": 0.0}
+{"group": "B", "zh": "可是人家不要你，把你赶了出来", "ref": "you've been expelled!", "pred": "But they don't want you, they're going to send you out", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "可是人家不要你，把你赶了出来", "ref": "you've been expelled!", "pred": "But they don't want you, so you're out of the way", "disagreement_rate": 0.0}
+{"group": "A", "zh": "也许是因为你先对我好的", "ref": "- you were the spider in mywindow.", "pred": "Maybe because you've been good to me before", "disagreement_rate": 0.0}
+{"group": "B", "zh": "也许是因为你先对我好的", "ref": "- you were the spider in mywindow.", "pred": "Maybe because you've been good to me before", "disagreement_rate": 0.0}
+{"group": "C", "zh": "也许是因为你先对我好的", "ref": "- you were the spider in mywindow.", "pred": "Maybe because you've been good to me before", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你要我怎么做 德拉科", "ref": "- what would you have me do? draco.", "pred": "You want me to do what?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你要我怎么做 德拉科", "ref": "- what would you have me do? draco.", "pred": "You want me to do what?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你要我怎么做 德拉科", "ref": "- what would you have me do? draco.", "pred": "You want me to do what?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 它要进水了，好了", "ref": "she's going in the water. ok.", "pred": "- It's time to get in the water, all right", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 它要进水了，好了", "ref": "she's going in the water. ok.", "pred": "- It's time to get in the water, all right", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 它要进水了，好了", "ref": "she's going in the water. ok.", "pred": "- It's time to get in the water, all right", "disagreement_rate": 0.0}
+{"group": "A", "zh": "父亲有一点为你担心", "ref": "well, father is a little worried about you.", "pred": "Father has a little worry for you", "disagreement_rate": 0.0}
+{"group": "B", "zh": "父亲有一点为你担心", "ref": "well, father is a little worried about you.", "pred": "Father has a little worry for you", "disagreement_rate": 0.0}
+{"group": "C", "zh": "父亲有一点为你担心", "ref": "well, father is a little worried about you.", "pred": "Father has a little worry for you", "disagreement_rate": 0.0}
+{"group": "A", "zh": "好了好了，别围着", "ref": "enough. nothing to see.", "pred": "Goodbye, let's go", "disagreement_rate": 0.0}
+{"group": "B", "zh": "好了好了，别围着", "ref": "enough. nothing to see.", "pred": "Goodbye, let's go", "disagreement_rate": 0.0}
+{"group": "C", "zh": "好了好了，别围着", "ref": "enough. nothing to see.", "pred": "Goodbye, let's go", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 她居然来了", "ref": "- i can't believe she's here", "pred": "- She came", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 她居然来了", "ref": "- i can't believe she's here", "pred": "- She came", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 她居然来了", "ref": "- i can't believe she's here", "pred": "- She came", "disagreement_rate": 0.0}
+{"group": "A", "zh": "嘿 Jer 没听你回电话", "ref": "hey, jer. um, i haven't heard back.", "pred": "Hey Jer, no one is listening to you", "disagreement_rate": 0.0}
+{"group": "B", "zh": "嘿 Jer 没听你回电话", "ref": "hey, jer. um, i haven't heard back.", "pred": "Hey Jer, no one is listening to you", "disagreement_rate": 0.0}
+{"group": "C", "zh": "嘿 Jer 没听你回电话", "ref": "hey, jer. um, i haven't heard back.", "pred": "Hey Jer, no one is listening to you", "disagreement_rate": 0.0}
+{"group": "A", "zh": "杜根搬去佛罗里达了", "ref": "dugan moved to florida.", "pred": "The root of the tree moved to Florida", "disagreement_rate": 0.0}
+{"group": "B", "zh": "杜根搬去佛罗里达了", "ref": "dugan moved to florida.", "pred": "The root of the tree moved to Florida", "disagreement_rate": 0.0}
+{"group": "C", "zh": "杜根搬去佛罗里达了", "ref": "dugan moved to florida.", "pred": "Dung root moved to Florida", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "预算年度为2005年7月1日至2006年6月30日。)", "ref": "budget year is 1 july 2005 to 30 june 2006.", "pred": "The budget year is 2005-2006.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "预算年度为2005年7月1日至2006年6月30日。)", "ref": "budget year is 1 july 2005 to 30 june 2006.", "pred": "The budget year is 2005-2006.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "预算年度为2005年7月1日至2006年6月30日。)", "ref": "budget year is 1 july 2005 to 30 june 2006.", "pred": "The budget year is 2005-2006.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "-不，正好相反 -你们俩是夫妻吧？", "ref": "no, quite the reverse.", "pred": "-No, exactly the opposite - Are you married to them?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-不，正好相反 -你们俩是夫妻吧？", "ref": "no, quite the reverse.", "pred": "-No, exactly the opposite - Are you married to them?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "-不，正好相反 -你们俩是夫妻吧？", "ref": "no, quite the reverse.", "pred": "-No, exactly the opposite - Are you married to them?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我不著名。", "ref": "why did you win it for?", "pred": "I am not famous.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我不著名。", "ref": "why did you win it for?", "pred": "I am not famous.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我不著名。", "ref": "why did you win it for?", "pred": "I am not famous.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "让我猜猜, Jack.", "ref": "that's great. let me guess, jack.", "pred": "Let me guess, Jack.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "让我猜猜, Jack.", "ref": "that's great. let me guess, jack.", "pred": "Let me guess, Jack.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "让我猜猜, Jack.", "ref": "that's great. let me guess, jack.", "pred": "Let me guess, Jack.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我那封律师信写得很清楚", "ref": "my letter of attorney states clearly", "pred": "I wrote that letter very clearly", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我那封律师信写得很清楚", "ref": "my letter of attorney states clearly", "pred": "I wrote that letter very clearly", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我那封律师信写得很清楚", "ref": "my letter of attorney states clearly", "pred": "I wrote that letter very clearly", "disagreement_rate": 0.0}
+{"group": "A", "zh": "安保证书方案", "ref": "security certification programme", "pred": "Assurance Letter Scheme", "disagreement_rate": 0.0}
+{"group": "B", "zh": "安保证书方案", "ref": "security certification programme", "pred": "Assurance Letter Scheme", "disagreement_rate": 0.0}
+{"group": "C", "zh": "安保证书方案", "ref": "security certification programme", "pred": "Assurance Letter Scheme", "disagreement_rate": 0.0}
+{"group": "A", "zh": "像个娘们儿似的嚎什么?", "ref": "why do you whine like a pussy?", "pred": "What does a woman in a crying voice like?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "像个娘们儿似的嚎什么?", "ref": "why do you whine like a pussy?", "pred": "What does a woman in a crying voice like?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "像个娘们儿似的嚎什么?", "ref": "why do you whine like a pussy?", "pred": "What does a woman in a crying voice like?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我是我艺术品的唯一作者", "ref": "walter: i am the sole creator of my art.", "pred": "My art is my only author", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我是我艺术品的唯一作者", "ref": "walter: i am the sole creator of my art.", "pred": "My art is my only author", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我是我艺术品的唯一作者", "ref": "walter: i am the sole creator of my art.", "pred": "My art is my only author", "disagreement_rate": 0.0}
+{"group": "A", "zh": "扎克 你最好了", "ref": "zach, you are the best.", "pred": "You're the best", "disagreement_rate": 0.0}
+{"group": "B", "zh": "扎克 你最好了", "ref": "zach, you are the best.", "pred": "You're the best", "disagreement_rate": 0.0}
+{"group": "C", "zh": "扎克 你最好了", "ref": "zach, you are the best.", "pred": "You're the best", "disagreement_rate": 0.0}
+{"group": "A", "zh": "整天都是我们儿子？ 什么我们儿子？", "ref": "what do you mean our son?", "pred": "What are you doing all day to your son?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "整天都是我们儿子？ 什么我们儿子？", "ref": "what do you mean our son?", "pred": "What are you doing all day to your son?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "整天都是我们儿子？ 什么我们儿子？", "ref": "what do you mean our son?", "pred": "What are you doing all day to your son?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "2. 空间法", "ref": "space law", "pred": "2. spatial law", "disagreement_rate": 0.0}
+{"group": "B", "zh": "2. 空间法", "ref": "space law", "pred": "2. spatial law", "disagreement_rate": 0.0}
+{"group": "C", "zh": "2. 空间法", "ref": "space law", "pred": "2. spatial law", "disagreement_rate": 0.0}
+{"group": "A", "zh": "1. 公约草案初稿", "ref": "preliminary draft convention", "pred": "1. Draft of the Convention", "disagreement_rate": 0.0}
+{"group": "B", "zh": "1. 公约草案初稿", "ref": "preliminary draft convention", "pred": "1. Draft of the Convention", "disagreement_rate": 0.0}
+{"group": "C", "zh": "1. 公约草案初稿", "ref": "preliminary draft convention", "pred": "1. Draft of the Convention", "disagreement_rate": 0.0}
+{"group": "A", "zh": "二位还是请回吧", "ref": "guys, better leave now.", "pred": "Two, please", "disagreement_rate": 0.0}
+{"group": "B", "zh": "二位还是请回吧", "ref": "guys, better leave now.", "pred": "Two, please", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "二位还是请回吧", "ref": "guys, better leave now.", "pred": "Two, please", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "克劳迪奥·格拉米齐，意大利（军火）", "ref": "claudio gramizzi, italy (arms)", "pred": "Claudio Gagliardi, Italy (army)", "disagreement_rate": 0.0}
+{"group": "B", "zh": "克劳迪奥·格拉米齐，意大利（军火）", "ref": "claudio gramizzi, italy (arms)", "pred": "Claudio Gagliardi, Italian (armaments)", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "克劳迪奥·格拉米齐，意大利（军火）", "ref": "claudio gramizzi, italy (arms)", "pred": "Claudio Gagliardi, Italian (armaments)", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "看看，这恐怖的书山!", "ref": "just see, that makes it a horror!", "pred": "Look at this scary book mountain!", "disagreement_rate": 0.0}
+{"group": "B", "zh": "看看，这恐怖的书山!", "ref": "just see, that makes it a horror!", "pred": "Look at this scary book mountain!", "disagreement_rate": 0.0}
+{"group": "C", "zh": "看看，这恐怖的书山!", "ref": "just see, that makes it a horror!", "pred": "Look at this scary book mountain!", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我们要为你找一所新的学校", "ref": "we got to find you a new school.", "pred": "We must find a new school for you", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们要为你找一所新的学校", "ref": "we got to find you a new school.", "pred": "We must find a new school for you", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们要为你找一所新的学校", "ref": "we got to find you a new school.", "pred": "We must find a new school for you", "disagreement_rate": 0.0}
+{"group": "A", "zh": "来 帮你弄下领带", "ref": "come here, i'ii fix your tie.", "pred": "Help me put on my tie", "disagreement_rate": 0.0}
+{"group": "B", "zh": "来 帮你弄下领带", "ref": "come here, i'ii fix your tie.", "pred": "Help me put on my tie", "disagreement_rate": 0.0}
+{"group": "C", "zh": "来 帮你弄下领带", "ref": "come here, i'ii fix your tie.", "pred": "Help me put on my tie", "disagreement_rate": 0.0}
+{"group": "A", "zh": "3. 青少年中间滥用药物作为娱乐问题", "ref": "recreational drug abuse among young people", "pred": "3. The problem of drug use among teenagers", "disagreement_rate": 0.0}
+{"group": "B", "zh": "3. 青少年中间滥用药物作为娱乐问题", "ref": "recreational drug abuse among young people", "pred": "3. The problem of drug use among teenagers", "disagreement_rate": 0.0}
+{"group": "C", "zh": "3. 青少年中间滥用药物作为娱乐问题", "ref": "recreational drug abuse among young people", "pred": "3. The problem of drug use among teenagers", "disagreement_rate": 0.0}
+{"group": "A", "zh": "恶运似乎都远离了", "ref": "the damn thing seems to have gone out.", "pred": "The bad luck seems to have left", "disagreement_rate": 0.0}
+{"group": "B", "zh": "恶运似乎都远离了", "ref": "the damn thing seems to have gone out.", "pred": "The bad luck seems to have left", "disagreement_rate": 0.0}
+{"group": "C", "zh": "恶运似乎都远离了", "ref": "the damn thing seems to have gone out.", "pred": "The bad luck seems to have left", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我必须告诉安理会一个例子。", "ref": "i must share with the council one example.", "pred": "I must tell the Security Council an example.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我必须告诉安理会一个例子。", "ref": "i must share with the council one example.", "pred": "I must tell the Security Council an example.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我必须告诉安理会一个例子。", "ref": "i must share with the council one example.", "pred": "I must tell the Security Council an example.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "细九", "ref": "gale...", "pred": "九九", "disagreement_rate": 0.0}
+{"group": "B", "zh": "细九", "ref": "gale...", "pred": "九九", "disagreement_rate": 0.0}
+{"group": "C", "zh": "细九", "ref": "gale...", "pred": "九九", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 冷静，冷静", "ref": "- it's everything cool.", "pred": "- calm", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 冷静，冷静", "ref": "- it's everything cool.", "pred": "- calm", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 冷静，冷静", "ref": "- it's everything cool.", "pred": "- calm", "disagreement_rate": 0.0}
+{"group": "A", "zh": "是么... 然后呢？", "ref": "her tablewares were all lucky chuppy goods.", "pred": "Is it a question?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "是么... 然后呢？", "ref": "her tablewares were all lucky chuppy goods.", "pred": "Is it a question?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "是么... 然后呢？", "ref": "her tablewares were all lucky chuppy goods.", "pred": "Is it a question?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "怎么回事 或许我完蛋了", "ref": "i don't know. maybe i'm done.", "pred": "How are you?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "怎么回事 或许我完蛋了", "ref": "i don't know. maybe i'm done.", "pred": "How are you?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "怎么回事 或许我完蛋了", "ref": "i don't know. maybe i'm done.", "pred": "How are you?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我的意思是，不怕 是他自己清楚。", "ref": "i mean, not afraid to be himself... clearly.", "pred": "I mean, I don't care.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我的意思是，不怕 是他自己清楚。", "ref": "i mean, not afraid to be himself... clearly.", "pred": "I mean, I don't care.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我的意思是，不怕 是他自己清楚。", "ref": "i mean, not afraid to be himself... clearly.", "pred": "I mean, I don't care.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "-好样的 我定了二号球场 晚上七点 华盛顿市区", "ref": "i booked court two, 7:00 p.m, downtown y.", "pred": "-Good job 我定了二号球场 晚上七点 �", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-好样的 我定了二号球场 晚上七点 华盛顿市区", "ref": "i booked court two, 7:00 p.m, downtown y.", "pred": "-Good job 我定了二号球场 晚上七点 �", "disagreement_rate": 0.0}
+{"group": "C", "zh": "-好样的 我定了二号球场 晚上七点 华盛顿市区", "ref": "i booked court two, 7:00 p.m, downtown y.", "pred": "-Good job 我定了二号球场 晚上七点 �", "disagreement_rate": 0.0}
+{"group": "A", "zh": "不知道 信号被切断了", "ref": "i don't know, signal cut out.", "pred": "I don't know if the signal is cut off", "disagreement_rate": 0.0}
+{"group": "B", "zh": "不知道 信号被切断了", "ref": "i don't know, signal cut out.", "pred": "I don't know if the signal is cut off", "disagreement_rate": 0.0}
+{"group": "C", "zh": "不知道 信号被切断了", "ref": "i don't know, signal cut out.", "pred": "I don't know if the signal is cut off", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我相信你会喜欢它。", "ref": "i'm sure you'ii like it.", "pred": "I believe you will like it.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我相信你会喜欢它。", "ref": "i'm sure you'ii like it.", "pred": "I believe you will like it.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我相信你会喜欢它。", "ref": "i'm sure you'ii like it.", "pred": "I believe you will like it.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "FBT 全身抽动综合症", "ref": "fbt, full body tourette's.", "pred": "FBT", "disagreement_rate": 0.0}
+{"group": "B", "zh": "FBT 全身抽动综合症", "ref": "fbt, full body tourette's.", "pred": "FBT", "disagreement_rate": 0.0}
+{"group": "C", "zh": "FBT 全身抽动综合症", "ref": "fbt, full body tourette's.", "pred": "FBT", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你怎么还有心思? 来嘛!", "ref": "well... as long as they're gonna think it.", "pred": "How do you do?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你怎么还有心思? 来嘛!", "ref": "well... as long as they're gonna think it.", "pred": "How do you do?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你怎么还有心思? 来嘛!", "ref": "well... as long as they're gonna think it.", "pred": "How do you do?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我估计没有 但他想往那边发展 看", "ref": "he's trying, though. see?", "pred": "I estimate that he has no idea where to go, but he wants to develop", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我估计没有 但他想往那边发展 看", "ref": "he's trying, though. see?", "pred": "I estimate that he has no idea where to go, but he wants to develop", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我估计没有 但他想往那边发展 看", "ref": "he's trying, though. see?", "pred": "I estimate that he has no idea where to go, but he wants to develop", "disagreement_rate": 0.0}
+{"group": "A", "zh": "声音的家伙已经死了。", "ref": "sound guy's dead.", "pred": "The sound of the beast has died.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "声音的家伙已经死了。", "ref": "sound guy's dead.", "pred": "The sound of the beast has died.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "声音的家伙已经死了。", "ref": "sound guy's dead.", "pred": "The sound of the beast has died.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这是个临终时所作的, 他肯定看到了什么...", "ref": "a desperate, dying act.", "pred": "This is a dying man who saw what he was dying for...", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这是个临终时所作的, 他肯定看到了什么...", "ref": "a desperate, dying act.", "pred": "This is a dying man who saw what he was dying for...", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这是个临终时所作的, 他肯定看到了什么...", "ref": "a desperate, dying act.", "pred": "This is a dying man who saw what he was dying for...", "disagreement_rate": 0.0}
+{"group": "A", "zh": "拉丁美洲和加勒比国家： 阿根廷 塞萨尔·马约拉尔先生阁下", "ref": "republic of moldova h.e. mr. vsevolod grigore", "pred": "The United States of America", "disagreement_rate": 0.0}
+{"group": "B", "zh": "拉丁美洲和加勒比国家： 阿根廷 塞萨尔·马约拉尔先生阁下", "ref": "republic of moldova h.e. mr. vsevolod grigore", "pred": "The United States of America", "disagreement_rate": 0.0}
+{"group": "C", "zh": "拉丁美洲和加勒比国家： 阿根廷 塞萨尔·马约拉尔先生阁下", "ref": "republic of moldova h.e. mr. vsevolod grigore", "pred": "The United States of America", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我看你是深情的，心烦意乱。", "ref": "i see you are soulful, distracted.", "pred": "I see you as a loving one, and I am very upset.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我看你是深情的，心烦意乱。", "ref": "i see you are soulful, distracted.", "pred": "I see you as a loving one, and I am very upset.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我看你是深情的，心烦意乱。", "ref": "i see you are soulful, distracted.", "pred": "I see you as a loving one, and I am very upset.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "\"我知我可以\"", "ref": "i know i could", "pred": "\"I know I can\"", "disagreement_rate": 0.0}
+{"group": "B", "zh": "\"我知我可以\"", "ref": "i know i could", "pred": "\"I know I can\"", "disagreement_rate": 0.0}
+{"group": "C", "zh": "\"我知我可以\"", "ref": "i know i could", "pred": "\"I know I can\"", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我叫做庞德，詹姆斯庞德", "ref": "my name's bond. james bond.", "pred": "I am called James, and I am James", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我叫做庞德，詹姆斯庞德", "ref": "my name's bond. james bond.", "pred": "I am called James, and I am James", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我叫做庞德，詹姆斯庞德", "ref": "my name's bond. james bond.", "pred": "I am called James, and I am James", "disagreement_rate": 0.0}
+{"group": "A", "zh": "漫画的下一集，我画好了", "ref": "i drew the next part of the story.", "pred": "The next episode of the cartoon is finished.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "漫画的下一集，我画好了", "ref": "i drew the next part of the story.", "pred": "The next episode of the cartoon is finished.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "漫画的下一集，我画好了", "ref": "i drew the next part of the story.", "pred": "The next episode of the cartoon is finished.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这才像话各种爵士舞？", "ref": "- now you're talking! - all of 'em?", "pred": "This is like a jazz dance", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这才像话各种爵士舞？", "ref": "- now you're talking! - all of 'em?", "pred": "This is like a jazz dance", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这才像话各种爵士舞？", "ref": "- now you're talking! - all of 'em?", "pred": "This is like a jazz dance", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我就是小寿星", "ref": "i'm the birthday girl.", "pred": "I am just a little star", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我就是小寿星", "ref": "i'm the birthday girl.", "pred": "I am just a little star", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我就是小寿星", "ref": "i'm the birthday girl.", "pred": "I am just a little star", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你想180克 我的哥哥吗？", "ref": "you want 180 grams, my brother.", "pred": "How much do you want 180 grams of my brother?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你想180克 我的哥哥吗？", "ref": "you want 180 grams, my brother.", "pred": "How much do you want 180 grams of my brother?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你想180克 我的哥哥吗？", "ref": "you want 180 grams, my brother.", "pred": "How much do you want 180 grams of my brother?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "以神为先，其他一切都将随之而来", "ref": "put god first and everything else will follow.", "pred": "以神为先，其他一切都将随之而来", "disagreement_rate": 0.0}
+{"group": "B", "zh": "以神为先，其他一切都将随之而来", "ref": "put god first and everything else will follow.", "pred": "以神为先，其他一切都将随之而来", "disagreement_rate": 0.0}
+{"group": "C", "zh": "以神为先，其他一切都将随之而来", "ref": "put god first and everything else will follow.", "pred": "以神为先，其他一切都将随之而来", "disagreement_rate": 0.0}
+{"group": "A", "zh": "(a) 查明某人的身份和下落；", "ref": "(a) identification and location of persons;", "pred": "(a) to find out the identity and whereabouts of a person;", "disagreement_rate": 0.0}
+{"group": "B", "zh": "(a) 查明某人的身份和下落；", "ref": "(a) identification and location of persons;", "pred": "(a) to find out the identity and whereabouts of a person;", "disagreement_rate": 0.0}
+{"group": "C", "zh": "(a) 查明某人的身份和下落；", "ref": "(a) identification and location of persons;", "pred": "(a) to find out the identity and whereabouts of a person;", "disagreement_rate": 0.0}
+{"group": "A", "zh": "画的真好看！", "ref": "yeah, it's daddy. wow, great drawing.", "pred": "画的真好看！", "disagreement_rate": 0.0}
+{"group": "B", "zh": "画的真好看！", "ref": "yeah, it's daddy. wow, great drawing.", "pred": "画的真好看！", "disagreement_rate": 0.0}
+{"group": "C", "zh": "画的真好看！", "ref": "yeah, it's daddy. wow, great drawing.", "pred": "画的真好看！", "disagreement_rate": 0.0}
+{"group": "A", "zh": "蕾妮 这些都是治疗精神病的吧", "ref": "lanie, aren't those antipsychotics?", "pred": "This is a treatment for mental illness", "disagreement_rate": 0.0}
+{"group": "B", "zh": "蕾妮 这些都是治疗精神病的吧", "ref": "lanie, aren't those antipsychotics?", "pred": "This is a treatment for mental illness", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "蕾妮 这些都是治疗精神病的吧", "ref": "lanie, aren't those antipsychotics?", "pred": "This is a treatment for mental illness", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "他们是一见钟情 你们家人同意了这样的联姻吗?", "ref": "do your people approve of the match?", "pred": "They are in love with each other. Do you agree with their marriage proposal?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "他们是一见钟情 你们家人同意了这样的联姻吗?", "ref": "do your people approve of the match?", "pred": "They are in love with each other. Do you agree with their marriage proposal?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "他们是一见钟情 你们家人同意了这样的联姻吗?", "ref": "do your people approve of the match?", "pred": "They are in love with each other. Do you agree with their marriage proposal?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你不是胜!", "ref": "you're not sheng!", "pred": "You are not winning!", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你不是胜!", "ref": "you're not sheng!", "pred": "You are not winning!", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你不是胜!", "ref": "you're not sheng!", "pred": "You are not winning!", "disagreement_rate": 0.0}
+{"group": "A", "zh": "显然给你留下一笔钱", "ref": "and apparently left you some money.", "pred": "It's obvious that you've got a lot of money", "disagreement_rate": 0.0}
+{"group": "B", "zh": "显然给你留下一笔钱", "ref": "and apparently left you some money.", "pred": "It's obvious that you've got a lot of money", "disagreement_rate": 0.0}
+{"group": "C", "zh": "显然给你留下一笔钱", "ref": "and apparently left you some money.", "pred": "It's obvious that you've got a lot of money", "disagreement_rate": 0.0}
+{"group": "A", "zh": "先把课本翻开，第二课", "ref": "open your books, lesson two", "pred": "First, open the textbook, and read the second lesson.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "先把课本翻开，第二课", "ref": "open your books, lesson two", "pred": "First, open the textbook, and read the second lesson.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "先把课本翻开，第二课", "ref": "open your books, lesson two", "pred": "First, open the textbook, and read the second lesson.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "请相信我，当我告诉你", "ref": "believe me when i tell you", "pred": "请相信我，当我告诉你", "disagreement_rate": 0.0}
+{"group": "B", "zh": "请相信我，当我告诉你", "ref": "believe me when i tell you", "pred": "请相信我，当我告诉你", "disagreement_rate": 0.0}
+{"group": "C", "zh": "请相信我，当我告诉你", "ref": "believe me when i tell you", "pred": "请相信我，当我告诉你", "disagreement_rate": 0.0}
+{"group": "A", "zh": "国际青年商会", "ref": "junior chamber international", "pred": "International Youth Business Council", "disagreement_rate": 0.0}
+{"group": "B", "zh": "国际青年商会", "ref": "junior chamber international", "pred": "International Youth Business Council", "disagreement_rate": 0.0}
+{"group": "C", "zh": "国际青年商会", "ref": "junior chamber international", "pred": "International Youth Business Council", "disagreement_rate": 0.0}
+{"group": "A", "zh": "收获爱情", "ref": "gather the rose.", "pred": "Harvesting love", "disagreement_rate": 0.0}
+{"group": "B", "zh": "收获爱情", "ref": "gather the rose.", "pred": "Harvesting love", "disagreement_rate": 0.0}
+{"group": "C", "zh": "收获爱情", "ref": "gather the rose.", "pred": "Harvesting love", "disagreement_rate": 0.0}
+{"group": "A", "zh": "或者你可以看到的... 如果", "ref": "or you would... if...", "pred": "你也可以看到的... 如果", "disagreement_rate": 0.0}
+{"group": "B", "zh": "或者你可以看到的... 如果", "ref": "or you would... if...", "pred": "你也可以看到的... 如果", "disagreement_rate": 0.0}
+{"group": "C", "zh": "或者你可以看到的... 如果", "ref": "or you would... if...", "pred": "你也可以看到的... 如果", "disagreement_rate": 0.0}
+{"group": "A", "zh": "名单上的当事方", "ref": "parties on the list", "pred": "List of parties", "disagreement_rate": 0.0}
+{"group": "B", "zh": "名单上的当事方", "ref": "parties on the list", "pred": "List of parties", "disagreement_rate": 0.0}
+{"group": "C", "zh": "名单上的当事方", "ref": "parties on the list", "pred": "List of parties", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我们都可以把他们找出来", "ref": "harris or worse, we're gonna find them.", "pred": "We can find them all", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们都可以把他们找出来", "ref": "harris or worse, we're gonna find them.", "pred": "We can find them all", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们都可以把他们找出来", "ref": "harris or worse, we're gonna find them.", "pred": "We can find them all", "disagreement_rate": 0.0}
+{"group": "A", "zh": "也许只是来自摇滚乐吧", "ref": "or maybe it was just the rock 'n' roll.", "pred": "Maybe it's just rock music", "disagreement_rate": 0.0}
+{"group": "B", "zh": "也许只是来自摇滚乐吧", "ref": "or maybe it was just the rock 'n' roll.", "pred": "Maybe it's just rock music", "disagreement_rate": 0.0}
+{"group": "C", "zh": "也许只是来自摇滚乐吧", "ref": "or maybe it was just the rock 'n' roll.", "pred": "Maybe it's just rock music", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "有任何突发行为 我就扣扳机 这是程序", "ref": "all right, please don't move.", "pred": "任何突发行为 我就扣扳机 这是程序", "disagreement_rate": 0.0}
+{"group": "B", "zh": "有任何突发行为 我就扣扳机 这是程序", "ref": "all right, please don't move.", "pred": "任何突发行为 我就扣扳机 这是程序", "disagreement_rate": 0.0}
+{"group": "C", "zh": "有任何突发行为 我就扣扳机 这是程序", "ref": "all right, please don't move.", "pred": "任何突发行为 我就扣扳机 这是程序", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这正是我要告诉他们的", "ref": "that is what i tell them.", "pred": "This is what I want to tell them", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这正是我要告诉他们的", "ref": "that is what i tell them.", "pred": "This is what I want to tell them", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这正是我要告诉他们的", "ref": "that is what i tell them.", "pred": "This is what I want to tell them", "disagreement_rate": 0.0}
+{"group": "A", "zh": "谢谢你 克拉丽斯 明天见", "ref": "thank you, clarice. see you tomorrow.", "pred": "Thank you, Clarys, see you tomorrow", "disagreement_rate": 0.0}
+{"group": "B", "zh": "谢谢你 克拉丽斯 明天见", "ref": "thank you, clarice. see you tomorrow.", "pred": "Thank you, Clarys, see you tomorrow", "disagreement_rate": 0.0}
+{"group": "C", "zh": "谢谢你 克拉丽斯 明天见", "ref": "thank you, clarice. see you tomorrow.", "pred": "Thank you, Clarys, see you tomorrow", "disagreement_rate": 0.0}
+{"group": "A", "zh": "见上文脚注40。", "ref": "cit., supra note 40.", "pred": "See the footnotes 40.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "见上文脚注40。", "ref": "cit., supra note 40.", "pred": "See the footnotes 40.", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "见上文脚注40。", "ref": "cit., supra note 40.", "pred": "See the footnotes 40.", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "-保罗 我不是演员", "ref": "- paul, i am not an actor.", "pred": "-Paul is not an actor", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-保罗 我不是演员", "ref": "- paul, i am not an actor.", "pred": "-Paul is not an actor", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "-保罗 我不是演员", "ref": "- paul, i am not an actor.", "pred": "-Paul is not an actor", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "哈 利 波特 不會 生 多 比的 氣 的", "ref": "harry potter mustn' t be angry with dobby.", "pred": "What's the difference between the two?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "哈 利 波特 不會 生 多 比的 氣 的", "ref": "harry potter mustn' t be angry with dobby.", "pred": "What's the difference between the two?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "哈 利 波特 不會 生 多 比的 氣 的", "ref": "harry potter mustn' t be angry with dobby.", "pred": "What's the difference between the two?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我会发疯。", "ref": "you're blowing my mind.", "pred": "I will go crazy.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我会发疯。", "ref": "you're blowing my mind.", "pred": "I will go crazy.", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "我会发疯。", "ref": "you're blowing my mind.", "pred": "I will go crazy.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "火箭？", "ref": "-a rocket. a rocket?", "pred": "rocket", "disagreement_rate": 0.0}
+{"group": "B", "zh": "火箭？", "ref": "-a rocket. a rocket?", "pred": "rocket", "disagreement_rate": 0.0}
+{"group": "C", "zh": "火箭？", "ref": "-a rocket. a rocket?", "pred": "rocket", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "很久以前我就决定不追求任何女人了", "ref": "i decided long ago not to run after any girl.", "pred": "I've decided not to pursue any woman for a long time ago", "disagreement_rate": 0.0}
+{"group": "B", "zh": "很久以前我就决定不追求任何女人了", "ref": "i decided long ago not to run after any girl.", "pred": "I've decided not to pursue any woman for a long time ago", "disagreement_rate": 0.0}
+{"group": "C", "zh": "很久以前我就决定不追求任何女人了", "ref": "i decided long ago not to run after any girl.", "pred": "I've decided not to pursue any woman for a long time ago", "disagreement_rate": 0.0}
+{"group": "A", "zh": "哎呀，这不是我的邻居吗？", "ref": "is too good for you.", "pred": "Oh, that's not my neighbor!", "disagreement_rate": 0.0}
+{"group": "B", "zh": "哎呀，这不是我的邻居吗？", "ref": "is too good for you.", "pred": "Oh, that's not my neighbor!", "disagreement_rate": 0.0}
+{"group": "C", "zh": "哎呀，这不是我的邻居吗？", "ref": "is too good for you.", "pred": "Oh, that's not my neighbor!", "disagreement_rate": 0.0}
+{"group": "A", "zh": "星期天起床", "ref": "got up sunday morning.", "pred": "Sunday morning", "disagreement_rate": 0.0}
+{"group": "B", "zh": "星期天起床", "ref": "got up sunday morning.", "pred": "Sunday morning", "disagreement_rate": 0.0}
+{"group": "C", "zh": "星期天起床", "ref": "got up sunday morning.", "pred": "Sunday morning", "disagreement_rate": 0.0}
+{"group": "A", "zh": "她是非洲的女皇", "ref": "she's the queen of africa .", "pred": "She is the Queen of Africa", "disagreement_rate": 0.0}
+{"group": "B", "zh": "她是非洲的女皇", "ref": "she's the queen of africa .", "pred": "She is the Queen of Africa", "disagreement_rate": 0.0}
+{"group": "C", "zh": "她是非洲的女皇", "ref": "she's the queen of africa .", "pred": "She is the Queen of Africa", "disagreement_rate": 0.0}
+{"group": "A", "zh": "已安排好的。", "ref": "there's arrangements to be made.", "pred": "The arrangements have been made.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "已安排好的。", "ref": "there's arrangements to be made.", "pred": "The arrangements have been made.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "已安排好的。", "ref": "there's arrangements to be made.", "pred": "The arrangements have been made.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "老板 , 你咋睡那儿呢", "ref": "boss, you're sleeping there?", "pred": "你好，老板，你睡在哪儿呢", "disagreement_rate": 0.0}
+{"group": "B", "zh": "老板 , 你咋睡那儿呢", "ref": "boss, you're sleeping there?", "pred": "你好，老板，你睡在哪儿呢", "disagreement_rate": 0.0}
+{"group": "C", "zh": "老板 , 你咋睡那儿呢", "ref": "boss, you're sleeping there?", "pred": "你好，老板，你睡在哪儿呢", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你和他提到车牌号了吗?", "ref": "did you give him that license number?", "pred": "你提到车牌号了吗?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你和他提到车牌号了吗?", "ref": "did you give him that license number?", "pred": "你提到车牌号了吗?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你和他提到车牌号了吗?", "ref": "did you give him that license number?", "pred": "你提到车牌号了吗?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "布利克斯先生还指出", "ref": "mr. blix also stated that", "pred": "The British have also pointed out", "disagreement_rate": 0.0}
+{"group": "B", "zh": "布利克斯先生还指出", "ref": "mr. blix also stated that", "pred": "The British have also pointed out", "disagreement_rate": 0.0}
+{"group": "C", "zh": "布利克斯先生还指出", "ref": "mr. blix also stated that", "pred": "The British have also pointed out", "disagreement_rate": 0.0}
+{"group": "A", "zh": "多谢了 你太好了", "ref": "- thanks a lot. it was excellent.", "pred": "Thank you very much", "disagreement_rate": 0.0}
+{"group": "B", "zh": "多谢了 你太好了", "ref": "- thanks a lot. it was excellent.", "pred": "Thank you very much", "disagreement_rate": 0.0}
+{"group": "C", "zh": "多谢了 你太好了", "ref": "- thanks a lot. it was excellent.", "pred": "Thank you very much", "disagreement_rate": 0.0}
+{"group": "A", "zh": "所以你故意报复我", "ref": "so you're trying to get back at me", "pred": "So you deliberately hurt me", "disagreement_rate": 0.0}
+{"group": "B", "zh": "所以你故意报复我", "ref": "so you're trying to get back at me", "pred": "So you deliberately hurt me", "disagreement_rate": 0.0}
+{"group": "C", "zh": "所以你故意报复我", "ref": "so you're trying to get back at me", "pred": "So you deliberately hurt me", "disagreement_rate": 0.0}
+{"group": "A", "zh": "(b) 遵约问题状况", "ref": "(b) status of compliance issue", "pred": "(b) The problem situation", "disagreement_rate": 0.0}
+{"group": "B", "zh": "(b) 遵约问题状况", "ref": "(b) status of compliance issue", "pred": "(b) The problem situation", "disagreement_rate": 0.0}
+{"group": "C", "zh": "(b) 遵约问题状况", "ref": "(b) status of compliance issue", "pred": "(b) The problem situation", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 哎, 哎, 乔, 乔, 嘿", "ref": "hey. - come on, let's go.", "pred": "- Oh, oh, Joe, Joe, ah", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 哎, 哎, 乔, 乔, 嘿", "ref": "hey. - come on, let's go.", "pred": "- Oh, oh, Joe, Joe, ah", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 哎, 哎, 乔, 乔, 嘿", "ref": "hey. - come on, let's go.", "pred": "- Oh, oh, Joe, Joe, ah", "disagreement_rate": 0.0}
+{"group": "A", "zh": "千万别搞这种事...", "ref": "never do that...", "pred": "Never do that again!", "disagreement_rate": 0.0}
+{"group": "B", "zh": "千万别搞这种事...", "ref": "never do that...", "pred": "Never do that again!", "disagreement_rate": 0.0}
+{"group": "C", "zh": "千万别搞这种事...", "ref": "never do that...", "pred": "Never do that again!", "disagreement_rate": 0.0}
+{"group": "A", "zh": "自此以后，这个数字保持在20或更多。", "ref": "since then it has stood at 20 or more.", "pred": "Since then, this number has remained at least 20 or more.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "自此以后，这个数字保持在20或更多。", "ref": "since then it has stood at 20 or more.", "pred": "Since then, this number has remained at least 20 or more.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "自此以后，这个数字保持在20或更多。", "ref": "since then it has stood at 20 or more.", "pred": "Since then, this number has remained at least 20 or more.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "好吧 好吧 我们很快拆礼物", "ref": "you know what? this is what we'll do.", "pred": "Okay, okay, we'll get the gift soon", "disagreement_rate": 0.0}
+{"group": "B", "zh": "好吧 好吧 我们很快拆礼物", "ref": "you know what? this is what we'll do.", "pred": "Okay, okay, we'll get the gift soon", "disagreement_rate": 0.0}
+{"group": "C", "zh": "好吧 好吧 我们很快拆礼物", "ref": "you know what? this is what we'll do.", "pred": "Okay, okay, we'll get the gift soon", "disagreement_rate": 0.0}
+{"group": "A", "zh": "看来也不是免费的啊", "ref": "doesn't sound free to me.", "pred": "It's not free", "disagreement_rate": 0.0}
+{"group": "B", "zh": "看来也不是免费的啊", "ref": "doesn't sound free to me.", "pred": "It's not free", "disagreement_rate": 0.0}
+{"group": "C", "zh": "看来也不是免费的啊", "ref": "doesn't sound free to me.", "pred": "It's not free", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我们邻居不时都报警的", "ref": "my neighbors always call the police.", "pred": "We often get a lot of calls from our neighbors", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们邻居不时都报警的", "ref": "my neighbors always call the police.", "pred": "We often get a lot of calls from our neighbors", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们邻居不时都报警的", "ref": "my neighbors always call the police.", "pred": "We often get a lot of calls from our neighbors", "disagreement_rate": 0.0}
+{"group": "A", "zh": "2004年：改善公共部门的效率", "ref": "2004: improving public sector effectiveness", "pred": "2004: Improving the efficiency of public sector", "disagreement_rate": 0.0}
+{"group": "B", "zh": "2004年：改善公共部门的效率", "ref": "2004: improving public sector effectiveness", "pred": "2004: Improving the efficiency of public sector", "disagreement_rate": 0.0}
+{"group": "C", "zh": "2004年：改善公共部门的效率", "ref": "2004: improving public sector effectiveness", "pred": "2004: Improving the efficiency of public sector", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我们继续尽兴", "ref": "ladies and gerbils, you know the next part.", "pred": "We continue to have fun", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们继续尽兴", "ref": "ladies and gerbils, you know the next part.", "pred": "We continue to have fun", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "我们继续尽兴", "ref": "ladies and gerbils, you know the next part.", "pred": "We continue to have fun", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "我们能否找到足够资源？", "ref": "can we raise adequate resources?", "pred": "Can we find enough resources?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们能否找到足够资源？", "ref": "can we raise adequate resources?", "pred": "Can we find enough resources?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们能否找到足够资源？", "ref": "can we raise adequate resources?", "pred": "Can we find enough resources?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "引力塌缩的各个过程中", "ref": "or various processes that involve", "pred": "The collapse of a star is caused by the gravitational collapse of its core. The", "disagreement_rate": 0.0}
+{"group": "B", "zh": "引力塌缩的各个过程中", "ref": "or various processes that involve", "pred": "The collapse of a star is caused by the gravitational collapse of its core. The", "disagreement_rate": 0.0}
+{"group": "C", "zh": "引力塌缩的各个过程中", "ref": "or various processes that involve", "pred": "The collapse of a star is caused by the gravitational collapse of its core. The", "disagreement_rate": 0.0}
+{"group": "A", "zh": "最终上了报纸", "ref": "that ended up in the paper.", "pred": "The final article was published in the newspaper.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "最终上了报纸", "ref": "that ended up in the paper.", "pred": "The final article was published in the newspaper.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "最终上了报纸", "ref": "that ended up in the paper.", "pred": "The final article was published in the newspaper.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我想知道 如果你想和我一起。", "ref": "i was wondering if you want to join me.", "pred": "I want to know if you want to go with me.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我想知道 如果你想和我一起。", "ref": "i was wondering if you want to join me.", "pred": "I want to know if you want to go with me.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我想知道 如果你想和我一起。", "ref": "i was wondering if you want to join me.", "pred": "I want to know if you want to go with me.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "-击个掌吧", "ref": "- dude, high five", "pred": "-Let's shake hands", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-击个掌吧", "ref": "- dude, high five", "pred": "-Let's shake hands", "disagreement_rate": 0.0}
+{"group": "C", "zh": "-击个掌吧", "ref": "- dude, high five", "pred": "-Let's shake hands", "disagreement_rate": 0.0}
+{"group": "A", "zh": "Rob有很多才能", "ref": "the master will attend or", "pred": "Rob has many talents", "disagreement_rate": 0.0}
+{"group": "B", "zh": "Rob有很多才能", "ref": "the master will attend or", "pred": "Rob has many talents", "disagreement_rate": 0.0}
+{"group": "C", "zh": "Rob有很多才能", "ref": "the master will attend or", "pred": "Rob has many talents", "disagreement_rate": 0.0}
+{"group": "A", "zh": "就當做受懲罰 去做飯吧", "ref": "so think of it as the penalty...", "pred": "Just do it, go to the restaurant", "disagreement_rate": 0.0}
+{"group": "B", "zh": "就當做受懲罰 去做飯吧", "ref": "so think of it as the penalty...", "pred": "Just do it, go to the restaurant", "disagreement_rate": 0.0}
+{"group": "C", "zh": "就當做受懲罰 去做飯吧", "ref": "so think of it as the penalty...", "pred": "Just do it, go to the restaurant", "disagreement_rate": 0.0}
+{"group": "A", "zh": "現在我到達了幸福的彼岸", "ref": "and i'm on the other side.", "pred": "I'm at the end of the road to happiness", "disagreement_rate": 0.0}
+{"group": "B", "zh": "現在我到達了幸福的彼岸", "ref": "and i'm on the other side.", "pred": "I'm at the end of the road to happiness", "disagreement_rate": 0.0}
+{"group": "C", "zh": "現在我到達了幸福的彼岸", "ref": "and i'm on the other side.", "pred": "I'm at the end of the road to happiness", "disagreement_rate": 0.0}
+{"group": "A", "zh": "男人想在公平 格鬥中贏得女人", "ref": "the man wants to win a woman in a fair combat.", "pred": "男人想在公平格斗中赢得女人", "disagreement_rate": 0.0}
+{"group": "B", "zh": "男人想在公平 格鬥中贏得女人", "ref": "the man wants to win a woman in a fair combat.", "pred": "男人想在公平格斗中赢得女人", "disagreement_rate": 0.0}
+{"group": "C", "zh": "男人想在公平 格鬥中贏得女人", "ref": "the man wants to win a woman in a fair combat.", "pred": "男人想在公平格斗中赢得女人", "disagreement_rate": 0.0}
+{"group": "A", "zh": "就... 说声对不起吧", "ref": "just say you're sorry", "pred": "Sorry, please forgive me", "disagreement_rate": 0.0}
+{"group": "B", "zh": "就... 说声对不起吧", "ref": "just say you're sorry", "pred": "Sorry, please forgive me", "disagreement_rate": 0.0}
+{"group": "C", "zh": "就... 说声对不起吧", "ref": "just say you're sorry", "pred": "Sorry, please forgive me", "disagreement_rate": 0.0}
+{"group": "A", "zh": "为什么不让他去服兵役?", "ref": "why isn't that draft coming from the army?", "pred": "Why not let him go to serve in the military?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "为什么不让他去服兵役?", "ref": "why isn't that draft coming from the army?", "pred": "Why not let him go to serve in the army?", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "为什么不让他去服兵役?", "ref": "why isn't that draft coming from the army?", "pred": "Why not let him go to serve in the military?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "(建议4)", "ref": "(recommendation 4)", "pred": "(建议4)", "disagreement_rate": 0.0}
+{"group": "B", "zh": "(建议4)", "ref": "(recommendation 4)", "pred": "(建议4)", "disagreement_rate": 0.0}
+{"group": "C", "zh": "(建议4)", "ref": "(recommendation 4)", "pred": "(建议4)", "disagreement_rate": 0.0}
+{"group": "A", "zh": "建立特别帐户的目的，是资助各种项目、项目前和有关活动。", "ref": "the special account shall be established", "pred": "Establishing a special account is to support various projects, projects in advance and related", "disagreement_rate": 0.0}
+{"group": "B", "zh": "建立特别帐户的目的，是资助各种项目、项目前和有关活动。", "ref": "the special account shall be established", "pred": "Establishing a special account is to support various projects, projects in advance and related", "disagreement_rate": 0.0}
+{"group": "C", "zh": "建立特别帐户的目的，是资助各种项目、项目前和有关活动。", "ref": "the special account shall be established", "pred": "Establishing a special account is to support various projects, projects in advance and related", "disagreement_rate": 0.0}
+{"group": "A", "zh": "(f) 附录", "ref": "(f) appendices", "pred": "(f) 附录", "disagreement_rate": 0.0}
+{"group": "B", "zh": "(f) 附录", "ref": "(f) appendices", "pred": "(f) 附录", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "(f) 附录", "ref": "(f) appendices", "pred": "(f) 附录", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "曼谷真正的名字", "ref": "that's the real name of bangkok.", "pred": "Bangkok", "disagreement_rate": 0.0}
+{"group": "B", "zh": "曼谷真正的名字", "ref": "that's the real name of bangkok.", "pred": "Bangkok", "disagreement_rate": 0.0}
+{"group": "C", "zh": "曼谷真正的名字", "ref": "that's the real name of bangkok.", "pred": "Bangkok", "disagreement_rate": 0.0}
+{"group": "A", "zh": "美国是一个很大的国家，不是吗？", "ref": "america is a country very big, no?", "pred": "Yes, the United States is a very large country.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "美国是一个很大的国家，不是吗？", "ref": "america is a country very big, no?", "pred": "Yes, the United States is a very large country.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "美国是一个很大的国家，不是吗？", "ref": "america is a country very big, no?", "pred": "Yes, the United States is a very large country.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这真的需要谨慎不是吗？", "ref": "it's so tricky nowadays, don't you think?", "pred": "Is this really necessary?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这真的需要谨慎不是吗？", "ref": "it's so tricky nowadays, don't you think?", "pred": "Is this really necessary?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这真的需要谨慎不是吗？", "ref": "it's so tricky nowadays, don't you think?", "pred": "Is this really necessary?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "就在你身边，这是怎么回事？", "ref": "on your side, what's up?", "pred": "In the midst of your surroundings, what is happening?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "就在你身边，这是怎么回事？", "ref": "on your side, what's up?", "pred": "In the midst of your surroundings, what is happening?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "就在你身边，这是怎么回事？", "ref": "on your side, what's up?", "pred": "In the midst of your surroundings, what is happening?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "有客人穿着睡衣", "ref": "a gentleman in a nightshirt was there.", "pred": "There is a guest wearing a sleeping suit", "disagreement_rate": 0.0}
+{"group": "B", "zh": "有客人穿着睡衣", "ref": "a gentleman in a nightshirt was there.", "pred": "There is a guest wearing a sleeping suit", "disagreement_rate": 0.0}
+{"group": "C", "zh": "有客人穿着睡衣", "ref": "a gentleman in a nightshirt was there.", "pred": "There is a guest wearing a sleeping suit", "disagreement_rate": 0.0}
+{"group": "A", "zh": "第八条 工作人员关系", "ref": "article vii travel and removal expenses", "pred": "第八条 工作关系", "disagreement_rate": 0.0}
+{"group": "B", "zh": "第八条 工作人员关系", "ref": "article vii travel and removal expenses", "pred": "第八条 工作关系", "disagreement_rate": 0.0}
+{"group": "C", "zh": "第八条 工作人员关系", "ref": "article vii travel and removal expenses", "pred": "第八条 工作关系", "disagreement_rate": 0.0}
+{"group": "A", "zh": "有最好的生活。", "ref": "had the best life.", "pred": "There is the best life.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "有最好的生活。", "ref": "had the best life.", "pred": "There is the best life.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "有最好的生活。", "ref": "had the best life.", "pred": "There is the best life.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我送你去醫院。", "ref": "- no, no, no, no, no. i don't need...", "pred": "I'll take you to the hospital.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我送你去醫院。", "ref": "- no, no, no, no, no. i don't need...", "pred": "I'll take you to the hospital.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我送你去醫院。", "ref": "- no, no, no, no, no. i don't need...", "pred": "I'll take you to the hospital.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "说实话,我想收复马根达", "ref": "honestly, i'd like to get magenta back.", "pred": "I'm sorry, I want to recover Manguad", "disagreement_rate": 0.0}
+{"group": "B", "zh": "说实话,我想收复马根达", "ref": "honestly, i'd like to get magenta back.", "pred": "I'm sorry, I want to recover Manguad", "disagreement_rate": 0.0}
+{"group": "C", "zh": "说实话,我想收复马根达", "ref": "honestly, i'd like to get magenta back.", "pred": "I'm sorry, I want to recover Manguad", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 我把声音关小", "ref": "i'll turn the sound down, then.", "pred": "- I turned down the volume", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 我把声音关小", "ref": "i'll turn the sound down, then.", "pred": "- I turned down the volume", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 我把声音关小", "ref": "i'll turn the sound down, then.", "pred": "- I turned down the volume", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 我们这里不办理火车托运", "ref": "- we don't handle train baggage here.", "pred": "- We don't handle railway freight", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 我们这里不办理火车托运", "ref": "- we don't handle train baggage here.", "pred": "- We don't handle railway freight", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 我们这里不办理火车托运", "ref": "- we don't handle train baggage here.", "pred": "- We don't handle railway freight", "disagreement_rate": 0.0}
+{"group": "A", "zh": "不，我不想你成为受害者.", "ref": "no, and l don't like you being a martyr.", "pred": "I don't want you to be a victim.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "不，我不想你成为受害者.", "ref": "no, and l don't like you being a martyr.", "pred": "I don't want you to be a victim.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "不，我不想你成为受害者.", "ref": "no, and l don't like you being a martyr.", "pred": "I don't want you to be a victim.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "听说了 怎么来找我?", "ref": "i heard that. why you talking to me?", "pred": "I heard you", "disagreement_rate": 0.0}
+{"group": "B", "zh": "听说了 怎么来找我?", "ref": "i heard that. why you talking to me?", "pred": "I heard you", "disagreement_rate": 0.0}
+{"group": "C", "zh": "听说了 怎么来找我?", "ref": "i heard that. why you talking to me?", "pred": "I heard you", "disagreement_rate": 0.0}
+{"group": "A", "zh": "他就是爸爸", "ref": "he is my father", "pred": "He is his father", "disagreement_rate": 0.0}
+{"group": "B", "zh": "他就是爸爸", "ref": "he is my father", "pred": "He is his father", "disagreement_rate": 0.0}
+{"group": "C", "zh": "他就是爸爸", "ref": "he is my father", "pred": "He is his father", "disagreement_rate": 0.0}
+{"group": "A", "zh": "再等几天，好吧？", "ref": "let's just wait a few days, all right?", "pred": "I'll wait a few more days, okay?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "再等几天，好吧？", "ref": "let's just wait a few days, all right?", "pred": "I'll wait a few more days, okay?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "再等几天，好吧？", "ref": "let's just wait a few days, all right?", "pred": "I'll wait a few more days, okay?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "看吧，你可以的", "ref": "you see, you can do it.", "pred": "Look at me, you can do it", "disagreement_rate": 0.0}
+{"group": "B", "zh": "看吧，你可以的", "ref": "you see, you can do it.", "pred": "Look at me, you can do it", "disagreement_rate": 0.0}
+{"group": "C", "zh": "看吧，你可以的", "ref": "you see, you can do it.", "pred": "Look at me, you can do it", "disagreement_rate": 0.0}
+{"group": "A", "zh": "没有工会卡 也没有工作", "ref": "if you got no union card, you don't get a job.", "pred": "No union card, no job", "disagreement_rate": 0.0}
+{"group": "B", "zh": "没有工会卡 也没有工作", "ref": "if you got no union card, you don't get a job.", "pred": "No union card, no job", "disagreement_rate": 0.0}
+{"group": "C", "zh": "没有工会卡 也没有工作", "ref": "if you got no union card, you don't get a job.", "pred": "No union card, no job", "disagreement_rate": 0.0}
+{"group": "A", "zh": "那么她为什么不 刚回家", "ref": "so why doesn't she just come home?", "pred": "Then why didn't she come back", "disagreement_rate": 0.0}
+{"group": "B", "zh": "那么她为什么不 刚回家", "ref": "so why doesn't she just come home?", "pred": "Then why didn't she come back", "disagreement_rate": 0.0}
+{"group": "C", "zh": "那么她为什么不 刚回家", "ref": "so why doesn't she just come home?", "pred": "Then why didn't she come back", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "㈡ 托克劳问题", "ref": "(ii) question of tokelau", "pred": "Ⅱ. The Tocqueville Problem", "disagreement_rate": 0.0}
+{"group": "B", "zh": "㈡ 托克劳问题", "ref": "(ii) question of tokelau", "pred": "Ⅱ. The Tocqueville Problem", "disagreement_rate": 0.0}
+{"group": "C", "zh": "㈡ 托克劳问题", "ref": "(ii) question of tokelau", "pred": "Ⅱ. The Tocqueville Problem", "disagreement_rate": 0.0}
+{"group": "A", "zh": "新的案子", "ref": "new audits. have a good day.", "pred": "New case", "disagreement_rate": 0.0}
+{"group": "B", "zh": "新的案子", "ref": "new audits. have a good day.", "pred": "New case", "disagreement_rate": 0.0}
+{"group": "C", "zh": "新的案子", "ref": "new audits. have a good day.", "pred": "New case", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你知道，我们过去。", "ref": "you know, we're in the past.", "pred": "I know, we used to.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你知道，我们过去。", "ref": "you know, we're in the past.", "pred": "I know, we used to.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你知道，我们过去。", "ref": "you know, we're in the past.", "pred": "I know, we used to.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "1 《人口健康状况调查》，19971998年。", "ref": "demographic health survey-1997-1998", "pred": "1 19971998年。", "disagreement_rate": 0.0}
+{"group": "B", "zh": "1 《人口健康状况调查》，19971998年。", "ref": "demographic health survey-1997-1998", "pred": "1 19971998年。", "disagreement_rate": 0.0}
+{"group": "C", "zh": "1 《人口健康状况调查》，19971998年。", "ref": "demographic health survey-1997-1998", "pred": "1 19971998年。", "disagreement_rate": 0.0}
+{"group": "A", "zh": "詹姆斯要开车和她一起去伦敦。", "ref": "james was driving them both to london.", "pred": "James is going to drive to London with her.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "詹姆斯要开车和她一起去伦敦。", "ref": "james was driving them both to london.", "pred": "James is going to drive to London with her.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "詹姆斯要开车和她一起去伦敦。", "ref": "james was driving them both to london.", "pred": "James is going to drive to London with her.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这个日子并不属于他，他遇到了强手", "ref": "(reporter) it's not his day. he is beaten.", "pred": "This day is not his, he met a strong hand", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这个日子并不属于他，他遇到了强手", "ref": "(reporter) it's not his day. he is beaten.", "pred": "This day is not his, he met a strong hand", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这个日子并不属于他，他遇到了强手", "ref": "(reporter) it's not his day. he is beaten.", "pred": "This day is not his, he met a strong hand", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我做了一个的恶梦 真恐怖", "ref": "i had a bad nightmare.", "pred": "I had a bad dream", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我做了一个的恶梦 真恐怖", "ref": "i had a bad nightmare.", "pred": "I had a bad dream", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我做了一个的恶梦 真恐怖", "ref": "i had a bad nightmare.", "pred": "I had a bad dream", "disagreement_rate": 0.0}
+{"group": "A", "zh": "现在回去还有话好说", "ref": "we can still make peace.", "pred": "Now, let's say goodbye to the past", "disagreement_rate": 0.0}
+{"group": "B", "zh": "现在回去还有话好说", "ref": "we can still make peace.", "pred": "Now, let's say goodbye to the past", "disagreement_rate": 0.0}
+{"group": "C", "zh": "现在回去还有话好说", "ref": "we can still make peace.", "pred": "Now, let's say goodbye to the past", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你是这儿老大", "ref": "you are the boss here?", "pred": "You are here the oldest", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你是这儿老大", "ref": "you are the boss here?", "pred": "You are the biggest", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "你是这儿老大", "ref": "you are the boss here?", "pred": "You are the biggest", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "我们会淹死的", "ref": "we might drown.", "pred": "We will drown", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们会淹死的", "ref": "we might drown.", "pred": "We will drown", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们会淹死的", "ref": "we might drown.", "pred": "We will drown", "disagreement_rate": 0.0}
+{"group": "A", "zh": "妳丈夫跟我太太才有染！", "ref": "- liar! - thank you.", "pred": "My wife and I have a child with her husband.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "妳丈夫跟我太太才有染！", "ref": "- liar! - thank you.", "pred": "My wife and I have a child with her husband.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "妳丈夫跟我太太才有染！", "ref": "- liar! - thank you.", "pred": "My wife and I have a child with her husband.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "人已经到齐了，五分钟后准备好", "ref": "we're lined up and ready in five minutes.", "pred": "The people have arrived, and the train will be ready in five minutes", "disagreement_rate": 0.0}
+{"group": "B", "zh": "人已经到齐了，五分钟后准备好", "ref": "we're lined up and ready in five minutes.", "pred": "The people have arrived, and the train will be ready in five minutes", "disagreement_rate": 0.0}
+{"group": "C", "zh": "人已经到齐了，五分钟后准备好", "ref": "we're lined up and ready in five minutes.", "pred": "The people have arrived, and the train will be ready in five minutes", "disagreement_rate": 0.0}
+{"group": "A", "zh": "电话分线装好", "ref": "securing bridge clips.", "pred": "Telephone line installed", "disagreement_rate": 0.0}
+{"group": "B", "zh": "电话分线装好", "ref": "securing bridge clips.", "pred": "Telephone line installed", "disagreement_rate": 0.0}
+{"group": "C", "zh": "电话分线装好", "ref": "securing bridge clips.", "pred": "Telephone line installed", "disagreement_rate": 0.0}
+{"group": "A", "zh": "卡薇雅", "ref": "kaavya. kaavya.", "pred": "Karaviya", "disagreement_rate": 0.0}
+{"group": "B", "zh": "卡薇雅", "ref": "kaavya. kaavya.", "pred": "Karaviya", "disagreement_rate": 0.0}
+{"group": "C", "zh": "卡薇雅", "ref": "kaavya. kaavya.", "pred": "Karaviya", "disagreement_rate": 0.0}
+{"group": "A", "zh": "手槍和火藥 快點走", "ref": "a pistol and powder. go quickly now.", "pred": "Handgun and gunpowder", "disagreement_rate": 0.0}
+{"group": "B", "zh": "手槍和火藥 快點走", "ref": "a pistol and powder. go quickly now.", "pred": "Handgun and gunpowder", "disagreement_rate": 0.0}
+{"group": "C", "zh": "手槍和火藥 快點走", "ref": "a pistol and powder. go quickly now.", "pred": "Handgun and gunpowder", "disagreement_rate": 0.0}
+{"group": "A", "zh": "他们都吃的不错", "ref": "they've eaten a lot.", "pred": "They all like to eat well", "disagreement_rate": 0.0}
+{"group": "B", "zh": "他们都吃的不错", "ref": "they've eaten a lot.", "pred": "They all like to eat well", "disagreement_rate": 0.0}
+{"group": "C", "zh": "他们都吃的不错", "ref": "they've eaten a lot.", "pred": "They all like to eat well", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 她剛剛說什麼？", "ref": "- what did she say? - mmm.", "pred": "- What did she just say?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 她剛剛說什麼？", "ref": "- what did she say? - mmm.", "pred": "- What did she just say?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 她剛剛說什麼？", "ref": "- what did she say? - mmm.", "pred": "- What did she just say?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "怎么回事 这种不祥的感觉", "ref": "why do i have bad premonition?", "pred": "How do I know if I have a bad dream?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "怎么回事 这种不祥的感觉", "ref": "why do i have bad premonition?", "pred": "How do I know if I have a bad dream?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "怎么回事 这种不祥的感觉", "ref": "why do i have bad premonition?", "pred": "How do I know if I have a bad dream?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我从不需要", "ref": "i never need one, dad.", "pred": "I don't need", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我从不需要", "ref": "i never need one, dad.", "pred": "I don't need", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "我从不需要", "ref": "i never need one, dad.", "pred": "I don't need", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "- 是哪里的女人？", "ref": "- where were the women?", "pred": "- Where is the woman from?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 是哪里的女人？", "ref": "- where were the women?", "pred": "- Where is the woman from?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 是哪里的女人？", "ref": "- where were the women?", "pred": "- Where is the woman from?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "(a) 全球宣传活动和分析；", "ref": "(a) global advocacy and analysis;", "pred": "(a) global campaigns and analysis", "disagreement_rate": 0.0}
+{"group": "B", "zh": "(a) 全球宣传活动和分析；", "ref": "(a) global advocacy and analysis;", "pred": "(a) global campaigns and analysis", "disagreement_rate": 0.0}
+{"group": "C", "zh": "(a) 全球宣传活动和分析；", "ref": "(a) global advocacy and analysis;", "pred": "(a) global campaigns and analysis", "disagreement_rate": 0.0}
+{"group": "A", "zh": "都是你 阿牛", "ref": "it's all your fault mr ox.", "pred": "You are all my cows", "disagreement_rate": 0.0}
+{"group": "B", "zh": "都是你 阿牛", "ref": "it's all your fault mr ox.", "pred": "You are all my cows", "disagreement_rate": 0.0}
+{"group": "C", "zh": "都是你 阿牛", "ref": "it's all your fault mr ox.", "pred": "You are all my cows", "disagreement_rate": 0.0}
+{"group": "A", "zh": "对 对 就是她", "ref": "yeah, yeah, yeah, that's her.", "pred": "对 对 就是她", "disagreement_rate": 0.0}
+{"group": "B", "zh": "对 对 就是她", "ref": "yeah, yeah, yeah, that's her.", "pred": "对 对 就是她", "disagreement_rate": 0.0}
+{"group": "C", "zh": "对 对 就是她", "ref": "yeah, yeah, yeah, that's her.", "pred": "对 对 就是她", "disagreement_rate": 0.0}
+{"group": "A", "zh": "好吧 28", "ref": "all right, no, no. twenty-eight.", "pred": "Goodbye 28", "disagreement_rate": 0.0}
+{"group": "B", "zh": "好吧 28", "ref": "all right, no, no. twenty-eight.", "pred": "Goodbye 28", "disagreement_rate": 0.0}
+{"group": "C", "zh": "好吧 28", "ref": "all right, no, no. twenty-eight.", "pred": "Goodbye 28", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这里一点点钱", "ref": "here's some money", "pred": "Here is a penny", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这里一点点钱", "ref": "here's some money", "pred": "Here is a penny", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这里一点点钱", "ref": "here's some money", "pred": "Here is a penny", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我是边界巡逻的创始人", "ref": "l'm a former border patrol agent.", "pred": "I am the founder of the border patrol", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我是边界巡逻的创始人", "ref": "l'm a former border patrol agent.", "pred": "I am the founder of the border patrol", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我是边界巡逻的创始人", "ref": "l'm a former border patrol agent.", "pred": "I am the founder of the border patrol", "disagreement_rate": 0.0}
+{"group": "A", "zh": "有几个因素造成了这种变化。", "ref": "a number of factors accounted for the change.", "pred": "How many factors caused this change?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "有几个因素造成了这种变化。", "ref": "a number of factors accounted for the change.", "pred": "How many factors caused this change?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "有几个因素造成了这种变化。", "ref": "a number of factors accounted for the change.", "pred": "How many factors caused this change?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 技术主管。", "ref": "- by the head technician", "pred": "- Technical supervisor.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 技术主管。", "ref": "- by the head technician", "pred": "- Technical supervisor.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 技术主管。", "ref": "- by the head technician", "pred": "- Technical supervisor.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "- 沙漏", "ref": "- hourglass.", "pred": "- sifter", "disagreement_rate": 0.0}
+{"group": "B", "zh": "- 沙漏", "ref": "- hourglass.", "pred": "- sifter", "disagreement_rate": 0.0}
+{"group": "C", "zh": "- 沙漏", "ref": "- hourglass.", "pred": "- sifter", "disagreement_rate": 0.0}
+{"group": "A", "zh": "想不想親我一下？", "ref": "how would you like to give me a kiss?", "pred": "Do you want to kiss me?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "想不想親我一下？", "ref": "how would you like to give me a kiss?", "pred": "Do you want to kiss me?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "想不想親我一下？", "ref": "how would you like to give me a kiss?", "pred": "Do you want to kiss me?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "剛剛從監獄出來,對嗎?", "ref": "just get out, did ya? hmm?", "pred": "Just from the prison, is that right?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "剛剛從監獄出來,對嗎?", "ref": "just get out, did ya? hmm?", "pred": "Just from the prison, is that right?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "剛剛從監獄出來,對嗎?", "ref": "just get out, did ya? hmm?", "pred": "Just from the prison, is that right?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "-祝你好运 盖伊", "ref": "- good luck, guy.", "pred": "-May you have a good year", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-祝你好运 盖伊", "ref": "- good luck, guy.", "pred": "-May you have a good year", "disagreement_rate": 0.0}
+{"group": "C", "zh": "-祝你好运 盖伊", "ref": "- good luck, guy.", "pred": "-May you have a good year", "disagreement_rate": 0.0}
+{"group": "A", "zh": "表14. 中 断 费 索 赔 (科威特第纳尔)", "ref": "(kuwaiti dinars)", "pred": "Table 14. Breakage Compensation (Kuwaiti Dinar)", "disagreement_rate": 0.0}
+{"group": "B", "zh": "表14. 中 断 费 索 赔 (科威特第纳尔)", "ref": "(kuwaiti dinars)", "pred": "Table 14. Breakage Compensation (Kuwaiti Dinar)", "disagreement_rate": 0.0}
+{"group": "C", "zh": "表14. 中 断 费 索 赔 (科威特第纳尔)", "ref": "(kuwaiti dinars)", "pred": "Table 14. Breakage Compensation (Kuwaiti Dinar)", "disagreement_rate": 0.0}
+{"group": "A", "zh": "发展中国家面临的气候挑战", "ref": "the climate challenge for developing countries", "pred": "Developing countries face climate challenges", "disagreement_rate": 0.0}
+{"group": "B", "zh": "发展中国家面临的气候挑战", "ref": "the climate challenge for developing countries", "pred": "Developing countries face climate challenges", "disagreement_rate": 0.0}
+{"group": "C", "zh": "发展中国家面临的气候挑战", "ref": "the climate challenge for developing countries", "pred": "Developing countries face climate challenges", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你并不是真正的乡村医生 你为什么来这?", "ref": "you're not exactly a country doctor.", "pred": "You are not a real doctor in the countryside? Why are you here?", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你并不是真正的乡村医生 你为什么来这?", "ref": "you're not exactly a country doctor.", "pred": "You are not a real doctor in the countryside? Why are you here?", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你并不是真正的乡村医生 你为什么来这?", "ref": "you're not exactly a country doctor.", "pred": "You are not a real doctor in the countryside? Why are you here?", "disagreement_rate": 0.0}
+{"group": "A", "zh": "现在，Kid出了这事...", "ref": "now, with kid...", "pred": "Now, Kid has done this...", "disagreement_rate": 0.0}
+{"group": "B", "zh": "现在，Kid出了这事...", "ref": "now, with kid...", "pred": "Now, Kid has done this...", "disagreement_rate": 0.0}
+{"group": "C", "zh": "现在，Kid出了这事...", "ref": "now, with kid...", "pred": "Now, Kid has done this...", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "и炳秈ㄓぃ琌盾", "ref": "were in, arentt we?", "pred": "andb�", "disagreement_rate": 0.0}
+{"group": "B", "zh": "и炳秈ㄓぃ琌盾", "ref": "were in, arentt we?", "pred": "andb�", "disagreement_rate": 0.0}
+{"group": "C", "zh": "и炳秈ㄓぃ琌盾", "ref": "were in, arentt we?", "pred": "andb�", "disagreement_rate": 0.0}
+{"group": "A", "zh": "抓了很多？", "ref": "caught many?", "pred": "A lot of people have been caught.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "抓了很多？", "ref": "caught many?", "pred": "A lot of people have been caught.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "抓了很多？", "ref": "caught many?", "pred": "A lot of people have been caught.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你们好吗 很好你的狗怎么样？", "ref": "i'm sorry. okay, drinks for everybody.", "pred": "你好，你怎么样？", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你们好吗 很好你的狗怎么样？", "ref": "i'm sorry. okay, drinks for everybody.", "pred": "你好，你怎么样？", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你们好吗 很好你的狗怎么样？", "ref": "i'm sorry. okay, drinks for everybody.", "pred": "你好，你怎么样？", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我打了十几次电话都没有找到你", "ref": "- i called 14 times, but couldn't reach you.", "pred": "I've called you ten times and you haven't answered", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我打了十几次电话都没有找到你", "ref": "- i called 14 times, but couldn't reach you.", "pred": "I've called you ten times and you haven't answered", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我打了十几次电话都没有找到你", "ref": "- i called 14 times, but couldn't reach you.", "pred": "I've called you ten times and you haven't answered", "disagreement_rate": 0.0}
+{"group": "A", "zh": "这一招够阴的 道格", "ref": "that was a dirty shot, doug.", "pred": "This is a good trick", "disagreement_rate": 0.0}
+{"group": "B", "zh": "这一招够阴的 道格", "ref": "that was a dirty shot, doug.", "pred": "This is a good trick", "disagreement_rate": 0.0}
+{"group": "C", "zh": "这一招够阴的 道格", "ref": "that was a dirty shot, doug.", "pred": "This is a good trick", "disagreement_rate": 0.0}
+{"group": "A", "zh": "还有你们，先生们", "ref": "and you, gentlemen", "pred": "There are still you, sir", "disagreement_rate": 0.0}
+{"group": "B", "zh": "还有你们，先生们", "ref": "and you, gentlemen", "pred": "There are still you, sir", "disagreement_rate": 0.0}
+{"group": "C", "zh": "还有你们，先生们", "ref": "and you, gentlemen", "pred": "There are still you, sir", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你先看一下标题", "ref": "you look at the title", "pred": "你先看一下标题", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你先看一下标题", "ref": "you look at the title", "pred": "你先看一下标题", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你先看一下标题", "ref": "you look at the title", "pred": "你先看一下标题", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我们这点儿人，他们根本看不上", "ref": "they couldn't care less about us", "pred": "We have this one person, they don't see him", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我们这点儿人，他们根本看不上", "ref": "they couldn't care less about us", "pred": "We have this one person, they don't see him", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我们这点儿人，他们根本看不上", "ref": "they couldn't care less about us", "pred": "We have this one person, they don't see him", "disagreement_rate": 0.0}
+{"group": "A", "zh": "所以她要我 前来四处打听。", "ref": "so she wanted me to come and ask around.", "pred": "So she wants me to go to all over the place to find out.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "所以她要我 前来四处打听。", "ref": "so she wanted me to come and ask around.", "pred": "So she wants me to go to the four corners of the world to look for", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "所以她要我 前来四处打听。", "ref": "so she wanted me to come and ask around.", "pred": "So she wants me to go to the four corners of the world to look for", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "112. 学术界对此问题的意见有所分歧。", "ref": "academic opinion is divided on this issue.", "pred": "112. There is some disagreement on the academic issues.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "112. 学术界对此问题的意见有所分歧。", "ref": "academic opinion is divided on this issue.", "pred": "112. There is some disagreement on the academic issues.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "112. 学术界对此问题的意见有所分歧。", "ref": "academic opinion is divided on this issue.", "pred": "112. There is some disagreement on the academic issues.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "见过但和你干的不一样", "ref": "- no. not looking like you do.", "pred": "See but different from you", "disagreement_rate": 0.0}
+{"group": "B", "zh": "见过但和你干的不一样", "ref": "- no. not looking like you do.", "pred": "See but different from you", "disagreement_rate": 0.0}
+{"group": "C", "zh": "见过但和你干的不一样", "ref": "- no. not looking like you do.", "pred": "See but different from you", "disagreement_rate": 0.0}
+{"group": "A", "zh": "他们正在传递 下来从他们过去的垃圾。", "ref": "they're passing down garbage from their past.", "pred": "They are passing on the garbage from their past.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "他们正在传递 下来从他们过去的垃圾。", "ref": "they're passing down garbage from their past.", "pred": "They are passing on the garbage from their past.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "他们正在传递 下来从他们过去的垃圾。", "ref": "they're passing down garbage from their past.", "pred": "They are passing on the garbage from their past.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你又没念完　没错", "ref": "- you never finished. - no.", "pred": "You've finished reading it", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你又没念完　没错", "ref": "- you never finished. - no.", "pred": "You've finished reading it", "disagreement_rate": 0.0625}
+{"group": "C", "zh": "你又没念完　没错", "ref": "- you never finished. - no.", "pred": "You've finished reading it", "disagreement_rate": 0.0625}
+{"group": "A", "zh": "-看到了吧,我真的曾说过", "ref": "- see, i did say that.", "pred": "-I saw that, I really have said that", "disagreement_rate": 0.0}
+{"group": "B", "zh": "-看到了吧,我真的曾说过", "ref": "- see, i did say that.", "pred": "-I saw that, I really have said that", "disagreement_rate": 0.0}
+{"group": "C", "zh": "-看到了吧,我真的曾说过", "ref": "- see, i did say that.", "pred": "-I saw that, I really have said that", "disagreement_rate": 0.0}
+{"group": "A", "zh": "你最近寫什麼？", "ref": "what've you been writing lately?", "pred": "你最近寫什麼？", "disagreement_rate": 0.0}
+{"group": "B", "zh": "你最近寫什麼？", "ref": "what've you been writing lately?", "pred": "你最近寫什麼？", "disagreement_rate": 0.0}
+{"group": "C", "zh": "你最近寫什麼？", "ref": "what've you been writing lately?", "pred": "你最近寫什麼？", "disagreement_rate": 0.0}
+{"group": "A", "zh": "走的时候，妈妈。", "ref": "time to go, mama.", "pred": "When I walked out, my mother.", "disagreement_rate": 0.0}
+{"group": "B", "zh": "走的时候，妈妈。", "ref": "time to go, mama.", "pred": "When I walked out, my mother.", "disagreement_rate": 0.0}
+{"group": "C", "zh": "走的时候，妈妈。", "ref": "time to go, mama.", "pred": "When I walked out, my mother.", "disagreement_rate": 0.0}
+{"group": "A", "zh": "我不是压抑或保守", "ref": "i'm not inhibited or closed-minded.", "pred": "I am not repressed or conservative", "disagreement_rate": 0.0}
+{"group": "B", "zh": "我不是压抑或保守", "ref": "i'm not inhibited or closed-minded.", "pred": "I am not repressed or conservative", "disagreement_rate": 0.0}
+{"group": "C", "zh": "我不是压抑或保守", "ref": "i'm not inhibited or closed-minded.", "pred": "I am not repressed or conservative", "disagreement_rate": 0.0}
+{"group": "A", "zh": "亨利， 你別想更改報上已登了訃聞", "ref": "you don't want talk. the notice in the times.", "pred": "亨利，别想更改报上已登了的传闻", "disagreement_rate": 0.0}
+{"group": "B", "zh": "亨利， 你別想更改報上已登了訃聞", "ref": "you don't want talk. the notice in the times.", "pred": "亨利，别想更改报上已登了的传闻", "disagreement_rate": 0.0}
+{"group": "C", "zh": "亨利， 你別想更改報上已登了訃聞", "ref": "you don't want talk. the notice in the times.", "pred": "亨利，别想更改报上已登了的传闻", "disagreement_rate": 0.0}
+{"group": "A", "zh": "就像它被称作的， 那个\"死亡女孩\"的案子！", "ref": "the \"snuff girls\" case, as it's been called.", "pred": "As it is called, the case of the \"death girl\"", "disagreement_rate": 0.0}
+{"group": "B", "zh": "就像它被称作的， 那个\"死亡女孩\"的案子！", "ref": "the \"snuff girls\" case, as it's been called.", "pred": "As it is called, the case of the \"death girl\"", "disagreement_rate": 0.0}
+{"group": "C", "zh": "就像它被称作的， 那个\"死亡女孩\"的案子！", "ref": "the \"snuff girls\" case, as it's been called.", "pred": "As it is called, the case of the \"death girl\"", "disagreement_rate": 0.0}
+{"group": "A", "zh": "那么我们会很惨", "ref": "then we got a very serious problem.", "pred": "Then we will be very sad", "disagreement_rate": 0.0}
+{"group": "B", "zh": "那么我们会很惨", "ref": "then we got a very serious problem.", "pred": "Then we will be very sad", "disagreement_rate": 0.0}
+{"group": "C", "zh": "那么我们会很惨", "ref": "then we got a very serious problem.", "pred": "Then we will be very sad", "disagreement_rate": 0.0}
+{"group": "A", "zh": "好好用餐、听话、安静", "ref": "eat properly, listen, be quiet, go to", "pred": "Good eating, listening, quiet", "disagreement_rate": 0.0}
+{"group": "B", "zh": "好好用餐、听话、安静", "ref": "eat properly, listen, be quiet, go to", "pred": "Good eating, listening, quiet", "disagreement_rate": 0.0}
+{"group": "C", "zh": "好好用餐、听话、安静", "ref": "eat properly, listen, be quiet, go to", "pred": "Good eating, listening, quiet", "disagreement_rate": 0.0}
+{"group": "A", "zh": "反对：", "ref": "against:", "pred": "oppose", "disagreement_rate": 0.0}
+{"group": "B", "zh": "反对：", "ref": "against:", "pred": "oppose", "disagreement_rate": 0.0}
+{"group": "C", "zh": "反对：", "ref": "against:", "pred": "oppose", "disagreement_rate": 0.0}
+{"group": "A", "zh": "开始使用 脆的指甲和头发", "ref": "have started ... nails and brittle hair ...", "pred": "Start using a hard, brittle nail and hair", "disagreement_rate": 0.0}
+{"group": "B", "zh": "开始使用 脆的指甲和头发", "ref": "have started ... nails and brittle hair ...", "pred": "Start using a hard, brittle nail and hair", "disagreement_rate": 0.0}
+{"group": "C", "zh": "开始使用 脆的指甲和头发", "ref": "have started ... nails and brittle hair ...", "pred": "Start using a hard, brittle nail and hair", "disagreement_rate": 0.0}

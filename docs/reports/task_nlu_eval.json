@@ -1,0 +1,18 @@
+{
+  "domains": [
+    "appointment",
+    "delivery",
+    "flight",
+    "food",
+    "hotel",
+    "repair",
+    "restaurant",
+    "topup",
+    "train"
+  ],
+  "train_turns": 9177,
+  "val_turns": 3050,
+  "val_domain_balanced_acc": 0.8565,
+  "verdict": "PASS: 任务领域 NLU 在留出 session 上有效",
+  "note": "学习式领域识别 NLU 用任务语料训练（非合成模板），按 session 切分留出评测。"
+}

@@ -1,0 +1,14 @@
+{
+  "train_turns": 10777,
+  "val_turns": 3615,
+  "val_sessions": 750,
+  "overall_balanced_acc": 1.0,
+  "ambiguous_subset": {
+    "context_aware": 1.0,
+    "belief_cleared_blind": 0.5,
+    "delta": 0.5
+  },
+  "verdict": "PASS: 学习式 context-aware policy 在留出 session 上 belief 强有效",
+  "ckpt": "checkpoints\\active_inference\\context_policy.pt",
+  "note": "按 session 切分防泄漏；端到端逐轮用该轮 belief 预测动作。belief_cleared_blind=同模型清空 belief 的盲对照。"
+}

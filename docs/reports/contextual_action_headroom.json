@@ -1,0 +1,20 @@
+{
+  "n_samples": 14013,
+  "vocab_size": 97,
+  "ambiguous_frac": 0.5591,
+  "class_dist": {
+    "answer": 4827,
+    "ask_clarification": 4693,
+    "retrieve": 1711,
+    "refuse": 1125,
+    "update_memory": 1657
+  },
+  "epochs": 200,
+  "baseline_overall_bal_acc": 0.9184,
+  "belief_overall_bal_acc": 1.0,
+  "baseline_ambiguous_bal_acc": 0.7731,
+  "belief_ambiguous_bal_acc": 1.0,
+  "ambiguous_delta": 0.2269,
+  "verdict": "PASS: belief 机制在歧义子集显著胜出（headroom 真实存在）",
+  "note": "唯一变量=能否访问 belief（已知城市/有无 pending 请求）。歧义轮次同句不同标签，只看当前句必翻车。"
+}

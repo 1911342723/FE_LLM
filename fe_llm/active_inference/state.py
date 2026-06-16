@@ -33,6 +33,13 @@ class BeliefState:
     last_action: str | None = None
     # 上一轮是否发出了澄清请求（即模型预期下一观测应当补充信息）。
     pending_clarification: bool = False
+    # 槽位级记忆：已填槽位（slot_key -> value）与正在等待澄清的槽位键。
+    # 把"通用 pending_clarification"升级为"槽位级 belief"的地基（见 经验.md headroom 首证）。
+    known_slots: dict[str, str] = field(default_factory=dict)
+    pending_slot: str | None = None
+    # B2d：活跃任务领域（booking/hotel/reminder…），用于消解"领域未明示的跟进句"——
+    # 真实数据(CrossWOZ)验证 belief 的真实 headroom 在状态/领域追踪（见 经验.md B2 系列）。
+    active_domain: str | None = None
 
     @classmethod
     def empty(cls, dim: int = 128) -> "BeliefState":
@@ -49,6 +56,9 @@ class BeliefState:
             "turn_index": self.turn_index,
             "last_action": self.last_action,
             "pending_clarification": self.pending_clarification,
+            "known_slots": dict(self.known_slots),
+            "pending_slot": self.pending_slot,
+            "active_domain": self.active_domain,
         }
 
 

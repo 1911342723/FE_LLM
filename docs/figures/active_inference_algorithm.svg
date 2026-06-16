@@ -1,0 +1,114 @@
+<svg width="1320" height="820" viewBox="0 0 1320 820" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">FE-LLM expected free energy policy selection</title>
+  <desc id="desc">A scientific matrix figure decomposing expected free energy by action and selecting the minimum action.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#111827"/>
+    </marker>
+    <style>
+      .page { fill: #ffffff; }
+      .panel { fill: #fbfbfc; stroke: #111827; stroke-width: 1.2; }
+      .panelTitle { font: 700 18px Arial, Helvetica, sans-serif; fill: #111827; }
+      .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #374151; }
+      .label { font: 600 15px Arial, Helvetica, sans-serif; fill: #111827; }
+      .math { font: italic 16px "Times New Roman", Times, serif; fill: #111827; }
+      .mathSmall { font: italic 13px "Times New Roman", Times, serif; fill: #374151; }
+      .cell0 { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; }
+      .cell1 { fill: #dbeafe; stroke: #cbd5e1; stroke-width: 1; }
+      .cell2 { fill: #bfdbfe; stroke: #cbd5e1; stroke-width: 1; }
+      .cell3 { fill: #93c5fd; stroke: #cbd5e1; stroke-width: 1; }
+      .cell4 { fill: #60a5fa; stroke: #cbd5e1; stroke-width: 1; }
+      .good { fill: #dcfce7; stroke: #16a34a; stroke-width: 1.8; }
+      .node { fill: #ffffff; stroke: #111827; stroke-width: 1.3; }
+      .arrow { stroke: #111827; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #64748b; stroke-width: 1.5; fill: none; stroke-dasharray: 6 5; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="page" width="1320" height="820"/>
+  <text x="50" y="48" class="panelTitle" style="font-size:26px">Policy selection by expected free energy</text>
+  <text x="50" y="76" class="small">The algorithm is not a token-level decoder; it first chooses an action by minimizing a decomposed expected-free-energy score.</text>
+
+  <rect class="panel" x="50" y="112" width="520" height="650" rx="3"/>
+  <text x="74" y="148" class="panelTitle">(a) Score decomposition</text>
+  <text x="86" y="190" class="math">G(a | b_t, o_t) = R(a) + B(a) - I(a) + C(a)</text>
+
+  <g transform="translate(88,238)">
+    <rect class="cell0" x="0" y="0" width="120" height="42"/><text class="label" x="22" y="27">term</text>
+    <rect class="cell0" x="120" y="0" width="120" height="42"/><text class="label" x="140" y="27">meaning</text>
+    <rect class="cell0" x="240" y="0" width="120" height="42"/><text class="label" x="266" y="27">low when</text>
+    <rect class="cell0" x="360" y="0" width="70" height="42"/><text class="label" x="381" y="27">sign</text>
+
+    <rect class="cell1" x="0" y="42" width="120" height="58"/><text class="mathSmall" x="42" y="76">R(a)</text>
+    <rect class="cell0" x="120" y="42" width="120" height="58"/><text class="small" x="134" y="75">risk</text>
+    <rect class="cell0" x="240" y="42" width="120" height="58"/><text class="small" x="258" y="68">safe and</text><text class="small" x="258" y="86">compliant</text>
+    <rect class="cell0" x="360" y="42" width="70" height="58"/><text class="mathSmall" x="388" y="76">+</text>
+
+    <rect class="cell2" x="0" y="100" width="120" height="58"/><text class="mathSmall" x="42" y="134">B(a)</text>
+    <rect class="cell0" x="120" y="100" width="120" height="58"/><text class="small" x="134" y="133">ambiguity</text>
+    <rect class="cell0" x="240" y="100" width="120" height="58"/><text class="small" x="258" y="126">state becomes</text><text class="small" x="258" y="144">less uncertain</text>
+    <rect class="cell0" x="360" y="100" width="70" height="58"/><text class="mathSmall" x="388" y="134">+</text>
+
+    <rect class="cell3" x="0" y="158" width="120" height="58"/><text class="mathSmall" x="42" y="192">I(a)</text>
+    <rect class="cell0" x="120" y="158" width="120" height="58"/><text class="small" x="134" y="191">epistemic value</text>
+    <rect class="cell0" x="240" y="158" width="120" height="58"/><text class="small" x="258" y="184">action answers</text><text class="small" x="258" y="202">what is unknown</text>
+    <rect class="cell0" x="360" y="158" width="70" height="58"/><text class="mathSmall" x="388" y="192">-</text>
+
+    <rect class="cell1" x="0" y="216" width="120" height="58"/><text class="mathSmall" x="42" y="250">C(a)</text>
+    <rect class="cell0" x="120" y="216" width="120" height="58"/><text class="small" x="134" y="249">action cost</text>
+    <rect class="cell0" x="240" y="216" width="120" height="58"/><text class="small" x="258" y="242">intervention is</text><text class="small" x="258" y="260">minimal</text>
+    <rect class="cell0" x="360" y="216" width="70" height="58"/><text class="mathSmall" x="388" y="250">+</text>
+  </g>
+
+  <rect class="panel" x="640" y="112" width="630" height="650" rx="3"/>
+  <text x="664" y="148" class="panelTitle">(b) Action-score matrix and argmin rule</text>
+
+  <g transform="translate(690,198)">
+    <rect class="cell0" x="0" y="0" width="132" height="42"/><text class="label" x="36" y="27">action</text>
+    <rect class="cell0" x="132" y="0" width="86" height="42"/><text class="label" x="160" y="27">R</text>
+    <rect class="cell0" x="218" y="0" width="86" height="42"/><text class="label" x="246" y="27">B</text>
+    <rect class="cell0" x="304" y="0" width="86" height="42"/><text class="label" x="332" y="27">I</text>
+    <rect class="cell0" x="390" y="0" width="86" height="42"/><text class="label" x="418" y="27">C</text>
+    <rect class="cell0" x="476" y="0" width="86" height="42"/><text class="label" x="502" y="27">G</text>
+
+    <rect class="cell0" x="0" y="42" width="132" height="58"/><text class="label" x="28" y="76">ANSWER</text>
+    <rect class="cell1" x="132" y="42" width="86" height="58"/><text class="small" x="164" y="77">low</text>
+    <rect class="cell3" x="218" y="42" width="86" height="58"/><text class="small" x="248" y="77">var</text>
+    <rect class="cell1" x="304" y="42" width="86" height="58"/><text class="small" x="336" y="77">low</text>
+    <rect class="cell1" x="390" y="42" width="86" height="58"/><text class="small" x="422" y="77">low</text>
+    <rect class="cell3" x="476" y="42" width="86" height="58"/><text class="small" x="506" y="77">var</text>
+
+    <rect class="cell0" x="0" y="100" width="132" height="58"/><text class="label" x="12" y="134">ASK_CLARIFY</text>
+    <rect class="cell1" x="132" y="100" width="86" height="58"/><text class="small" x="164" y="135">low</text>
+    <rect class="cell1" x="218" y="100" width="86" height="58"/><text class="small" x="250" y="135">low</text>
+    <rect class="cell4" x="304" y="100" width="86" height="58"/><text class="small" x="334" y="135">high</text>
+    <rect class="cell2" x="390" y="100" width="86" height="58"/><text class="small" x="422" y="135">mid</text>
+    <rect class="good" x="476" y="100" width="86" height="58"/><text class="small" x="502" y="135">min</text>
+
+    <rect class="cell0" x="0" y="158" width="132" height="58"/><text class="label" x="28" y="192">RETRIEVE</text>
+    <rect class="cell1" x="132" y="158" width="86" height="58"/><text class="small" x="164" y="193">low</text>
+    <rect class="cell1" x="218" y="158" width="86" height="58"/><text class="small" x="250" y="193">low</text>
+    <rect class="cell4" x="304" y="158" width="86" height="58"/><text class="small" x="334" y="193">high</text>
+    <rect class="cell2" x="390" y="158" width="86" height="58"/><text class="small" x="422" y="193">mid</text>
+    <rect class="cell2" x="476" y="158" width="86" height="58"/><text class="small" x="506" y="193">low</text>
+
+    <rect class="cell0" x="0" y="216" width="132" height="58"/><text class="label" x="38" y="250">REFUSE</text>
+    <rect class="cell1" x="132" y="216" width="86" height="58"/><text class="small" x="164" y="251">low</text>
+    <rect class="cell1" x="218" y="216" width="86" height="58"/><text class="small" x="250" y="251">low</text>
+    <rect class="cell4" x="304" y="216" width="86" height="58"/><text class="small" x="334" y="251">high</text>
+    <rect class="cell2" x="390" y="216" width="86" height="58"/><text class="small" x="422" y="251">mid</text>
+    <rect class="cell2" x="476" y="216" width="86" height="58"/><text class="small" x="506" y="251">low</text>
+
+    <rect class="cell0" x="0" y="274" width="132" height="58"/><text class="label" x="10" y="308">UPDATE_MEM</text>
+    <rect class="cell1" x="132" y="274" width="86" height="58"/><text class="small" x="164" y="309">low</text>
+    <rect class="cell1" x="218" y="274" width="86" height="58"/><text class="small" x="250" y="309">low</text>
+    <rect class="cell4" x="304" y="274" width="86" height="58"/><text class="small" x="334" y="309">high</text>
+    <rect class="cell3" x="390" y="274" width="86" height="58"/><text class="small" x="422" y="309">var</text>
+    <rect class="cell2" x="476" y="274" width="86" height="58"/><text class="small" x="506" y="309">low</text>
+  </g>
+
+  <rect class="node" x="726" y="590" width="462" height="76" rx="5"/>
+  <text x="756" y="623" class="math">a*_t = arg min_a G(a | b_t, o_t)</text>
+  <text x="756" y="650" class="small">The selected action is then realized as text; token generation is downstream of policy selection.</text>
+  <path class="arrow" d="M970 530 V590"/>
+</svg>
+

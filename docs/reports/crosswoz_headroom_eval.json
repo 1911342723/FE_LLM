@@ -1,0 +1,62 @@
+{
+  "dataset": "CrossWOZ (real human-annotated task dialogue)",
+  "data": "data\\crosswoz\\train.json.zip",
+  "n_dialogues": 5012,
+  "n_samples": 36910,
+  "vocab": 1868,
+  "slot_keys": 53,
+  "schemes": {
+    "binary_offer_nooffer": {
+      "classes": [
+        "offer",
+        "nooffer"
+      ],
+      "class_dist": {
+        "offer": 34410,
+        "nooffer": 2500
+      },
+      "ambiguous_frac": 0.0001,
+      "ambiguous_count_val": 1,
+      "overall": {
+        "context_blind": 0.8211,
+        "context_aware": 0.8011,
+        "delta": -0.0201
+      },
+      "ambiguous_subset": {
+        "context_blind": 0.0,
+        "context_aware": 0.0,
+        "delta": 0.0
+      }
+    },
+    "triple_inform_recommend_nooffer": {
+      "classes": [
+        "inform",
+        "recommend",
+        "nooffer"
+      ],
+      "class_dist": {
+        "inform": 31451,
+        "recommend": 2959,
+        "nooffer": 2500
+      },
+      "ambiguous_frac": 0.0009,
+      "ambiguous_count_val": 6,
+      "overall": {
+        "context_blind": 0.7763,
+        "context_aware": 0.7654,
+        "delta": -0.011
+      },
+      "ambiguous_subset": {
+        "context_blind": 0.5,
+        "context_aware": 0.5,
+        "delta": 0.0
+      }
+    }
+  },
+  "verdict": "WEAK: 真实任务对话上 belief 对系统动作预测无 headroom（同句多动作≈0，系统动作几乎由当前 utterance 决定）",
+  "anchors": {
+    "teacher_synthetic_amb_delta": 0.51,
+    "lccc_open_chat_belief": 0.655
+  },
+  "note": "真实人标任务对话；唯一变量=belief(决策前累积用户 informed (domain·slot) multi-hot)。口径与 teacher_corpus_eval 一致（同 MLP/split/train）。CrossWOZ 系统从不 Request，故测 offer/nooffer（binary）与 inform/recommend/nooffer（triple）。对照：教师合成歧义子集 +0.51、开放闲聊 LCCC 0.655。"
+}

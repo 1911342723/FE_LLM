@@ -1,0 +1,13 @@
+{
+  "n_train": 72,
+  "n_heldout": 36,
+  "heldout_span_recall": {
+    "CITY": 0.0,
+    "DATE": 0.5833,
+    "TIME": 0.5
+  },
+  "heldout_datetime_recall": 0.5416,
+  "heldout_city_recall": 0.0,
+  "verdict": "PASS: 规则型 DATE/TIME 可学且泛化，开放实体 CITY 受容量限制（诚实边界）",
+  "note": "从 0 字符级序列标注；DATE/TIME 规则模式可泛化到新表达，CITY 开放命名实体对未见城市受容量限制（小模型 NER 固有边界）。"
+}

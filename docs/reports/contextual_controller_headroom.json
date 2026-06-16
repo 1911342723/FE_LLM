@@ -1,0 +1,9 @@
+{
+  "n_sessions": 60,
+  "round_a_ask_rate": 1.0,
+  "stateful_headroom_answer_acc": 1.0,
+  "memoryless_headroom_answer_acc": 0.0,
+  "delta": 1.0,
+  "verdict": "PASS: 真实 controller 的 belief 在 headroom 轮决定性胜出",
+  "note": "真实 ActiveInferenceController；headroom 轮='提供过 route 后再说帮我订票'。stateful 用 known_slots 记住 route→ANSWER，memoryless 无记忆→ASK。"
+}

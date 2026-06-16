@@ -96,6 +96,8 @@ def main():
     ap.add_argument("--batch", type=int, default=128)
     ap.add_argument("--lr", type=float, default=1e-3)
     ap.add_argument("--extra-data", default="", help="额外 jsonl 语料路径（与主语料合并训练）")
+    ap.add_argument("--ckpt-path", default=CKPT_PATH, help="模型权重输出路径（默认覆盖主 checkpoint）")
+    ap.add_argument("--ckpt-tok", default=CKPT_TOK, help="字表输出路径")
     args = ap.parse_args()
 
     device = get_device()
@@ -194,10 +196,10 @@ def main():
               f"下一字准确率={acc:.1%} 用时={time.time()-t0:.0f}s", flush=True)
         if avg_l < best:
             best = avg_l
-            os.makedirs(CKPT_DIR, exist_ok=True)
-            model.save(CKPT_PATH); tok.save(CKPT_TOK)
+            os.makedirs(os.path.dirname(args.ckpt_path) or ".", exist_ok=True)
+            model.save(args.ckpt_path); tok.save(args.ckpt_tok)
 
-    print(f"\n[intent] 完成，最佳 decode_loss={best:.4f} → {CKPT_PATH}")
+    print(f"\n[intent] 完成，最佳 decode_loss={best:.4f} → {args.ckpt_path}")
 
 
 if __name__ == "__main__":

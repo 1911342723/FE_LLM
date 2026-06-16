@@ -51,6 +51,15 @@ class BeliefUpdater:
             unresolved.append("Resolve internal consistency conflict")
 
         confidence = float(np.clip(1.0 - max(uncertainty, safety, prediction_error.consistency_error), 0.0, 1.0))
+        # 槽位级 belief：观测提供的所有槽位值写入/更新 known_slots（跨轮记忆来源，支持多槽位）。
+        known_slots = dict(prior_belief.known_slots)
+        for slot_key, slot_val in (observation_state.features.get("provided_slots") or {}).items():
+            known_slots[slot_key] = slot_val
+        # B2d：仅当本轮由关键词可靠检出领域时更新活跃领域，否则沿用上一活跃领域。
+        # 关键：裸槽位值（"北京"/"明天"）即便被 NLU 高置信猜成 booking/reminder，也不更新活跃领域——
+        # 否则会把语境污染掉，跟进句无法挂回真正在进行的领域。
+        kw_domain = observation_state.features.get("keyword_domain")
+        active_domain = kw_domain if kw_domain else prior_belief.active_domain
         return BeliefState(
             intent_vector=new_vec.astype(np.float32),
             context_vector=context.astype(np.float32),
@@ -60,6 +69,10 @@ class BeliefUpdater:
             turn_index=prior_belief.turn_index,
             last_action=prior_belief.last_action,
             pending_clarification=prior_belief.pending_clarification and not clarification_fulfilled,
+            # 槽位记忆跨轮持久化（含本轮新填）；澄清被满足时清掉正在等待的槽位。
+            known_slots=known_slots,
+            pending_slot=None if clarification_fulfilled else prior_belief.pending_slot,
+            active_domain=active_domain,
         )
 
     @staticmethod

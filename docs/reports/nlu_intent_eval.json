@@ -1,0 +1,10 @@
+{
+  "n_train": 60,
+  "n_heldout": 80,
+  "train_acc_learned": 1.0,
+  "heldout_acc_learned": 0.925,
+  "heldout_acc_keyword": 0.0625,
+  "delta": 0.8625,
+  "verdict": "PASS: 学习式 NLU 在改写上显著优于关键词表",
+  "note": "held-out 改写刻意不含关键词子串；keyword 基线只能命中固定词→漏判，学习式从训练多样表达泛化。"
+}

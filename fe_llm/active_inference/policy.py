@@ -127,7 +127,7 @@ class PolicySelector:
         self,
         classifier_path: str | None = None,
         classifier_weight: float = 0.5,
-        classifier_weight_overrides: dict[A++ctionType, float] | None = None,
+        classifier_weight_overrides: dict[ActionType, float] | None = None,
     ):
         self.classifier_path = classifier_path
         # 该权重按当前 EFE total 尺度校准；过大会让 MLP 覆盖可解释公式的场景保护。
@@ -159,9 +159,15 @@ class PolicySelector:
         # 当多轮证据明确（如澄清请求刚被满足）时由控制器降低融合比例，公式主导。
         probs = self._predict_probs(observation_state, prediction_error) if fusion_scale > 0 else None
         if probs is not None:
+            # 低不确定性时不让分类器把行动推向追问：无歧义却追问违背 active inference
+            # （teacher 训练的 MLP 偶尔对低不确定性陈述误判 ask，此守卫纠正之）。
+            low_uncertainty = prediction_error is not None and prediction_error.uncertainty_error < 0.3
             for action_type, prob in probs.items():
-                if action_type in adjusted:
-                    adjusted[action_type] -= fusion_scale * self._weight_for(action_type) * prob
+                if action_type not in adjusted:
+                    continue
+                if action_type == ActionType.ASK_CLARIFICATION and low_uncertainty:
+                    continue
+                adjusted[action_type] -= fusion_scale * self._weight_for(action_type) * prob
         selected_type = min(adjusted, key=adjusted.get)
         for action in candidates:
             if action.action_type == selected_type:

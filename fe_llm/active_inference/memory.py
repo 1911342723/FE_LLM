@@ -107,6 +107,40 @@ class MemoryManager:
                 recalled.append(candidate)
         return recalled
 
+    def audit_summary(self, confirm_threshold: int = 2, full_confidence_count: int = 3) -> list[dict[str, Any]]:
+        """只读的成长审计视图：按文本聚合记忆候选，给出重复次数/置信/晋升状态。
+
+        对应道易草案"穷则变"：单次出现只是候选，重复且稳定出现才晋升 confirmed
+        （可进入长期记忆/离线再训练）。本方法不改持久化，仅供审计与离线评估。
+        """
+        from collections import defaultdict
+
+        groups: dict[str, dict[str, Any]] = defaultdict(lambda: {"count": 0, "sessions": set(), "reasons": set()})
+        for candidate in self.candidates:
+            key = candidate.text.strip()
+            if not key:
+                continue
+            group = groups[key]
+            group["count"] += 1
+            if candidate.session_id:
+                group["sessions"].add(candidate.session_id)
+            if candidate.reason:
+                group["reasons"].add(candidate.reason)
+
+        summary: list[dict[str, Any]] = []
+        for text, group in groups.items():
+            count = int(group["count"])
+            summary.append({
+                "text": text,
+                "count": count,
+                "distinct_sessions": len(group["sessions"]),
+                "confidence": round(min(1.0, count / max(full_confidence_count, 1)), 4),
+                "status": "confirmed" if count >= confirm_threshold else "candidate",
+                "reasons": sorted(group["reasons"]),
+            })
+        summary.sort(key=lambda item: item["count"], reverse=True)
+        return summary
+
     def update_if_needed(self, trace: InferenceTrace) -> MemoryCandidate | None:
         if trace.selected_action.action_type != ActionType.UPDATE_MEMORY:
             return None

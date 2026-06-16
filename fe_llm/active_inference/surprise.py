@@ -115,6 +115,9 @@ class PredictionErrorEstimator:
         value = 0.1
         if features.get("is_ambiguous_request"):
             value = max(value, 0.9)
+        if features.get("requires_slot"):
+            # 必需槽位缺失 = 欠规范，应抬高不确定性 → 主动追问（active inference 连贯性）。
+            value = max(value, 0.8)
         if features.get("needs_external_info"):
             value = max(value, 0.75)
         if features.get("has_question") and features.get("length", 0) <= 6:

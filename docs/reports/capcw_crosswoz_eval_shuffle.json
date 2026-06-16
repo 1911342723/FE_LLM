@@ -1,0 +1,18 @@
+{
+  "task": "CrossWOZ real dialogue-state binding retrieval (query slot -> value)",
+  "config": {
+    "k": 4,
+    "d": 32,
+    "n_keys": 53,
+    "n_vals": 40,
+    "epochs": 40,
+    "seeds": 2,
+    "random_baseline": 0.025
+  },
+  "mode": "shuffled(真in-context)",
+  "flat_acc": 0.2966,
+  "capcw_acc": 0.8825,
+  "delta_capcw_minus_flat": 0.5859,
+  "verdict": "PASS: CAPCW 在真实语言(CrossWOZ)绑定检索上同样明显胜单向量",
+  "note": "真实 CrossWOZ informed (领域·槽位→值)；同槽在不同对话取不同值→必须 in-context 检索；按对话切分 test 未见。唯一变量=世界状态结构(单向量 vs slot 工作空间)。"
+}

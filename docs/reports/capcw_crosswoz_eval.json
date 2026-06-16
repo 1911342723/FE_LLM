@@ -1,0 +1,17 @@
+{
+  "task": "CrossWOZ real dialogue-state binding retrieval (query slot -> value)",
+  "config": {
+    "k": 4,
+    "d": 32,
+    "n_keys": 53,
+    "n_vals": 40,
+    "epochs": 40,
+    "seeds": 2,
+    "random_baseline": 0.025
+  },
+  "flat_acc": 0.9807,
+  "capcw_acc": 0.6677,
+  "delta_capcw_minus_flat": -0.313,
+  "verdict": "FAIL: 真实数据上未明显胜",
+  "note": "真实 CrossWOZ informed (领域·槽位→值)；同槽在不同对话取不同值→必须 in-context 检索；按对话切分 test 未见。唯一变量=世界状态结构(单向量 vs slot 工作空间)。"
+}
