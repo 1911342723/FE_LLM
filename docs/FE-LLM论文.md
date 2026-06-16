@@ -1,342 +1,341 @@
-# 基于最小自由能原理的认知演化语言模型 FE-LLM：架构、实现与初步验证
+# FE-LLM：一种可溯源的主动推理语言架构与内容寻址预测编码核心引擎
 
-> **摘要**　主流大语言模型以"被动预测下一个词的概率分布"为核心范式，在交叉熵损失下拟合海量语料的统计规律。本文提出并实现了一种以 Karl Friston 的**最小自由能原理（Free Energy Principle, FEP）**与**主动推理（Active Inference）**为第一性原理的语言模型架构 FE-LLM（Free Energy Large Language Model）。其根本思想是：系统不计算"下一个词是什么"，而是计算"如何输出才能让内部世界模型对外部观测的惊奇度（surprise）最小"。我们将抽象的认知科学理论映射为可运行的工程系统，包括五个核心组件：马尔可夫毯（Markov Blanket）边界隔离、分层预测编码（Hierarchical Predictive Coding）、三层惊奇度量化引擎、能量地貌世界模型（基于 pgvector 持久化），以及能量递减解码器（Energy-Descent Decoder）。我们在两个任务上进行了验证：在**算术推理**任务上，基于能量最小化的解题准确率达到 100%，并清晰展示了"惊奇即错误答案的高能量"这一核心主张；在**中英双向翻译**任务上验证了"交叉熵最小化等价于期望惊奇度最小化"，证明该框架可承载序列生成。本文同时**坦诚讨论了当前实现的局限**：在开放任务上 FE-LLM 尚未展现出超越标准 Transformer 范式的性能优势，其主要价值在于**可解释性**——每个决策都具有明确的能量/惊奇物理含义。本文将 FE-LLM 定位为一项思想验证原型（proof-of-concept），而非已成熟的下一代架构。
+> **摘要**　主流大语言模型把生成建模为条件语言建模：给定上下文逐 token 估计 `P(y_t mid y_{<t}, x)`，再采样或搜索。这一路线工程上极成功，但通常不显式回答三个问题：输入如何扰动模型的内部世界状态？模型为何选择回答、追问、检索、拒答或记忆更新？输出能否被追溯为一次降低不确定性的行动？本文报告 **FE-LLM**：一个**从 0 自建、不依赖预训练底座**、以自由能最小化 / 预测编码 / 主动推理为组织原则的语言架构，分两部分：(1) 一个已端到端打通并在真实任务对话数据上验证的**主动推理控制闭环**——把 prompt 视为 observation，先估计相对当前 belief 的 prediction error 与 surprise，再在候选动作间最小化期望自由能，最后把动作实现为可溯源的语言输出；(2) 一个我们提出并系统验证的**核心引擎 CAPCW（内容寻址预测编码工作空间）**——把自由能 / 预测误差从失败的"固定纵向分层"搬到 Transformer 已验证有效的"横向、内容寻址"结构上，并补上"可溯源 + 可生长"。CAPCW 把世界状态表示为一组可寻址 slot，误差按内容路由到 slot（attention 即推理），弛豫降自由能，穷则变生长。我们以"先定任务与判据、再写引擎"的纪律给出一系列单变量、同预算的判定实验：内容寻址绑定在容量受限区间决定性胜单向量；序列相邻算子救活 induction；**多跳链式推理的关键是显式解码中间符号再据它检索（潜在思维链 / CoT），而非潜空间反复 attention**（独立复现"LLM 多跳要 CoT"）；2×2 析因进一步把多跳主因定位为"中间监督"，且该监督可由单跳 teacher 自举；引擎 surprise 让"知道何时不该答 + 内容取回 + 多步推理"接回真实 controller 的活文本路径并从机制涌现。我们同样诚实地报告负结果与边界：分层世界模型经组合泛化裁决判为本规模过度设计、已封存；CAPCW 不解锁比较 / 计数这类运算推理（它是内容寻址工作记忆引擎，非通用算术聚合器）；裸增容量 d 不抬反降（须架构工程才能 scale，等于重建标准大模型，按容量纪律刻意不走）。全量 **200 个回归测试**守护可复现性。本文把语言生成重新定义为**可追踪的主动推理行动**，把"powerful brain"的核心引擎问题从"分层不是答案"推进到"CAPCW 是边界清晰的正面答案"。
 >
-> **关键词**：最小自由能原理；主动推理；预测编码；能量模型；语言模型；可解释人工智能
+> **关键词**：主动推理；自由能原理；预测编码；内容寻址；注意力即推理；可溯源生成；思维链；自我成长；能量模型
 
 ---
 
 ## 1. 引言
 
-### 1.1 研究背景
+### 1.1 从"预测下一个词"到"平复惊奇"
 
-自 Transformer（Vaswani 等，2017）问世以来，大语言模型（LLM）的主导范式可以概括为"自回归概率预测"：给定上文 $x_{<t}$，模型通过 Softmax 输出词表上的概率分布 $P(x_t \mid x_{<t})$，并以最大化训练语料的对数似然（等价于最小化交叉熵）为目标。这一范式在工程上极为成功，但其认知学基础始终受到质疑——它本质上是对语言统计规律的"填鸭式"拟合，缺乏一个显式的、可演化的"内部世界模型"，因而存在幻觉（hallucination）、知识更新成本高、决策不可解释等固有问题。
+Transformer 以来，语言模型的标准形式是
 
-与此同时，理论神经科学领域的**最小自由能原理（FEP）**（Friston，2010）提出了一个统一的智能解释框架：任何能维持自身存在的自适应系统（从单细胞到大脑），都在持续地**最小化其对外部世界的"惊奇度"（surprise）**，即最小化感知输入的负对数证据。系统通过两条途径降低自由能：（1）**感知/学习**——更新内部信念以更好地解释观测；（2）**行动**——主动改变外部环境，使其更符合内部预期。后者即"主动推理"。
+$$
+y_t^\star=\arg\max_{w} P_\theta(w\mid x,y_{<t}).
+$$
 
-一个自然的问题是：如果彻底抛弃"被动预测概率"的范式，转而以 FEP 为唯一第一性原理来构建语言模型，会得到怎样的架构？本文是对这一问题的系统性探索与工程实现。
+它极有效，但若目标是一种**可溯源、能主动思考、能自我成长**的语言系统，仅靠 next-token prediction 会留下理论空缺：模型为什么要说这句话？为什么现在应该回答而不是追问？为什么某些输入应触发检索、拒答或记忆更新？
 
-### 1.2 核心思想
+FE-LLM 的出发点是：
 
-FE-LLM 的运行逻辑相对传统 LLM 发生了根本翻转：
+> 用户输入不是一段等待续写的文本，而是一次对模型内部世界稳定态的扰动。生成不是单纯续写，而是系统为降低当前与未来自由能而采取的外部行动。
 
-- **传统 LLM**：被动计算"下一个词是什么"，本质是文字接龙。
-- **FE-LLM**：主动计算"我该如何输出，才能让系统内部的矛盾与惊奇度降到最低"，本质是为恢复内部平静而采取的目标导向行动。
+因此 FE-LLM 的核心问题不是"下一个 token 是什么"，而是"当前 observation 打破了哪里？哪种 action 最能降低期望自由能？"
 
-一个形象的比喻：系统如同一池平静的水，用户的 Prompt 是投入水中的石头，激起"误差的涟漪"；系统的思考与生成过程，就是通过内部状态重组（预测编码）和外部输出（主动推理），让这池水重归平静的过程。
+### 1.2 两个层次与两条贡献线
 
-### 1.3 本文贡献
+FE-LLM 有两个层次（图 1）：
 
-1. **架构层面**：提出 FE-LLM 的完整架构，将 FEP 的四个抽象机制（马尔可夫毯、分层预测编码、主动推理、能量地貌）一一映射为可运行的软件组件，并实现了真实的向量嵌入与 pgvector 持久化世界模型。
-2. **数学层面**：给出"惊奇度"在工程上的三层分解（语义/因果/噪音），并论证序列生成任务中交叉熵最小化与期望自由能最小化的等价性。
-3. **实验层面**：在算术与翻译两个任务上验证核心机制，给出可复现的训练与推理流程。
-4. **态度层面**：诚实评估该范式当前的能力边界，明确区分"已验证的主张"与"尚未成立的设想"。
+1. **控制架构（control architecture）**：感知 → 预测误差 / surprise → 期望自由能策略 → 行动实现 → 可溯源 trace / 成长。这一层已端到端打通，并在真实任务对话数据上证明价值。
+2. **核心引擎（core engine）**：承载"世界状态 / 工作记忆"的那颗"脑子"。本文的主要新贡献是 **CAPCW（内容寻址预测编码工作空间）**——第一个在本项目里有系统实证的核心引擎方向。
+
+### 1.3 硬纪律：容量
+
+一条贯穿全文的纪律：**从 0 自建的小模型不与通用 LLM 拼世界知识 / 翻译 / 开放问答**（8.9M 字符级模型物理上装不下，翻译 word-F1 0.07/0.08 两次证伪）。FE-LLM 的战场是**机制**：动作选择、多轮 surprise 平复、意图驱动短生成、内容寻址、可溯源、自我成长。这条纪律也解释了为什么 CAPCW 的价值恰在**容量受限**区间（见 §6.4）。
+
+![FE-LLM 架构](figures/fe_llm_architecture.svg)
+
+**图 1　FE-LLM 总体架构。** A 带：感知与预测编码（observation → 编码 → 预测误差 → surprise）。B 带：核心引擎 CAPCW（内容寻址预测编码工作空间，承载世界状态 / 工作记忆，支持 bind / query / 多跳）。C 带：期望自由能策略 → grounded 实现 → trace / 成长。灰虚线为主动推理反馈闭环；底部给出"六要素 → 模块"映射与核心公式。
 
 ---
 
-## 2. 相关工作
+## 2. 原理与形式化
 
-**预测编码与自由能**。FEP（Friston，2010）及预测编码理论（Rao & Ballard，1999）为本文提供了核心理论基础。已有工作尝试将预测编码用于深度学习（如 PredNet、PC-based backprop 近似），但少有将其作为语言模型的核心生成机制。
+### 2.1 自由能与预测编码
 
-**能量模型（EBM）**。LeCun 等长期倡导基于能量的学习框架，主张用标量能量函数 $E(x)$ 衡量配置的相容性，生成即在能量曲面上寻找低能态。FE-LLM 的"能量地貌""能量递减解码"直接借鉴了这一思想。
+系统维护内部状态（belief）；感知是用预测误差修正内部状态、降低**变分自由能**的过程。一般预测编码形式：
 
-**主动推理的智能体应用**。主动推理近年被用于强化学习与机器人控制（期望自由能 EFE 作为统一的探索-利用目标）。本文将其引入文本生成场景，把"输出文字"建模为改变环境的行动。
+$$
+\epsilon_l=\mu_l-f_l(\mu_{l+1}),\qquad
+F=\sum_l \tfrac12\,\epsilon_l^\top \Pi_l \epsilon_l,\qquad
+\mu_l \leftarrow \mu_l-\alpha\,\frac{\partial F}{\partial \mu_l},
+$$
 
-**与标准 NMT 的关系**。需要强调，本文的翻译实验在数学形式上与标准神经机器翻译（NMT）一致；我们的贡献不在于提出新的翻译算法，而在于以自由能视角重新诠释其训练目标与解码过程。
+其中 `Pi_l` 是精度（precision）。**关键诊断**（§7.2）：错的不是"预测编码 / 自由能"这套语言，而是把它套在**固定纵向层级**上；应把同一套能量语言套到 Transformer 已验证有效的**横向、内容寻址**结构上——这正是 CAPCW（§4）。
+
+### 2.2 Observation、belief 与 surprise
+
+给定输入 `x_t` 与会话元数据 `m_t`，构造 observation `o_t = Obs(x_t, m_t)`，感知层编码为 `s_t = phi(o_t)`。belief `b_t` 含意图向量、上下文、置信、假设、未决问题，以及（v2 新增）由 CAPCW 承载的内容寻址世界状态。predictor 由先验给出预测 `s_hat_t = f(b_{t-1})`，预测误差拆成五个**可解释分量**：
+
+$$
+\epsilon_t=(\epsilon^{sem}_t,\epsilon^{intent}_t,\epsilon^{cons}_t,\epsilon^{unc}_t,\epsilon^{safe}_t),
+\qquad
+S_t=\frac{\sum_i \pi_i \epsilon^i_t}{\sum_i \pi_i}.
+$$
+
+即把"惊奇"从黑箱分数拆成语义偏离、意图不明、逻辑矛盾、不确定性、安全风险五路。
+
+### 2.3 主动推理：行动作为期望自由能最小化
+
+FE-LLM 不直接生成文本，而先在候选动作集
+`A = {ANSWER, ASK, RETRIEVE, REFUSE, UPDATE_MEMORY}` 上评分。每个动作的期望自由能
+
+$$
+G(a\mid b_t,o_t)=R(a)+B(a)-I(a)+C(a),
+$$
+
+其中 `R` 风险、`B` 歧义、`I` 认知增益（epistemic value）、`C` 行动代价。系统选 `a* = arg min_a G`，再 `y_t = Realize(a*, b_t, o_t)`。这给出与 Transformer 不同的核心公式：
+
+$$
+\boxed{\,o_t\rightarrow b_t\ (\text{CAPCW 内容寻址弛豫，}F\downarrow)\rightarrow a_t^\star=\arg\min_a G(a\mid b_t,o_t)\rightarrow y_t\,}
+$$
+
+### 2.4 注意力即推理（content addressing as inference）
+
+CAPCW 的理论支点：attention 可由变分推理 / 预测编码近似得到——attention 权重 ≈ 对隐因的后验责任（responsibility）。因此把"按内容路由证据"这一步推导为"最小化自由能的责任分配"，既能拿到 Transformer 级的内容寻址，又保留能量 / 误差身份。结合对象中心学习（slot attention）把输入绑定到内容寻址 slot，可得：
+
+$$
+\text{CAPCW} = \text{预测编码语言} \times (\text{attention 即推理}) \times (\text{slot 绑定}) \times \text{自由能驱动的结构成长}.
+$$
 
 ---
 
-## 3. 总体架构
+## 3. 系统架构
 
-FE-LLM 的总体架构如图 1 所示。系统以马尔可夫毯为边界，将外部环境与内部认知状态隔离；内部由五个核心组件构成一个完整的"感知—编码—行动"自由能闭环。
+控制架构由六层组成（对应图 1）：
 
-![FE-LLM 总体架构](figures/architecture.svg)
+1. **Observation 层**：把输入转 observation，抽取 prompt 特征（含 required_slots、领域关键词等规则信号）。
+2. **Perception 层**：`IntentEncoder`（或 hash 兜底）得到 observation state；可选学习式 NLU（窄触发、高置信门控）补意图。
+3. **Predictive 层**：predictor 生成预测，估计五路 prediction error 与 surprise，更新 belief。
+4. **核心引擎 CAPCW（§4）**：内容寻址世界状态 / 工作记忆；bind / query / 多跳；query 路由 surprise 驱动"知道何时不该答 + 内容取回"。
+5. **Policy 层**：生成候选动作，期望自由能评分并选择；含"低不确定不追问"等前提守卫；可选学习式上下文 policy。
+6. **Trace / 成长层**：记录完整 inference trace（含 CoT trace、路由责任）；记忆候选→确认→离线蒸馏；CAPCW 穷则变 / 有界遗忘。
 
-**图 1　FE-LLM 总体架构：最小自由能认知闭环。** 外部 Prompt 经感知层向量化为抽象惊奇信号，依次经过自由能引擎、分层预测编码、主动推理，最终由行动层输出文字以改变外部环境；世界模型（pgvector 能量地貌）为各环节提供吸引子检索。
+公开接口：
 
-### 3.1 马尔可夫毯：系统的物理边界
-
-在 FEP 中，任何"系统"都必须有一层边界，将内部状态与外部世界隔离。传统 Transformer 没有边界，Prompt 直接贯穿所有网络层，系统被外部数据强行驱动。FE-LLM 设立严格的马尔可夫毯：
-
-- **感知层（Sensory）**：唯一的输入口。接收 Prompt，将其向量化并计算自由能，封装成"抽象惊奇信号"后才放行。核心引擎永远看不到原始文本被直接灌入权重。
-- **行动层（Active）**：唯一的输出口。把内部坍缩出的意图转化为人类可读文字。
-- **内部隔离区（Internal）**：核心引擎只处理过滤后的误差信号。
-
-这一隔离带来的工程收益是：更换底层嵌入后端（真实 API ↔ 哈希降级）或存储后端（pgvector ↔ 内存）时，上层自由能逻辑完全无需改动。
-
-### 3.2 能量地貌世界模型
-
-系统在"学会说话"之前，必须先有一个能产生"信念"和"惊奇"的地方。我们不存储文本片段，而是把核心公理、常识、因果关系编码为高维向量"吸引子"，沉淀在挂载 pgvector 扩展的 PostgreSQL 中，构成一个起伏的"能量地貌（Energy Landscape）"：
-
-- 一个稳固的知识（如"地球是球体"）= 一个能量极低的深谷。
-- 记忆提取/推理 = 把当前认知状态抛入地貌，让它自然"滚落（settle）"到最匹配的低能量山谷。
-
-每个概念（`Concept`）带有 `depth`（吸引子深度/稳固度）与 `relations`（如"互斥"关系），分别用于控制其抗修改能力与支撑因果冲突检测。
-
-### 3.3 分层预测编码
-
-这是取代 Transformer 前向传播与注意力机制的核心计算引擎。系统维护三层信念：底层（实际观测）、中层（事实逻辑）、高层（抽象意图）。
-
-- **自上而下（Top-down）**：高层向下发送"预测"。
-- **自下而上（Bottom-up）**：下层接触实际输入后，把不符合预期的"误差"向上传递。
-- **计算本质**：上下层反复妥协、迭代修正信念，直到系统残余自由能趋近 0（"能量坍缩"），内部达到自洽稳定态，得到一个稳定的"潜在意图向量"。
-
----
-
-## 4. 惊奇度的数学定义与量化
-
-### 4.1 信息论定义
-
-在 FEP 框架中，惊奇度的本质是内部世界模型对外部观测数据的负对数概率：
-
-$$
-\text{Surprise} = -\ln P(\text{Observation} \mid \text{Internal Model})
-$$
-
-这一定义虽然优美，但若要落地为代码，必须解决一个核心工程难题：**用户可以输入任何文字，甚至毫无逻辑的乱码，如何把模糊的"惊变能量"转化为可计算的损失项？**
-
-我们的答案是：不能用单一指标衡量，而要参考大脑的层次结构，把惊奇拆解为一个**多维度的层次函数**，自下而上累加，并设置阈值阻断。三层惊奇度与对应的行动策略如图 2 所示。
-
-![三层惊奇度与行动策略](figures/surprise_layers.svg)
-
-**图 2　三层惊奇度分解与行动策略映射。**
-
-### 4.2 三层惊奇度
-
-**浅层惊奇 $E_{\text{semantic}}$（语义距离）**。系统维护对当前语境的"预期向量"。新输入到来时转化为高维向量，计算其与最近吸引子的余弦距离 $d$，再经 $-\ln(1-d)$ 映射为惊奇值。距离越大（如聊着代码突然切到炖猪肉），惊奇越高。命中已知概念时惊奇趋近 0。
-
-**中层惊奇 $E_{\text{causal}}$（因果冲突）**。文字可能在语义上接近，但逻辑相反（如"明天太阳从西边升起"）。本层检测输入是否违背已固化的公理。我们的实现覆盖两种情形：（A）输入直接落在某个低深度"谬误"概念上，而该谬误与高深度公理互斥；（B）输入词面命中最近公理的互斥反命题。冲突惩罚与被违背公理的深度成正比。**需要强调：因果冲突是离散的逻辑事实，不应由回归网络凭空臆造**，因此即便启用神经网络打分，该项仍由规则层把关是否存在真实冲突。
-
-**顶层噪音 $E_{\text{noise}}$（无法解析）**。面对纯乱码，系统不应陷入死循环强行理解。当可识别词元占比过低时，触发阶跃惩罚；当总能量超过安全阈值时，系统判定为"致命级惊奇"，强制阻断，输出"您的输入无法解析，请重新表述"。这是一种"节能"的最小自由能动作——通过终止无效计算，把环境逼回可理解范围。
-
-### 4.3 总自由能与动态置信度
-
-总自由能为三项加权之和：
-
-$$
-\text{FreeEnergy} = \rho \cdot (E_{\text{semantic}} + E_{\text{causal}}) + E_{\text{noise}}
-$$
-
-其中 $\rho$ 为**动态置信度（precision）**，是系统的容错旋钮：
-
-- $\rho$ 高（如 2.0）→ 低容错，数理严苛模式，对矛盾据理力争。
-- $\rho$ 低（如 0.4）→ 高容错，适合闲聊或深度角色扮演，放宽阈值以接受用户设定。
-
-这回答了一个深层问题：面对"逻辑严密但违背常理"的深度角色扮演，系统应固守世界观反驳，还是妥协迎合？答案是——由置信度旋钮动态决定，而非写死。
-
-### 4.4 关键洞察
-
-> **文字越复杂不代表惊奇度越高，"出乎系统意料的程度"才是唯一的核心。**
-
----
-
-## 5. 生成机制：能量递减解码
-
-### 5.1 从概率预测到目标导向运动
-
-传统 LLM 的解码像"文字接龙"：用 Softmax 算出下一个词的概率分布，挑概率最高的词，循环往复。FE-LLM 的生成则是一种"目标导向的运动学"，分三步（如图 3）：
-
-1. **意图定型**：预测编码坍缩出的稳定状态即"潜在意图向量"（目标吸引子）。它还不是具体文字，而是系统想传达的核心因果关系。
-2. **轨迹规划（预期自由能 EFE）**：系统评估不同"发声动作"，计算 $\text{EFE} = \text{认识不确定性} - \text{实现目标的外部效用}$，选择 EFE 最低的策略。
-3. **能量递减解码**：每输出一个 token，相当于在能量曲面上向目标意图走一步。
-
-![能量递减解码](figures/energy_decoding.svg)
-
-**图 3　能量递减解码：生成即"滚落到意图吸引子"。**
-
-### 5.2 解码规则
-
-解码器不计算"哪个词概率最高"，而是计算：给定已生成的前缀，哪个候选 token 能最大程度拉近"当前状态→目标意图"的距离（即最大程度降低残余能量）：
-
-$$
-\text{token}_t = \arg\min_{w} \; E(\,[\,x_{<t}, w\,],\; \text{intent}\,)
-$$
-
-当残余能量趋近 0（意图表达完毕）时，自动输出 `<EOS>`。
-
-形象的比喻：传统解码像**开枪射击**——一旦开火，子弹轨迹由概率决定，若中途生成了幻觉只能将错就错；FE-LLM 像**导弹制导**——锁定目标后，飞行中持续扫描当前位置与目标的偏差并实时修正航向，即便用了个奇怪的词也能在后文把逻辑拉回主航道。
-
-### 5.3 与交叉熵的等价性
-
-对序列生成任务，若把 token 能量定义为 $E(w) = -\text{logit}(w)$，则束搜索选择累计能量最低的路径，等价于选择最大对数似然路径。而训练时最小化交叉熵 $-\ln P(x_t \mid x_{<t})$，**在数学上恰好就是最小化系统的期望惊奇度**。这一等价性使得 FE-LLM 框架可以直接承载标准的序列生成，而无需牺牲成熟的训练技术。
-
----
-
-## 6. 工程实现
-
-### 6.1 分层与隔离
-
-整个系统严格分层，运行时包 `fe_llm/` 与训练层 `training/`、实验层 `experiments/`、数据层 `data/` 隔离：
-
-```
-fe_llm/                核心推理包（运行时）
-  config.py            统一配置（.env：API 密钥 / 数据库 / 设备）
-  embedding/           语义嵌入：DashScope 真实向量(1536维) + 哈希降级
-  world_model/         ① 世界模型：pgvector 持久化 + 内存降级
-  free_energy/         ② 自由能引擎：规则版 + 可训练 SurpriseNet
-  perception/          ③ 马尔可夫毯 + 分层预测编码
-  generation/          ④ 概念分词器 + 主动推理 + 能量解码器 + 可训练 DecoderNet
-  engine.py / factory.py   顶层总装与装配
-training/              训练层（蒸馏数据生成 + 两个网络的训练脚本）
-experiments/           验证实验（arithmetic / translation）
-data/                  数据层（种子知识 / 平行语料）
-scripts/               运维（建库 / 灌种子 / 清理）
-checkpoints/           固化权重产出
+```python
+response = ActiveInferenceController(
+    capcw_chain_memory_path=...,    # 可选：CAPCW 多跳链式工作记忆（默认关，零回归）
+).respond(text, session_id=None)
+# ModelResponse: text, selected_action_type, surprise_score, prediction_error,
+#   action_scores, trace, memory_candidate, incontext_value, incontext_surprise, incontext_chain
 ```
 
-### 6.2 哪些部分需要"训练"
+---
 
-一个重要的设计判断：在 FE-LLM 中，**知识沉淀在世界模型（向量库）里，而非神经网络权重里**。因此真正需要被深度学习框架训练并固化成权重的，只有两个轻量网络：
+## 4. 核心引擎：CAPCW（内容寻址预测编码工作空间）
 
-| 网络 | 职责 | 特点 |
-|------|------|------|
-| **SurpriseNet** | 给"输入信号 vs 世界模型期望"的多维误差打分 | 不背知识，参数极小 |
-| **DecoderNet** | 给定意图向量，规划输出词汇的能量下降路径 | 不背知识，参数极小 |
+### 4.1 数据结构与机制
 
-二者均可缺省：无权重时自动回退到解析版/几何版，保证未训练也能跑通。训练数据通过"教师—学生蒸馏"自动生成，无需人工标注（图 4）。
+把"分层纵向 latent"换成"一组内容寻址 slot 工作空间" `W = {s_1, ..., s_M}`，用预测编码 / 自由能驱动（图 2）。每来一个观测 `x = {x_1, ..., x_P}`（token / (key,value) 对 / 三元组），做若干步弛豫：
 
-![教师—学生蒸馏与训练管道](figures/distillation_pipeline.svg)
+$$
+\hat{x}_m=g(s_m),\quad
+r_{m,p}=\operatorname{softmax}_m\big(-\pi\lVert x_p-\hat{x}_m\rVert^2\big),\quad
+\hat{x}_p=\sum_m r_{m,p}\hat{x}_m,
+$$
+$$
+\epsilon_p=x_p-\hat{x}_p,\quad
+F=\tfrac12\pi\,\operatorname{mean}_p\lVert\epsilon_p\rVert^2,\quad
+s_m\leftarrow s_m+\alpha\,\pi\sum_p r_{m,p}\,(\epsilon_p\!\cdot\! W_g).
+$$
 
-**图 4　教师—学生蒸馏与训练管道。**
+第 3 步的内容路由 `r` 就是 attention，但被推导为"最小化 F 的后验责任"。跨 token 时 `W` 持续保留并被更新，充当工作记忆。**可溯源**：responsibilities、final_error、free_energy_trace 全部显式返回。**关键差异**（相对纯 Transformer / 纯 slot-attention）：路由不是黑箱 softmax 而是可溯源的自由能责任分配；状态不是黑箱残差流而是带类型、可读、可生长的显式 slot 世界状态。
 
-### 6.3 优雅降级
+![CAPCW 工作空间机制](figures/capcw_workspace.svg)
 
-得益于分层隔离，缺少任一外部依赖时系统自动降级，始终可运行：
+**图 2　CAPCW 作为预测编码循环。** slot 自上而下生成预测 g；自下而上预测误差按内容路由 r（attention 即推理）；弛豫沿 −∂F/∂s 下降（自由能轨迹单调降）；查询经内容寻址读出 value，路由匹配度之补 = surprise；穷则变在自由能仍高时新增 slot。
 
-| 依赖缺失 | 自动降级到 |
-|---------|-----------|
-| DashScope 密钥/网络 | 确定性哈希向量 HashEmbedder |
-| PostgreSQL/pgvector | 内存向量库 MemoryStore |
-| 训练权重 | 规则版自由能 + 几何版解码 |
+### 4.2 行动 / 读出：引擎 surprise 即"知道何时不该答"
+
+收敛后的 `W` 经查询读出：`read = sum_m softmax_m<s_m, q> s_m`，取回 value；定义
+`surprise = 1 - max_m route(q)`。bound（命中、低 surprise）→ `ANSWER` + 取回 value；unbound（未命中、高 surprise）→ `ASK_CLARIFICATION`。**该决策无动作监督、从引擎 surprise 涌现**——这是 FE-LLM"机制从引擎涌现"主张在 controller 招牌决策上的落地。
+
+### 4.3 穷则变（结构自我成长）与有界工作记忆
+
+弛豫后 `F` 仍高（无 slot 能解释观测）→ 新增一个 slot 吸收残余误差。已验证 **slot 数 = 绑定容量**（穷则变前提成立）；可按相对边际增益自校准 `grow_m`。活工作记忆另支持**有界遗忘**：字符串词表满时 FIFO 淘汰最旧符号（优雅降级，不崩）。
+
+### 4.4 序列引擎与多跳：从绑定到推理
+
+- **序列相邻算子 → induction**：集合式 slot 擅长内容绑定但不自带"序列相邻算子"。补一个最小相邻基元（previous-token channel：位置 t 表示 = `proj([emb(前驱); emb(当前)])`）后，2×2 单变量析因显示"序列相邻算子"与"内容寻址 slot"**两者同时**具备才救活 induction，缺一格都≈随机。
+- **多跳链式 → 潜在 CoT**（图 3，核心结论）：对固定 slot 反复读（潜迭代读）不能链式组合（多读≈单读）。**把每跳读出解码成离散符号、再 re-embed 为下一跳 query**（潜在思维链 + 中间监督），链式才成立——独立复现"LLM 多跳要 CoT：思维链不是提示技巧，是多跳组合的机制必需"。
+- **2×2 纠偏**：把"decode vs latent"与"中间监督 vs 仅末端"拆成干净 2×2，发现**多跳主因是中间监督**（主效应 +0.27 ≫ decode→re-embed +0.03）；纯涌现（仅末端监督）失败。
+- **中间监督可自举**：现实只有最终答案标签时，单跳 teacher 自生成中间步即可恢复多跳到 GT 中间监督的 97%（免 GT 中间标签）。
+
+![多跳链式 CoT](figures/capcw_multihop_cot.svg)
+
+**图 3　多跳链式：潜迭代读（失败） vs decode→re-embed 潜在 CoT（成功）。** 潜迭代读把纠缠潜向量直接当下一跳 query，多跳≈单跳；解码-再嵌入每跳 emit 一个离散中间结论再据它检索，多跳成立（+0.30）。2×2 析因把主因定位为中间监督；活文本实例给出可溯源 CoT trace。
+
+### 4.5 接回真实 controller 的活文本闭环
+
+把 CAPCW 做成 controller 兼容的工作记忆组件（默认关、零回归）：高精度 in-context 绑定 NLU 把活文本"现场关联"抽成 bind/query 事件喂工作空间；引擎 surprise 在真实对话里驱动 ANSWER（取回 value，grounded 入回答）/ ASK；并支持**复合所有格多跳**（"A的经理的工位是多少"→ base+关系链 → 逐跳 decode→re-embed → 链尾 value + 可溯源 CoT trace）、**指代消解**（他/她/它 → 上文实体，自然录入链）、**从扁平 token 序列读关系**（非显式 pair，更像真语言）。主动推理闭环（图 4）：问未绑定 → surprise 1.0 → 追问 → 用户补绑定 → 再问 → surprise 降到 ~0.06 → grounded 回答。
+
+![主动推理闭环](figures/active_inference_loop.svg)
+
+**图 4　主动推理闭环与期望自由能。** observation 抬高 surprise → EFE 选 epistemic value 高的行动（如 ASK）→ 对外行动改变环境（用户补充）→ 下轮观测降低自由能。右侧给出 EFE 分解、五类动作的自由能含义与实证 surprise 平复轨迹。
 
 ---
 
-## 7. 实验
+## 5. 算法
 
-### 7.1 实验一：算术认知（核心机制验证）
+### 算法 1：FE-LLM 主动推理响应（含 CAPCW）
 
-**动机**。翻译等开放任务难以客观评判机制是否真正生效。算术答案客观可验证，且能最干净地展示 FE-LLM 的两条核心主张。
+```text
+输入: 用户文本 x, 可选 session sid
+输出: ModelResponse(y, a*, S, ε, G, trace, ...)
 
-**设置**。以 DeepSeek 为教师生成（并校验）算术题，操作数 0~50，加减法，答案空间 $[-50, 100]$ 共 151 个离散"答案吸引子"。训练两个网络：EnergyNet（惊奇网络）与 SolverNet（解码器），共享一张结构化的答案码本（数值相近的答案在空间中相近且整体可分）。设备为 RTX 5060，训练约 120 epoch。
+1.  o  ← Observation.from_text(x, sid)
+2.  s  ← Perception.encode(o)
+3.  b0 ← BeliefStore.load(sid)
+4.  ŝ  ← Predictor.predict(b0)
+5.  ε  ← Error.compare(s, ŝ);   S ← Surprise.score(ε)
+6.  b1 ← BeliefUpdater.update(b0, s, ε)
+7.  A  ← Policy.generate(b1, S)
+8.  G  ← FreeEnergy.score(A, b1, S, o)         # G = R + B − I + C
+9.  a* ← Policy.select(A, G)                    # + 槽位/上下文/守卫
+10. if CAPCW 工作记忆已加载:                     # 引擎 surprise 涌现"知道何时不该答"
+        event ← BindingNLU.parse(o.text)        # bind / query / (复合所有格)多跳 / 指代
+        if bind:   W.bind_str(k→v); a* ← ANSWER(确认)
+        if query:  dec, value, cot ← W.decide(query)   # 内容寻址取回 + 路由 surprise + CoT trace
+                   a* ← ANSWER(value) if bound else ASK
+11. y  ← Realize(a*, o, b1, S)                  # grounded：取回内容入回答
+12. trace ← Trace.record(o, s, b0, ŝ, ε, S, A, G, a*, b1, cot, responsibilities)
+13. Memory.update_if_needed(trace);  BeliefStore.save(b1, sid)
+14. return ModelResponse(y, a*, S, ε, G, trace, value, surprise, cot)
+```
 
-**两种生成方式**：
-- **能量法**：在所有答案吸引子上计算能量，取能量最低者（即在能量地貌上"滚落"到最深谷）。
-- **解码器法**：SolverNet 回归归一化标量答案，× scale 后取整"滚落"到最近整数吸引子。
-
-**结果**。能量法测试准确率 **100%**，解码器法 **≈99%**（测试集 1000 题）。更重要的是惊奇能量曲线（图 5）：对题目 $23+45$，正确答案 68 的能量为谷底（惊奇=0），偏离越远惊奇度单调上升（偏离 10 → 惊奇 +49 至 +122），呈完美的 V 形。
-
-![算术惊奇能量曲线](figures/arithmetic_energy.svg)
-
-**图 5　算术实验的惊奇能量曲线。** 这是"惊奇 = 错误答案的高能量"与"生成 = 滚落到能量最低吸引子"两条主张的直接证据。
-
-**调试中暴露并解决的问题**。初版解码器准确率仅 12%，诊断发现答案吸引子被能量损失随机塑形、在高维空间分布混乱（相邻整数关系仅保留 31%）。改用结构化固定吸引子 + 标量数值意图回归 + 余弦退火后，两种方式均达到 ~99-100%。这一过程本身验证了"能量地貌的几何结构对生成至关重要"。
-
-### 7.2 实验二：中英双向翻译（序列生成承载）
-
-**设置**。以 DeepSeek 围绕 24 个日常主题生成约 3000 条中英平行句对（蒸馏），用 SentencePiece 训练中英共享子词词表（unigram，词表约 7700），并用方向标签 `<2en>/<2zh>` 实现单模型双向翻译。模型为 25M 参数的标准 encoder-decoder Transformer（d_model=512，6 层），混合精度训练 150 epoch，RTX 5060 上 GPU 利用率约 97%。训练目标为交叉熵（= 期望惊奇度），解码为束搜索（= 能量递减解码）。
-
-**结果**。在训练分布内的常见句式上，翻译基本可用：
-
-| 方向 | 输入 | 输出 |
-|------|------|------|
-| 中→英 | 今天天气很好，我们去公园散步吧。 | the weather is nice today, let's go to the park. |
-| 中→英 | 请问最近的地铁站怎么走？ | excuse me, how do i get to the subway station? |
-| 英→中 | I would like to book a table for two. | 我想订一个两人桌。 |
-
-但对训练分布外的句子会出现语义漂移（如"我最喜欢的运动是打篮球"被错误关联到 subway/supermarket）。训练惊奇降至 1.3 而验证惊奇停在 4.25，表明在 3000 句对的小数据上、25M 模型出现了明显**过拟合**。
-
-**结论**。该实验证明了 FE-LLM 框架可以承载序列生成，且"交叉熵=最小化惊奇"的等价在工程上成立；但也清楚地表明，在此类任务上当前实现退化为"标准 Transformer + 自由能视角的重新诠释"，性能受限于数据规模，并未展现超越标准 NMT 的新能力。
+CAPCW `decide`（多跳）内部即图 3(b)：`q ← to_q(emb(start))`；逐跳 `read ← 内容寻址(W, q)`，`logits ← head(read)`，解码符号 `ĉ`，若非末跳 `q ← to_q(emb(ĉ))`；末跳 logits 即答案，各跳 `ĉ` 即 CoT trace。
 
 ---
 
-## 8. 客观评价与讨论
+## 6. 实验与结果
 
-本节对 FE-LLM 当前实现进行尽可能客观、不夸大的评估。
+所有实验遵守同一纪律：**先定任务与判据（写死 PASS 阈值），再写引擎；唯一变量 + 同预算 + 多 seed**。
 
-### 8.1 真正成立的部分
+### 6.1 控制架构（机制价值）
 
-- **算术实验有说服力**。能量法 100% 准确率，以及清晰的 V 形惊奇能量曲线，真实地证明了"生成=滚落到能量最低吸引子""惊奇=错误答案的高能量"两条核心主张。这不是修辞，而是可复现的量化证据。
-- **工程架构是扎实的**。马尔可夫毯隔离、pgvector 持久化世界模型、规则/神经双引擎、三级优雅降级，都是真实可运行的代码，而非概念演示。可解释性是其突出优点：每个决策（确认/反驳/追问/阻断）都附带能量分解与诊断说明。
+- **实验 C（基线对比）**：FE-agent 任务成功 100%（18/18）vs 永远直答 baseline 22.2%；baseline 胡编率 77.8%；澄清后平均 surprise 降幅 84.5%。
+- **belief 机制价值首证**：构造有 headroom 的上下文动作任务，唯一变量=能否访问 belief，歧义子集 0.773→1.000（+0.227）。结论：**瓶颈在任务太易、不在架构**——任务一旦有 headroom，机制就决定性胜出。
+- **真实闭环**：controller stateful 1.0 vs memoryless 0.0。
 
-### 8.2 被夸大或尚未成立的部分
+### 6.2 belief 在真实数据的价值地图（CrossWOZ，重要 thesis 修正）
 
-我们必须诚实指出：
+在真实人标任务对话 CrossWOZ 上，统一口径（唯一变量=是否加 belief）测三维：
 
-- **开放任务上的"惊奇度"目前主要是规则 + 几何启发式**，而非系统自发涌现的世界模型。地平说、永动机等谬误能被识别，依赖的是人工标注的"互斥"关系与词面重合检测。换一个没有预设互斥关系的新谬误，系统未必能抓到。这与"真正理解因果"还有本质距离。
-- **序列任务上未展现范式优势**。如 7.2 节所述，翻译实验中 FE-LLM 在数学形式上等同于标准 NMT，"能量递减解码"本质就是束搜索。FEP 在此提供的是"重新诠释"而非"新能力"。
-- **四层架构尚未在复杂任务上端到端联动**。两个实验分别使用独立的网络，均未完整走通主引擎的"马尔可夫毯→预测编码→主动推理"全链路。主引擎的完整闭环目前只在对话级 demo 中演示。
+| 维度 | belief 真实 headroom |
+|---|---:|
+| 怎么回应（动作类型） | **无**（−0.02，动作几乎由当前 utterance 决定） |
+| 谈什么·语境（状态/领域追踪） | **强 +0.19**（未明示跟进句 0.66→0.86） |
+| 说什么·内容（回复 领域·槽位 grounding） | **强 +0.15**（0.67→0.83） |
 
-### 8.3 综合判断
+结论：belief 的用武之地是"谈什么 / 语境 / 内容"（状态追踪、领域跟踪、指代、内容 grounding），不是"怎么回应"。这修正了早期"belief 决定动作"的合成强结论（很大程度是教师语料构造特性），又在真实数据上正面坐实机制价值。
 
-> 作为"用最小自由能原理重新理解并构建智能系统"的**思想验证原型**，FE-LLM 是成功且有启发性的；但作为"下一代大模型架构"，它目前仍停留在概念论证阶段，没有证据表明其在真实任务上能胜过现有范式。它最大的现实价值是**可解释性与可控性**，而非性能。
+### 6.3 CAPCW 核心引擎判定全表
 
-这一判断不是对项目的否定，而是为后续研究划定诚实的起点。
+| 判定 | 结果 |
+|---|---|
+| 内容寻址 slot > 单向量（容量受限绑定） | ✅ PASS（高 K 平均 +0.29） |
+| 显式自由能 / 可溯源形态不丢绑定能力 | ✅ PASS |
+| slot 数 = 绑定容量 → 穷则变前提 | ✅ PASS |
+| 接控制层：价值在内容 / 状态取回（与 §6.2 互证） | ✅ PASS（+0.39） |
+| 真 in-context 绑定边界（CrossWOZ 可记忆→不需它） | ✅ 边界画清（工作记忆引擎，非世界知识） |
+| 序列相邻算子 → induction（2×2 交互） | ✅ PASS（相邻算子 + 内容寻址缺一不可） |
+| 多跳链式：潜迭代读 | ⛔ FAIL |
+| 多跳链式：decode→re-embed + 中间监督（潜在 CoT） | ✅ PASS(机制)，+0.30（复现"多跳要 CoT"） |
+| 2×2 析因纠偏：多跳主因 = 中间监督 | ✅（主效应 +0.27 ≫ decode +0.03；纯涌现 FAIL） |
+| 中间监督可自举（单跳标签免 GT 中间标签） | ✅ PASS（达 GT 97%） |
+| 接回真实 controller（工作记忆 + surprise→动作 + grounded + surprise 平复） | ✅ PASS（活文本闭环） |
+| 活文本多跳（复合所有格 → 链式取回 + CoT trace） | ✅ PASS（决策/取回/劫持 1.0/1.0/0.0） |
+| 从扁平序列读关系（更像真语言） | ✅ PASS（多 K 平均 +0.564） |
+| 指代消解 + 有界工作记忆（活文本工程加固） | ✅（自然录入链 + 优雅降级） |
+| in-context 规则归纳（"超连连看"：外推到未见输入） | ✅ PASS（UNSEEN 规则外推 0.97；readout 之功） |
+| 推理基元·比较 / 计数（检索之外的运算推理） | ⛔ 诚实负·边界（CAPCW=内容寻址引擎，非算术聚合器） |
+| 自我成长（穷则变接活 WM） | 🟡 机制成立、小 WM 不划算（诚实 PARTIAL） |
+| 小 d 绑定稳定性 | ✅ 已稳（高方差实为 init 种子 bug，iters=3 最优） |
+
+### 6.4 容量扩展曲线："裸增 d 能否到好效果？"
+
+固定高负载绑定（K=8），扫脑容量 d，flat vs CAPCW：
+
+| d | flat | CAPCW |
+|---:|---:|---:|
+| 16 | 0.127 | **0.822** |
+| 32 | 0.125 | 0.792 |
+| 64 | 0.123 | 0.300 |
+| 128 | 0.118 | 0.074 |
+
+**裸增 d 不抬反降**：CAPCW 最佳在最小 d、d≥64 训练塌缩（且非欠训——单独多训也不救：弛豫 dynamics 未随 d 重标定）。结论：要受益于规模须**架构工程**（归一化 / 弛豫稳定化 / 深度），那本质是**重建标准可扩展 Transformer/LLM**，正是按容量纪律刻意不走的方向；且即便修好，scale 只抬绝对精度、不改机制结论（多跳要 CoT、内容寻址优势恰在小 d、规则归纳靠 readout 等与 d 无关）。**内容寻址的价值专在小 d 容量瓶颈处**（d=16 CAPCW 0.82 ≫ flat）——这正是 FE-LLM 容量纪律下的真实主场。
+
+### 6.5 复现
+
+全量回归 `python -m pytest -q`（**200 tests**）。统一活大脑 demo：`python -m fe_llm.active_inference.experiments.fe_llm_brain_demo --run`（输出 Linear 风浅色自包含 HTML，一段对话串起 知道何时不该答 + 多跳推理可溯源 CoT + 指代 + grounded + surprise 平复 + 成长）。CAPCW 各判定：`python -m fe_llm.world_model.capcw_*.py --run`。
 
 ---
 
-## 9. 局限性
+## 7. 与既有工作的关系
 
-1. **数据规模**：翻译实验仅 3000 句对，严重不足，导致过拟合。需引入公开大规模平行语料（如 OPUS-100 的百万级数据）。
-2. **因果推理的脆弱性**：依赖人工预设的互斥关系，缺乏可泛化的因果机制（如知识图谱推理或逻辑求解器）。
-3. **世界模型的静态性**：虽支持"经验记忆"写回，但缺乏对核心公理的安全演化机制与遗忘机制。
-4. **缺乏标准基准对比**：尚未在 BLEU、GSM8K 等公认基准上与基线模型系统对比。
-5. **嵌入依赖外部 API**：感知层依赖 DashScope，离线降级（哈希向量）会显著损失语义质量。
+### 7.1 与 Transformer / attention
 
----
+Transformer 数学核心是 attention `softmax(QK^T/sqrt(d))V`，解决"证据路由：当前位置该看哪些上下文"。FE-LLM 不否定 attention，而是 (a) 在控制层把它降级为感知 / 证据路由的可选组件，核心移到"看到之后内部哪里不稳定、该采取什么行动降低未来自由能"；(b) 在核心引擎层，把 attention **重新推导为最小化自由能的内容路由责任分配**，从而既拿到 Transformer 级内容寻址，又保留能量 / 误差 / 可溯源 / 可生长身份。
 
-## 10. 未来工作
+### 7.2 为什么分层世界模型被封存（诚实负结果）
 
-1. **大规模语料**：接入 OPUS-100 等公开数据集（已实现 `prepare_data.py` 下载/清洗管道），将翻译数据扩充至十万~百万级，缓解过拟合。
-2. **可学习的因果层**：用图神经网络或可微逻辑替代手工互斥关系，让因果冲突检测可泛化、可学习。
-3. **全链路联动**：在复杂任务上打通主引擎的完整自由能闭环，验证预测编码 + 主动推理的协同价值。
-4. **主动学习闭环**：利用主动推理的"追问"机制，让系统主动向用户/教师索取最能降低未来惊奇的信息，实现高效的样本利用。
-5. **基准评测**：在 GSM8K（数理）、Flores/WMT（翻译）等基准上量化对比。
+v2 蓝图原定核心引擎是"分层预测编码世界模型（z_1..z_L 纵向）"。经**组合泛化裁决**（分层理论上唯一不可替代的好处）：未见组合 flat 0.652 ≥ hierarchical 0.637，分层连理论主场都没赢扁平；结合其 decode_loss 代价，判定本规模过度设计、**正式封存**（引擎 + 测试留档）。教训：判定一个架构有没有用，直接测它被理论声称的那个好处 + 公平对照，别去找"能让它出彩的任务"（motivated reasoning）。CAPCW 与之鲜明对比：分层连理论主场都输，CAPCW 在它的理论主场（容量受限绑定）决定性赢——区别在于 CAPCW 用 Transformer 已验证的横向内容寻址结构，分层用固定纵向结构。
 
----
+### 7.3 预训练底座线（封存）
 
-## 11. 结论
+两面夹证封存：注入路线（P1/P1.5/P2/P2c）翻译方向正式集阴性；句向量路线（action 分类 + 领域理解）冻结 Qwen2.5-0.5B 句向量均不优于自建 8.9M 编码器。底座强项（知识 / 流畅度）是按容量纪律主动不竞争的方向。
 
-本文提出并实现了以最小自由能原理为第一性原理的语言模型架构 FE-LLM，将抽象的认知科学理论系统地映射为可运行的工程组件，并在算术与翻译任务上进行了验证。算术实验有力地证明了"生成即能量下降、惊奇即高能量"的核心主张；翻译实验验证了框架对序列生成的承载能力，同时也诚实地暴露了其在开放任务上尚未超越标准范式的局限。我们将 FE-LLM 定位为一项强调可解释性的思想验证原型。我们相信，"以最小化惊奇为唯一目标来组织智能"这一视角具有长远价值，而把它打磨成真正实用的下一代架构，仍需在因果推理、规模化与全链路联动等方向上持续努力。
+### 7.4 理论根源
+
+自由能原理与预测编码（Friston；Rao & Ballard）；能量模型（LeCun 等）；attention（Vaswani 等）与"attention 即变分推理"；slot attention / 对象中心学习；离散状态空间主动推理（Da Costa 等）。
 
 ---
 
-## 附录 A：复现指南
+## 8. 诚实边界
+
+1. **容量是硬边界**：小 d 是刻意做小的真实处境；绝对精度随负载 / 跳数下滑，裸增 d 不抬反降（§6.4）。
+2. **CAPCW 是内容寻址工作记忆引擎，不是通用算术 / 聚合推理器**：比较 / 计数这类对值的运算推理无额外优势（§6.3）。
+3. **多跳要中间监督**（可自举但需要中间步信号）；纯涌现（无监督）失败。
+4. **生成质量弱**：小字符级模型，价值在控制 / 推理 / 可溯源 / 成长层，不在生成博学度。
+5. **绑定 / 关系 NLU 是高精度规则**（覆盖标记式 / 复合所有格 / 有限代词），非全开放实体 / 指代抽取。
+6. **真实可记忆的世界知识不需要 CAPCW**（单向量记先验即赢）；CAPCW 专属真 in-context 绑定 / 工作记忆。
+
+---
+
+## 9. 结论
+
+FE-LLM 把 prompt 视为 observation、把回答视为 action、把生成视为期望自由能最小化后的语言实现，并以 CAPCW（内容寻址预测编码工作空间）作为其核心引擎。与标准 next-token 模型相比，FE-LLM 的优势不是更强的语言流畅性，而是显式记录"输入如何造成惊奇、系统如何更新 belief、为何选择某个 action、多跳如何被链式组合（可溯源 CoT）、输出后是否触发成长"。核心引擎的"开放问"已从"分层不是答案"推进到"**CAPCW 是边界清晰的正面答案**"：内容寻址绑定 / induction / 多跳 CoT / 规则外推都成立并接回真实 controller 的活文本主动推理闭环；唯一硬边界是小 d 容量（按纪律不增 d）。它因惊奇而推理，因行动而输出，因 trace 而可追溯，因穷则变与离线蒸馏而具备可审计的成长入口。
+
+---
+
+## 附录 A：复现命令
 
 ```bash
-# 环境
-pip install -r requirements.txt
-# 配置 .env：DashScope / DeepSeek 密钥、PostgreSQL(pgvector) 连接
+# 全量回归（200 tests）
+python -m pytest -q
 
-# 主引擎对话 demo（世界模型 + 自由能闭环）
-python scripts/init_db.py && python scripts/seed_db.py
-python demo.py
+# 统一活大脑 demo（Linear 风浅色 HTML + 实录）
+python -m fe_llm.active_inference.experiments.fe_llm_brain_demo --run
 
-# 实验一：算术认知
-python experiments/arithmetic/train.py
-python experiments/arithmetic/infer.py
-
-# 实验二：中英双向翻译
-python experiments/translation/teacher.py --total 3000     # 或 prepare_data.py 用公开语料
-python experiments/translation/train.py
-python experiments/translation/infer.py --interactive
+# CAPCW 核心引擎各判定（绑定 / induction / 多跳 CoT / 接回 controller / 活文本多跳 / 2×2 / 自蒸馏 / 规则归纳 / 容量曲线）
+python -m fe_llm.world_model.capcw_binding_eval --run
+python -m fe_llm.world_model.capcw_induction_seq_eval --run
+python -m fe_llm.world_model.capcw_multihop_cot_eval --run
+python -m fe_llm.world_model.capcw_multihop_controller_eval --run
+python -m fe_llm.world_model.capcw_multihop_dialogue_eval --run
+python -m fe_llm.world_model.capcw_multihop_emergent_cot_eval --run
+python -m fe_llm.world_model.capcw_multihop_selfdistill_eval --run
+python -m fe_llm.world_model.capcw_rule_induction_eval --run
+python -m fe_llm.world_model.capcw_capacity_scaling_eval --run
 ```
 
 ## 附录 B：图表清单
 
-- 图 1　FE-LLM 总体架构（`figures/architecture.svg`）
-- 图 2　三层惊奇度与行动策略（`figures/surprise_layers.svg`）
-- 图 3　能量递减解码（`figures/energy_decoding.svg`）
-- 图 4　教师—学生蒸馏与训练管道（`figures/distillation_pipeline.svg`）
-- 图 5　算术惊奇能量曲线（`figures/arithmetic_energy.svg`）
+- 图 1　FE-LLM 总体架构：`figures/fe_llm_architecture.svg`
+- 图 2　CAPCW 内容寻址预测编码工作空间：`figures/capcw_workspace.svg`
+- 图 3　多跳链式 decode→re-embed 潜在 CoT：`figures/capcw_multihop_cot.svg`
+- 图 4　主动推理闭环与期望自由能：`figures/active_inference_loop.svg`
 
 ## 参考文献
 
 1. Friston, K. (2010). The free-energy principle: a unified brain theory? *Nature Reviews Neuroscience*, 11(2), 127-138.
-2. Rao, R. P., & Ballard, D. H. (1999). Predictive coding in the visual cortex. *Nature Neuroscience*, 2(1), 79-87.
-3. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
-4. LeCun, Y., et al. (2006). A tutorial on energy-based learning. *Predicting Structured Data*.
-5. Parr, T., Pezzulo, G., & Friston, K. (2022). *Active Inference: The Free Energy Principle in Mind, Brain, and Behavior*. MIT Press.
-
----
-
-*本文档基于 FE-LLM 项目的真实代码与实验记录撰写。所有实验数据可通过附录 A 的流程复现。*
+2. Rao, R. P. N., & Ballard, D. H. (1999). Predictive coding in the visual cortex. *Nature Neuroscience*, 2(1), 79-87.
+3. LeCun, Y., Chopra, S., Hadsell, R., Ranzato, M., & Huang, F. (2006). A tutorial on energy-based learning. *Predicting Structured Data*.
+4. Vaswani, A., et al. (2017). Attention is all you need. *NeurIPS*.
+5. Locatello, F., et al. (2020). Object-centric learning with slot attention. *NeurIPS*.
+6. Da Costa, L., Parr, T., Sajid, N., Veselic, S., Neacsu, V., & Friston, K. (2020). Active inference on discrete state-spaces: A synthesis. *Journal of Mathematical Psychology*.
+7. Wei, J., et al. (2022). Chain-of-thought prompting elicits reasoning in large language models. *NeurIPS*.
+8. Elhage, N., et al. (2021). A mathematical framework for transformer circuits（induction heads）. *Anthropic*.

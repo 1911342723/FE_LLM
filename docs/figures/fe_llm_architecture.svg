@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1360" height="940" viewBox="0 0 1360 940" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+  <title id="t">FE-LLM v2 architecture</title>
+  <desc id="d">Full FE-LLM architecture: observation, perception, predictive coding and surprise, the CAPCW content-addressed predictive-coding core engine, expected-free-energy policy, grounded realization, and trace/growth, with an active-inference feedback loop.</desc>
+  <defs>
+    <marker id="ar" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#111827"/></marker>
+    <marker id="arI" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#3730a3"/></marker>
+    <marker id="arG" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#6b7280"/></marker>
+    <style>
+      .pg{fill:#ffffff}
+      .h1{font:700 27px Arial,Helvetica,sans-serif;fill:#111827}
+      .h2{font:400 14px Arial,Helvetica,sans-serif;fill:#4b5563}
+      .bt{font:700 15px Arial,Helvetica,sans-serif;fill:#111827}
+      .lb{font:600 14px Arial,Helvetica,sans-serif;fill:#111827}
+      .sm{font:400 12px Arial,Helvetica,sans-serif;fill:#374151}
+      .mt{font:italic 13px "Times New Roman",Times,serif;fill:#1f2937}
+      .tag{font:700 11px Arial,Helvetica,sans-serif;fill:#6b7280;letter-spacing:.06em}
+      .node{fill:#ffffff;stroke:#111827;stroke-width:1.3}
+      .obs{fill:#eff6ff;stroke:#1d4ed8;stroke-width:1.4}
+      .err{fill:#fff7ed;stroke:#c2410c;stroke-width:1.4}
+      .lat{fill:#eef2ff;stroke:#3730a3;stroke-width:1.4}
+      .act{fill:#ecfdf5;stroke:#047857;stroke-width:1.4}
+      .tr{fill:#f8fafc;stroke:#475569;stroke-width:1.2}
+      .core{fill:#f5f3ff;stroke:#4338ca;stroke-width:2.2}
+      .slot{fill:#ffffff;stroke:#4338ca;stroke-width:1.3}
+      .a{stroke:#111827;stroke-width:1.7;fill:none;marker-end:url(#ar)}
+      .ai{stroke:#3730a3;stroke-width:1.7;fill:none;marker-end:url(#arI)}
+      .fb{stroke:#6b7280;stroke-width:1.6;fill:none;stroke-dasharray:7 5;marker-end:url(#arG)}
+    </style>
+  </defs>
+  <rect class="pg" width="1360" height="940"/>
+  <text x="48" y="50" class="h1">FE-LLM: ????????? (???? + CAPCW ????)</text>
+  <text x="48" y="76" class="h2">Prompt ?? observation; ??????????????? action; ????????????????? (CAPCW) ??.</text>
+
+  <text x="48" y="118" class="tag">A . ??????? (PERCEPTION AND PREDICTIVE CODING)</text>
+  <rect class="obs" x="48" y="132" width="150" height="74" rx="8"/>
+  <text x="66" y="166" class="lb">Observation</text>
+  <text x="66" y="188" class="mt">o_t = Obs(x_t, m_t)</text>
+
+  <rect class="obs" x="240" y="132" width="158" height="74" rx="8"/>
+  <text x="258" y="166" class="lb">Perception phi</text>
+  <text x="258" y="188" class="mt">s_t = phi(o_t)</text>
+
+  <rect class="lat" x="440" y="132" width="158" height="74" rx="8"/>
+  <text x="458" y="160" class="lb">Prior belief</text>
+  <text x="458" y="182" class="mt">b_(t-1); predict s_hat</text>
+  <text x="458" y="199" class="sm">z, ctx, slots, known_slots</text>
+
+  <rect class="err" x="640" y="132" width="180" height="74" rx="8"/>
+  <text x="658" y="160" class="lb">Prediction error</text>
+  <text x="658" y="181" class="mt">eps = s_t - s_hat</text>
+  <text x="658" y="198" class="sm">??/??/??/???/??</text>
+
+  <rect class="err" x="862" y="132" width="150" height="74" rx="8"/>
+  <text x="880" y="160" class="lb">Surprise</text>
+  <text x="880" y="181" class="mt">S = Sum pi_i eps_i / Sum pi_i</text>
+  <text x="880" y="198" class="sm">precision ??</text>
+
+  <path class="a" d="M198 169 H236"/>
+  <path class="a" d="M398 169 H436"/>
+  <path class="a" d="M598 169 H636"/>
+  <path class="a" d="M820 169 H858"/>
+
+  <text x="48" y="262" class="tag">B . ????: ???????????? CAPCW (???? / ????)</text>
+  <rect class="core" x="48" y="276" width="760" height="318" rx="12"/>
+  <text x="70" y="306" class="bt">CAPCW core engine</text>
+  <text x="70" y="326" class="sm">?????????? W = {s_1 ... s_M}; ???????? slot; ??????; ?????.</text>
+
+  <rect class="slot" x="78" y="350" width="78" height="58" rx="7"/><text x="104" y="384" class="mt">s_1</text>
+  <rect class="slot" x="168" y="350" width="78" height="58" rx="7"/><text x="194" y="384" class="mt">s_2</text>
+  <rect class="slot" x="258" y="350" width="78" height="58" rx="7"/><text x="284" y="384" class="mt">s_3</text>
+  <rect class="slot" x="348" y="350" width="78" height="58" rx="7" stroke-dasharray="5 4"/><text x="368" y="384" class="mt">s_M</text>
+  <text x="452" y="375" class="sm">???: ????</text>
+  <text x="452" y="393" class="sm">-&gt; ?? slot (????)</text>
+
+  <rect class="node" x="78" y="436" width="210" height="58" rx="7"/>
+  <text x="96" y="460" class="lb">???? g</text>
+  <text x="96" y="481" class="mt">x_hat = Sum r*g(s_m); eps = x - x_hat</text>
+
+  <rect class="err" x="308" y="436" width="222" height="58" rx="7"/>
+  <text x="326" y="460" class="lb">?????? r (attention ???)</text>
+  <text x="326" y="481" class="mt">r_m = softmax(-pi*||x-g(s_m)||^2)</text>
+
+  <rect class="lat" x="550" y="436" width="232" height="58" rx="7"/>
+  <text x="568" y="460" class="lb">??????</text>
+  <text x="568" y="481" class="mt">F = pi/2 * mean||eps||^2; relax s_m</text>
+
+  <rect class="node" x="78" y="512" width="210" height="62" rx="7"/>
+  <text x="96" y="536" class="lb">bind(key -&gt; value)</text>
+  <text x="96" y="557" class="sm">???? in-context ??</text>
+
+  <rect class="node" x="308" y="512" width="222" height="62" rx="7"/>
+  <text x="326" y="536" class="lb">query -&gt; ??????</text>
+  <text x="326" y="557" class="sm">?? value + ?? surprise (?=??)</text>
+
+  <rect class="node" x="550" y="512" width="232" height="62" rx="7"/>
+  <text x="568" y="536" class="lb">???? (CoT)</text>
+  <text x="568" y="557" class="sm">decode -&gt; re-embed ??, ??????</text>
+
+  <path class="ai" d="M183 408 V434"/>
+  <path class="ai" d="M288 465 H306"/>
+  <path class="ai" d="M530 465 H548"/>
+  <path class="ai" d="M183 494 V510"/>
+  <path class="ai" d="M288 543 H306"/>
+  <path class="ai" d="M530 543 H548"/>
+
+  <path class="a" d="M937 206 C937 250 470 250 430 274"/>
+  <text x="690" y="244" class="sm">surprise / ?????????</text>
+
+  <text x="848" y="262" class="tag">C . ?????????</text>
+  <rect class="act" x="848" y="276" width="464" height="92" rx="10"/>
+  <text x="868" y="304" class="bt">Policy: ????????</text>
+  <text x="868" y="328" class="sm">?? {ANSWER, ASK, RETRIEVE, REFUSE, UPDATE_MEMORY}</text>
+  <text x="868" y="350" class="mt">a* = arg min_a G(a|b,o),  G = R + B - I + C</text>
+
+  <rect class="act" x="848" y="392" width="464" height="86" rx="10"/>
+  <text x="868" y="420" class="bt">Action realization (grounded ??)</text>
+  <text x="868" y="443" class="mt">y_t = Realize(a*, b_t, o_t)</text>
+  <text x="868" y="463" class="sm">EnergyDecoder ????; ???????=???</text>
+
+  <rect class="tr" x="848" y="502" width="226" height="86" rx="10"/>
+  <text x="868" y="530" class="bt">Trace (???)</text>
+  <text x="868" y="552" class="sm">observation / eps / S / ?? G /</text>
+  <text x="868" y="570" class="sm">a* / CoT trace / ????</text>
+
+  <rect class="tr" x="1086" y="502" width="226" height="86" rx="10"/>
+  <text x="1106" y="530" class="bt">Memory . ??</text>
+  <text x="1106" y="552" class="sm">?? -&gt; ?? -&gt; ??????;</text>
+  <text x="1106" y="570" class="sm">CAPCW ??? / ????</text>
+
+  <path class="a" d="M808 360 H846"/>
+  <text x="690" y="356" class="sm">?? value + surprise -&gt; ??</text>
+  <path class="a" d="M1080 368 V390"/>
+  <path class="a" d="M960 478 V500"/>
+  <path class="a" d="M1074 545 H1084"/>
+
+  <path class="fb" d="M848 446 C600 446 560 320 540 274"/>
+  <text x="556" y="430" class="sm">??????: ???????? -&gt; ?? surprise ??</text>
+
+  <text x="48" y="648" class="tag">??? -&gt; ???? (SIX PRINCIPLES TO MODULES)</text>
+  <rect class="node" x="48" y="664" width="206" height="64" rx="8"/><text x="64" y="690" class="lb">???? / ????</text><text x="64" y="712" class="sm">?? eps, F, ????</text>
+  <rect class="node" x="266" y="664" width="206" height="64" rx="8"/><text x="282" y="690" class="lb">?????</text><text x="282" y="712" class="sm">?? + ????? S ?</text>
+  <rect class="node" x="484" y="664" width="206" height="64" rx="8"/><text x="500" y="690" class="lb">????</text><text x="500" y="712" class="sm">EFE ??? + ????</text>
+  <rect class="node" x="702" y="664" width="206" height="64" rx="8"/><text x="718" y="690" class="lb">????????</text><text x="718" y="712" class="sm">CAPCW slot ????</text>
+  <rect class="node" x="920" y="664" width="186" height="64" rx="8"/><text x="936" y="690" class="lb">???</text><text x="936" y="712" class="sm">trace + CoT trace</text>
+  <rect class="node" x="1118" y="664" width="194" height="64" rx="8"/><text x="1134" y="690" class="lb">????</text><text x="1134" y="712" class="sm">?? -&gt; ?? -&gt; ??</text>
+
+  <text x="48" y="772" class="tag">???? (CORE EQUATION)</text>
+  <rect x="48" y="786" width="1264" height="58" rx="6" fill="#ffffff" stroke="#d1d5db" stroke-width="1"/>
+  <text x="70" y="822" class="mt" style="font-size:17px">o_t -&gt; b_t (CAPCW ??????, F ?) -&gt; a* = arg min_a G(a | b_t, o_t) -&gt; y_t = Realize(a*) ;  ??? trace ????</text>
+
+  <text x="48" y="886" class="sm">??? (??): ? 0 ????????? LLM ???/??; ????? -- ??????????????????. ???? (d ?) ? CAPCW ?????????.</text>
+  <text x="48" y="908" class="sm">??: ???=?????; ??=CAPCW ??????/??; ???=????????. ?? 200 ??????.</text>
+</svg>
