@@ -1,0 +1,44 @@
+{
+  "config": {
+    "interactions": 6,
+    "steps": 4,
+    "replay": 4,
+    "lora_lr": 0.002,
+    "rank": 8,
+    "alpha": 16,
+    "n_teach": 8,
+    "device": "",
+    "seed": 0
+  },
+  "device": "cuda",
+  "skills": [
+    "a",
+    "b",
+    "c"
+  ],
+  "iso_diag": [
+    0.0625,
+    0.25,
+    0.0625
+  ],
+  "pro_diag": [
+    0.0625,
+    0.375,
+    0.625
+  ],
+  "iso_s0": [
+    0.0625,
+    0.0625,
+    0.0625
+  ],
+  "pro_s0": [
+    0.0625,
+    0.0625,
+    0.0625
+  ],
+  "iso_forget": 0.0,
+  "pro_forget": 0.0,
+  "forward_transfer": 0.34375,
+  "verdict": "【Progressive 式·前向迁移 + 不忘】少步数(interactions=6)顺序学 3 个共享'复制 X'子技能：\n  - 各技能刚学完 acc：ISO [0.06, 0.25, 0.06] / Progressive [0.06, 0.38, 0.62]\n  - **后学技能(第2/3个)前向迁移**：Progressive − ISO = +34%（>0 = 侧向借旧列'复制 X'学得更快/好）\n  - 不忘：首技能「a」遗忘Δ ISO +0.00 / Progressive +0.00（均≈0，旧列冻结保证）\n结论：Progressive 侧向连接在保持'隔离不忘'的同时拿到**前向迁移**（+34%），缓解了 LoRA-ISO'每列从零学、无迁移'的代价。",
+  "fig": "docs\\reports\\figs\\code_progressive.png"
+}

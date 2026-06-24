@@ -1,0 +1,195 @@
+{
+  "config": {
+    "interactions": 40,
+    "steps": 4,
+    "replay": 6,
+    "lora_lr": 0.002,
+    "tf_full_lr": 0.0002,
+    "per_full_lr": 0.0002,
+    "unlearn_lr": 0.0001,
+    "unlearn_steps": 30,
+    "rank": 8,
+    "alpha": 16,
+    "n_teach": 8,
+    "device": "",
+    "seed": 0
+  },
+  "device": "cuda",
+  "skills": [
+    "make",
+    "get",
+    "new"
+  ],
+  "n_lora_per_skill_k": 163.4,
+  "lora_iso": [
+    {
+      "target": "make",
+      "before": {
+        "make": 0.6875,
+        "get": 0.8125,
+        "new": 0.8125
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.8125,
+        "new": 0.8125
+      },
+      "target_drop": 0.6875,
+      "bystander_drop": 0.0,
+      "specificity": 0.6875
+    },
+    {
+      "target": "get",
+      "before": {
+        "make": 0.6875,
+        "get": 0.8125,
+        "new": 0.8125
+      },
+      "after": {
+        "make": 0.6875,
+        "get": 0.0,
+        "new": 0.8125
+      },
+      "target_drop": 0.8125,
+      "bystander_drop": 0.0,
+      "specificity": 0.8125
+    },
+    {
+      "target": "new",
+      "before": {
+        "make": 0.6875,
+        "get": 0.8125,
+        "new": 0.8125
+      },
+      "after": {
+        "make": 0.6875,
+        "get": 0.8125,
+        "new": 0.0
+      },
+      "target_drop": 0.8125,
+      "bystander_drop": 0.0,
+      "specificity": 0.8125
+    }
+  ],
+  "transformer_full": [
+    {
+      "target": "make",
+      "before": {
+        "make": 0.875,
+        "get": 0.9375,
+        "new": 0.9375
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.875,
+      "bystander_drop": 0.9375,
+      "specificity": -0.0625
+    },
+    {
+      "target": "get",
+      "before": {
+        "make": 0.875,
+        "get": 0.9375,
+        "new": 0.9375
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.9375,
+      "bystander_drop": 0.90625,
+      "specificity": 0.03125
+    },
+    {
+      "target": "new",
+      "before": {
+        "make": 0.875,
+        "get": 0.9375,
+        "new": 0.9375
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.9375,
+      "bystander_drop": 0.90625,
+      "specificity": 0.03125
+    }
+  ],
+  "per_full": [
+    {
+      "target": "make",
+      "before": {
+        "make": 0.5,
+        "get": 0.6875,
+        "new": 0.5625
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.5,
+      "bystander_drop": 0.625,
+      "specificity": -0.125
+    },
+    {
+      "target": "get",
+      "before": {
+        "make": 0.5,
+        "get": 0.6875,
+        "new": 0.5625
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.6875,
+      "bystander_drop": 0.53125,
+      "specificity": 0.15625
+    },
+    {
+      "target": "new",
+      "before": {
+        "make": 0.5,
+        "get": 0.6875,
+        "new": 0.5625
+      },
+      "after": {
+        "make": 0.0,
+        "get": 0.0,
+        "new": 0.0
+      },
+      "target_drop": 0.5625,
+      "bystander_drop": 0.59375,
+      "specificity": -0.03125
+    }
+  ],
+  "specificity": {
+    "LoRA-ISO": 0.7708333333333334,
+    "Transformer-full": 0.0,
+    "PER-full": 0.0
+  },
+  "drops": {
+    "LoRA-ISO": [
+      0.7708333333333334,
+      0.0
+    ],
+    "Transformer-full": [
+      0.9166666666666666,
+      0.9166666666666666
+    ],
+    "PER-full": [
+      0.5833333333333334,
+      0.5833333333333334
+    ]
+  },
+  "verdict": "【知识可定位编辑·三臂对照】擦除一个知识时的编辑特异性（目标降 − 旁观降，1.0=完美定位）：\n  - LoRA-ISO（隔离模块）：特异性 +0.77（目标降 77%、旁观降 0%）→ 卸载目标块即精准擦除，旁观零影响\n  - Transformer-full：特异性 +0.00（目标降 92%、旁观降 92%）→ 共享参数纠缠，擦目标殃及旁观\n  - PER-full：特异性 +0.00（目标降 58%、旁观降 58%）→ 同样共享则同样殃及（证明'可定位'来自隔离结构，非 PER vs TF）\n结论：知识可定位/可外科编辑来自**隔离结构**（LoRA-ISO 每知识独立块）——这是标准 Transformer（共享参数黑箱）做不到的；而它正是我们 LoRA-ISO 模块自带的能力（与'不忘'同源：隔离）。",
+  "fig": "docs\\reports\\figs\\code_knowledge_editing.png"
+}

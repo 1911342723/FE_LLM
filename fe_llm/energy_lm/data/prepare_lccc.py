@@ -29,7 +29,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
 OUT_DIR = os.path.join("data", "dialogue")
-OUT_PATH = os.path.join(OUT_DIR, "dialogues.jsonl")
+DEFAULT_OUT = "dialogues_lccc_base.jsonl"   # 默认写新文件，绝不覆盖干净的 dialogues.jsonl
 
 # 只保留以中文/常见标点为主的字符，剔除表情、生僻符号、URL 残留
 _KEEP = re.compile(r"[\u4e00-\u9fff，。！？、…~,.!?]")
@@ -65,9 +65,13 @@ def main():
     ap.add_argument("--prompt-max", type=int, default=24)
     ap.add_argument("--resp-min", type=int, default=2)
     ap.add_argument("--resp-max", type=int, default=24, help="回应最长字数")
-    ap.add_argument("--max-scan", type=int, default=2_000_000,
+    ap.add_argument("--max-scan", type=int, default=8_000_000,
                     help="最多扫描多少段对话（控制耗时）")
+    ap.add_argument("--out", default=DEFAULT_OUT,
+                    help="输出文件名（相对 data/dialogue）或绝对路径；默认 dialogues_lccc_base.jsonl，不覆盖 dialogues.jsonl")
     args = ap.parse_args()
+
+    out_path = args.out if os.path.isabs(args.out) else os.path.join(OUT_DIR, args.out)
 
     src = _find_lccc()
     if src is None:
@@ -115,7 +119,7 @@ def main():
                     break
 
     os.makedirs(OUT_DIR, exist_ok=True)
-    with open(OUT_PATH, "w", encoding="utf-8") as f:
+    with open(out_path, "w", encoding="utf-8") as f:
         for p, r in pairs:
             f.write(json.dumps({"prompt": p, "response": r},
                                ensure_ascii=False) + "\n")
@@ -126,7 +130,7 @@ def main():
         chars.update(p); chars.update(r)
     avg_r = sum(len(r) for _, r in pairs) / max(1, len(pairs))
     print(f"[lccc] 扫描对话段：{n_dialogue}")
-    print(f"[lccc] 落盘对数：{len(pairs)} → {OUT_PATH}")
+    print(f"[lccc] 落盘对数：{len(pairs)} → {out_path}")
     print(f"[lccc] 字表规模：{len(chars)} 字")
     print(f"[lccc] 平均回应长度：{avg_r:.1f} 字")
     # 回应长度分布（每 4 字一桶）

@@ -1,0 +1,80 @@
+{
+  "config": {
+    "interactions": 40,
+    "steps": 4,
+    "replay": 4,
+    "lora_lr": 0.002,
+    "rank": 8,
+    "alpha": 16,
+    "n_teach": 8,
+    "n_probe": 4,
+    "grow_threshold": 0.5,
+    "device": "",
+    "seed": 0
+  },
+  "device": "cuda",
+  "stream": [
+    "make",
+    "get",
+    "make",
+    "tag",
+    "get"
+  ],
+  "growth_log": [
+    {
+      "step": 1,
+      "skill": "make",
+      "decision": "GROW",
+      "min_surprise": 1.0
+    },
+    {
+      "step": 2,
+      "skill": "get",
+      "decision": "GROW",
+      "min_surprise": 1.0
+    },
+    {
+      "step": 3,
+      "skill": "make",
+      "decision": "REUSE",
+      "min_surprise": 0.0,
+      "routed": "make"
+    },
+    {
+      "step": 4,
+      "skill": "tag",
+      "decision": "GROW",
+      "min_surprise": 1.0
+    },
+    {
+      "step": 5,
+      "skill": "get",
+      "decision": "REUSE",
+      "min_surprise": 0.0,
+      "routed": "get"
+    }
+  ],
+  "n_grow": 3,
+  "learned": [
+    "make",
+    "get",
+    "tag"
+  ],
+  "n_lora_per_block_k": 163.4,
+  "route_acc": {
+    "entropy": 0.9375,
+    "trigger": 1.0
+  },
+  "end2end_acc": {
+    "entropy": 0.7083333333333334,
+    "trigger": 0.75
+  },
+  "retention": {
+    "make": 0.8125,
+    "get": 0.8125,
+    "tag": 0.625
+  },
+  "retention_mean": 0.75,
+  "verdict": "【端到端成长系统】\n  1) surprise 门控自动成长：知识流 ['make', 'get', 'make', 'tag', 'get'] → 自动长 3 块（['make', 'get', 'tag']），重复的 make/get 第二次 min_surprise 低→复用不重复长 → ✅ 正确。\n  2) 推理路由正确率：能量/置信度 94% vs 触发词上限 100%；端到端 acc 能量 71% / 触发词 75%。\n  3) 隔离不忘：各用正确块平均 acc 75%（{'make': 0.8125, 'get': 0.8125, 'tag': 0.625}）——隔离的数学保证。\n结论：LoRA-ISO + surprise 门控 + 路由 = 端到端持续成长系统（自动判断该长则长、不忘旧、按需取用）。能量路由弱于触发词上限（学习化路由是真实难点，触发词路由可作可靠兜底）。",
+  "fig": "docs\\reports\\figs\\code_router_growth.png"
+}

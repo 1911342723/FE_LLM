@@ -1,0 +1,157 @@
+{
+  "task": "from-scratch traceable LM scaling: FULL PER prototype (causal PER + synapse #2) vs ablated vs Transformer ruler, char-LM held-out bpc",
+  "config": {
+    "corpus": "opus100-en chars",
+    "vocab": 49,
+    "ctx": 128,
+    "epochs": 12,
+    "train_chunks": 9042,
+    "val_chunks": 1004,
+    "subject": "完整 PER 原型(含可学突触 #2)",
+    "with_ablation": true
+  },
+  "rows": [
+    {
+      "dim": 64,
+      "depth": 2,
+      "n_heads": 4,
+      "per": {
+        "params": 106035,
+        "val_loss_nats": 1.8557,
+        "val_bpc": 2.6772,
+        "val_ppl": 6.4
+      },
+      "per_nosyn": {
+        "params": 73267,
+        "val_loss_nats": 1.9029,
+        "val_bpc": 2.7453,
+        "val_ppl": 6.71
+      },
+      "tf": {
+        "params": 81585,
+        "val_loss_nats": 1.8429,
+        "val_bpc": 2.6588,
+        "val_ppl": 6.32
+      }
+    },
+    {
+      "dim": 96,
+      "depth": 3,
+      "n_heads": 4,
+      "per": {
+        "params": 267508,
+        "val_loss_nats": 1.7231,
+        "val_bpc": 2.4859,
+        "val_ppl": 5.6
+      },
+      "per_nosyn": {
+        "params": 218356,
+        "val_loss_nats": 1.7877,
+        "val_bpc": 2.579,
+        "val_ppl": 5.98
+      },
+      "tf": {
+        "params": 246289,
+        "val_loss_nats": 1.6936,
+        "val_bpc": 2.4433,
+        "val_ppl": 5.44
+      }
+    },
+    {
+      "dim": 160,
+      "depth": 4,
+      "n_heads": 8,
+      "per": {
+        "params": 825269,
+        "val_loss_nats": 1.5381,
+        "val_bpc": 2.219,
+        "val_ppl": 4.66
+      },
+      "per_nosyn": {
+        "params": 759733,
+        "val_loss_nats": 1.5731,
+        "val_bpc": 2.2695,
+        "val_ppl": 4.82
+      },
+      "tf": {
+        "params": 862769,
+        "val_loss_nats": 1.5361,
+        "val_bpc": 2.2161,
+        "val_ppl": 4.65
+      }
+    },
+    {
+      "dim": 256,
+      "depth": 5,
+      "n_heads": 8,
+      "per": {
+        "params": 2446902,
+        "val_loss_nats": 1.4491,
+        "val_bpc": 2.0906,
+        "val_ppl": 4.26
+      },
+      "per_nosyn": {
+        "params": 2364982,
+        "val_loss_nats": 1.4757,
+        "val_bpc": 2.129,
+        "val_ppl": 4.37
+      },
+      "tf": {
+        "params": 2693937,
+        "val_loss_nats": 1.4523,
+        "val_bpc": 2.0953,
+        "val_ppl": 4.27
+      }
+    },
+    {
+      "dim": 384,
+      "depth": 6,
+      "n_heads": 8,
+      "per": {
+        "params": 6402103,
+        "val_loss_nats": 1.4735,
+        "val_bpc": 2.1259,
+        "val_ppl": 4.36
+      },
+      "per_nosyn": {
+        "params": 6303799,
+        "val_loss_nats": 1.4872,
+        "val_bpc": 2.1455,
+        "val_ppl": 4.42
+      },
+      "tf": {
+        "params": 7190833,
+        "val_loss_nats": 1.6459,
+        "val_bpc": 2.3745,
+        "val_ppl": 5.19
+      }
+    }
+  ],
+  "per_bpc_curve": [
+    2.6772,
+    2.4859,
+    2.219,
+    2.0906,
+    2.1259
+  ],
+  "abl_bpc_curve": [
+    2.7453,
+    2.579,
+    2.2695,
+    2.129,
+    2.1455
+  ],
+  "tf_bpc_curve": [
+    2.6588,
+    2.4433,
+    2.2161,
+    2.0953,
+    2.3745
+  ],
+  "per_drop_small_to_big": 0.5513,
+  "tf_drop_small_to_big": 0.2843,
+  "per_monotone": false,
+  "gap_small": 0.0184,
+  "gap_big": -0.2486,
+  "verdict": "**完整 PER 原型总体随规模变好但非严格单调**：val-bpc 2.677→2.126（降 +0.551）。有 scaling 趋势，个别档需调超参。 与 Transformer 标尺：小规模差距 +0.018 bpc、大规模 -0.249 bpc（缩小）；TF 自身降 +0.284。 升级证据(完整#2 vs 阉割)：各档 Δbpc(阉割−完整)=[0.0681, 0.0931, 0.0505, 0.0384, 0.0196]，完整更优 5/5 档（均值 +0.0539）→ 完整原型在 scaling 全程不劣于、整体优于阉割版。"
+}

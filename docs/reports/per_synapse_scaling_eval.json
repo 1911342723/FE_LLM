@@ -1,0 +1,71 @@
+{
+  "task": "PER #2 synapse scaling on real chat LM (full vs ablated across model sizes)",
+  "config": {
+    "data": "dialogues.jsonl",
+    "n_pairs": 8006,
+    "epochs": 15,
+    "n_seeds": 2,
+    "max_len": 64
+  },
+  "rows": [
+    {
+      "dim": 64,
+      "depth": 2,
+      "params": 314658,
+      "full_ppl": 26.644,
+      "full_std": 1.884,
+      "abl_ppl": 26.737,
+      "abl_std": 1.843,
+      "delta_mean": 0.093,
+      "delta_std": 0.041,
+      "wins_full": 2,
+      "n_seeds": 2,
+      "sec": 34.5
+    },
+    {
+      "dim": 96,
+      "depth": 3,
+      "params": 579491,
+      "full_ppl": 20.266,
+      "full_std": 1.793,
+      "abl_ppl": 20.514,
+      "abl_std": 1.785,
+      "delta_mean": 0.248,
+      "delta_std": 0.009,
+      "wins_full": 2,
+      "n_seeds": 2,
+      "sec": 44.6
+    },
+    {
+      "dim": 128,
+      "depth": 4,
+      "params": 973988,
+      "full_ppl": 18.613,
+      "full_std": 1.553,
+      "abl_ppl": 18.747,
+      "abl_std": 1.596,
+      "delta_mean": 0.134,
+      "delta_std": 0.042,
+      "wins_full": 2,
+      "n_seeds": 2,
+      "sec": 59.0
+    },
+    {
+      "dim": 192,
+      "depth": 5,
+      "params": 2064037,
+      "full_ppl": 17.979,
+      "full_std": 1.892,
+      "abl_ppl": 18.223,
+      "abl_std": 1.777,
+      "delta_mean": 0.244,
+      "delta_std": 0.114,
+      "wins_full": 2,
+      "n_seeds": 2,
+      "sec": 96.9
+    }
+  ],
+  "delta_vs_logparams_slope": 0.1337,
+  "fig": "docs\\reports\\figs\\per_synapse_scaling.png",
+  "verdict": "📈/🟡 **#2 的增益不随规模消失、且呈轻微上行（suggestive 非定论）**：4 档（0.31M→2.06M）完整原型 held-out ppl 全部低于阉割（8/8 种子全胜），Δ 对 log-参数斜率=+0.134>0；但绝对幅度小（~0.4%–1.3%）、点数少且有噪声（128×4 档回落、非单调），故只能说 #2 至少不是「规模一大就被洗掉」、反有「越大越值」苗头，需更大规模/更多种子坐实。#2 已确证的硬价值仍是可溯源（§2.6/P1）。"
+}

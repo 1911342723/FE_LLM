@@ -1,46 +1,105 @@
 # FE-LLM 文档
 
-本目录是 FE-LLM 的论文、架构说明与配图。当前主线已经从早期“能量坍缩生成器”收敛为：
+> **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
+>
+> 以「状态趋稳 / 自由能最小化」为第一性原理的非自回归语言模型 **SeqEnergyNet**
+>（因果预测-误差-弛豫 PER + 可学突触基底 #2，**非 Transformer 底座**）。在同参数 /
+> 同 token 预算下对标标准 Transformer，并系统验证泛化、可溯源、后天成长。
 
-> **可溯源主动推理语言模型原型**：prompt 作为 observation 进入系统，触发 prediction error 与 surprise；模型先选择能降低 expected free energy 的 action，再把 action 实现为语言输出，并记录完整 inference trace。
+## 核心结论（均为可复跑脚本 + 报告）
 
-## 当前论文
+| 命题 | 结论 | 报告 |
+|---|---|---|
+| 同参数 / 同 token 对标标准 Transformer | PER **val_bpc 1.0365** < Transformer **1.1949**；语法合法率 29% vs 21% | [code_per_vs_transformer.md](reports/code_per_vs_transformer.md) |
+| 真泛化（非记忆） | 未见分片 bpc 1.083 ≈ 训练 1.002（gap +0.08） | [code_per_vs_transformer.md](reports/code_per_vs_transformer.md) |
+| 架构 scaling 对标 Transformer | opus100 字符 5 档完整 PER 5/5 优于阉割；大规模反超 TF | [lm_scaling_eval.md](reports/lm_scaling_eval.md) |
+| 可学突触 #2 可溯源 | 剪某规则突触通路 → 该规则精准崩（1.00→0.00），干预特异性≈1.0 | [per_synapse_proof_eval.md](reports/per_synapse_proof_eval.md) |
+| 真实语言突触收益 | 中文聊天 LM held-out ppl 完整 < 阉割 **3/3 种子** | [per_synapse_lm_eval.md](reports/per_synapse_lm_eval.md) |
+| 突触规模趋势 | 0.31M→2.06M 完整全低于阉割 **8/8 种子** | [per_synapse_scaling_eval.md](reports/per_synapse_scaling_eval.md) |
+| 后天成长（synapse-only） | held-out 复制规则 0%→75%（须经验回放，naive 单样本发散） | [per_code_growth.md](reports/per_code_growth.md) |
+| 真成长不覆盖（加容量 + 隔离） | 旧技能 loss 学后续**恒定**（数学保证不遗忘）vs 共享突触灾难遗忘 | [per_code_growth_isolated.md](reports/per_code_growth_isolated.md) |
 
-- **[FE-LLM论文.md](FE-LLM论文.md)** — 完整中文论文《FE-LLM：一种可溯源的主动推理语言模型原型》，涵盖：
-  - 核心思想：不直接续写 prompt，而是 observation -> belief update -> action selection -> language realization。
-  - 数学形式：prediction error、precision-weighted surprise、expected free energy。
-  - 架构：`Observation`、`BeliefState`、`PredictionError`、`CandidateAction`、`ExpectedFreeEnergyScore`、`InferenceTrace`。
-  - 算法：`ActiveInferenceController.respond(...)` 的完整推理流程。
-  - 训练：8k 对话语料作为 `ANSWER` 样本，teacher 并发生成非 `ANSWER` 主动推理样本，小型 `PolicySelector` 使用 class-weighted loss。
-  - 验收：问候、模糊请求、时间矛盾、实时信息、安全拒答、记忆候选六类场景。
+可视化在 [reports/figs/](reports/figs/)：逐字惊奇 / 跨层 ‖ε‖ / 各层 η / 可学突触 S 热图 / 内容路由 g 六联图、突触通路热力图、scaling 曲线。
 
-## 图表
+## 专题：PER 解决 Transformer 两大痛点
 
-| 图 | 文件 | 说明 |
-|----|------|------|
-| 图 1 | [active_inference_architecture.svg](figures/active_inference_architecture.svg) | 生成模型、Markov blanket 与 v1 计算图 |
-| 图 2 | [active_inference_algorithm.svg](figures/active_inference_algorithm.svg) | expected free energy 策略评分分解 |
-| 图 3 | [active_inference_training.svg](figures/active_inference_training.svg) | 数据分布、policy selector 输入与训练目标 |
-| 图 4 | [intent_slot_architecture.svg](figures/intent_slot_architecture.svg) | 单向量意图瓶颈（翻译实验实证）与意图序列化（象层级）方案对比 |
+> 完整报告见 **[PER解决Transformer痛点.md](PER解决Transformer痛点.md)**
 
-## 架构演进文档
+在真实 52M 代码模型之上，一个"LoRA 式隔离知识模块"同时回答 Transformer 的两大痛点，并做成端到端成长系统：
 
-- **[FE-LLM阶段总结.md](FE-LLM阶段总结.md)** — 【收口·先读这份】当前阶段句号：愿景/已验证成果（带证据）/belief 在真实数据(CrossWOZ)的价值地图/底座线与分层预测编码世界模型的封存定论/蓝图差距/方法论沉淀/复现。125 回归测试。
-- **[FE-LLM核心引擎构想.md](FE-LLM核心引擎构想.md)** — 【下一步研究方向】方案一 CAPCW（内容寻址预测编码工作空间）：借鉴 Transformer 真正力量（内容寻址路由），把自由能/预测误差从失败的"固定纵向分层"搬到"内容寻址横向 slot 工作空间"+ 可溯源 + 可生长，保持六要素；含理论连接（attention 即推理 / slot-attention）、风险与组合泛化最小验证方案。
-- **[FE-LLM从0自建v2架构设计.md](FE-LLM从0自建v2架构设计.md)** — 【主线·部分修订】完全从 0、不依赖任何预训练底座的认知架构蓝图。注：其核心引擎"分层预测编码（z_1..z_L 纵向）"已经组合泛化裁决判为本规模过度设计、封存（见阶段总结）；新核心引擎方向见上面的核心引擎构想。
-- **[FE-LLM蓝图完成度.md](FE-LLM蓝图完成度.md)** — 【完成度】道易循环 / 规范架构 11 模块 / 六要素 → 已实现模块 → 验证证据 的逐条对齐；含诚实边界与复现入口。125 回归测试守护，全部 eval 可复跑。
-- **[FE-LLM术语表.md](FE-LLM术语表.md)** — 【术语】白话解释 controller / headroom / taxonomy / belief / surprise / 自由能 / 槽位 / 能量解码 等所有名词，附在 FE-LLM 里指什么、在哪个文件。看不懂名词先看这份。
-- **[端到端 Demo 实录](reports/fe_llm_demo_transcript.md)** — FE-LLM 核心闭环的 9 轮会话演示：信息不足→追问、风险→拒答、记住上下文→直接回答、稳定偏好→成长读回，每轮含显式 surprise 通道与 belief 槽位（可溯源）。运行 `python -m fe_llm.active_inference.experiments.fe_llm_demo --run`。
-- **[端到端 Demo 网页可视化](reports/fe_llm_demo.html)** — 同一 9 轮会话的自包含 HTML（浏览器直接打开）：动作色标徽章、surprise 各通道条形、belief 槽位 chips、召回与回答。生成 `python -m fe_llm.active_inference.experiments.fe_llm_demo_web --run`。交互 CLI：`python -m fe_llm.active_inference.experiments.fe_llm_cli`。**交互网页**（零依赖，浏览器实时对话）：`python -m fe_llm.active_inference.experiments.fe_llm_web_server` 后打开 http://127.0.0.1:8000 。
-- **[FE-LLM意图序列化架构草案.md](FE-LLM意图序列化架构草案.md)** — 由 opus-100 翻译泛化实验（word-F1 0.07）触发的架构升级草案：意图从单向量升级为 `global_intent + intent_slots + slot_salience`（道易方案"卦/爻/精度"的工程化转译），含与核心思想的逐条一致性审查与 M1-M4 判定实验路线。**M2 判定已完成（2026-06-11）：FAIL**（word-F1 0.083，仅 1.13x 基线），瓶颈锁定为小模型从零训练的容量而非意图结构，按预案转线。
-- **[FE-LLM预训练底座路线草案.md](FE-LLM预训练底座路线草案.md)** — M2 阴性结果触发的转线设计：预训练底座（容量）+ FE-LLM 机制层（结构化意图、能量解码、主动推理、可溯源）。三级接入路线 P1（冻结底座+外挂意图/能量头）→ P2（LoRA 意图条件注入）→ P3（蒸馏回自有 PER 架构），N1-N4 判定里程碑，强制同底座无机制对照组防止贡献归属混淆。
-- **[FE-LLM预训练底座N1执行规格.md](FE-LLM预训练底座N1执行规格.md)** — P1 首轮执行规格：冻结底座、外挂 `IntentAdapter` 与 `EnergyHead`、hybrid 打分、A/B/C 对照组与 N1 判定口径。
-- **[FE-LLM预训练底座N1选型.md](FE-LLM预训练底座N1选型.md)** — N1 首发底座选型：选择 `Qwen/Qwen2.5-0.5B`，并记录 Qwen3、SmolLM2、TinyLlama 的暂缓理由。
-- **[FE-LLM预训练底座N1阶段小结.md](FE-LLM预训练底座N1阶段小结.md)** — 汇总 P1/P1.5/P2 最小外挂路线的实验矩阵、阶段判定与下一步 P2b 建议。
-- **[FE-LLM预训练底座N1下一阶段决策.md](FE-LLM预训练底座N1下一阶段决策.md)** — 在进入更重 LoRA/hook 前，先诊断 `IntentAdapter` 表达是否本身足够分离。
-- **[FE-LLM预训练底座P1.5执行方案.md](FE-LLM预训练底座P1.5执行方案.md)** — P1 rerank 阴性/部分阳性后进入 P1.5：`IntentLogitsAdapter` 让 structured intent 直接生成候选 logit bias，再用同一 A/B/C 口径复测。
-- **[FE-LLM预训练底座P2执行方案.md](FE-LLM预训练底座P2执行方案.md)** — P1/P1.5 正式评估未过后进入 P2：`IntentResidualAdapter` 让 intent 进入 hidden state 更新，再经底座 `lm_head` 读出 logits。
+| 痛点 / 能力 | 标准 Transformer | 本模块 | 实验 |
+|---|---|---|---|
+| 持续学习不遗忘 | ❌ 88%→0% | ✅ Δ0、学会 83% | B/C/D |
+| 知识可定位编辑 | ❌ 殃及旁观(特异性0) | ✅ 特异性 0.77、旁观 0 影响 | A |
+| 自动成长 + 路由 | ❌ | ✅ surprise 门控自动长块、路由 94% | Router |
+| 前向迁移（且不忘） | ✅ 但会忘 | ✅ +34% 且 Δ0 | E |
 
-## 一句话总结
+6 个对照实验脚本：`code_forgetting_compare` / `code_param_efficiency_eval` / `code_lora_isolation_eval` / `code_knowledge_editing_eval` / `code_router_growth_eval` / `code_progressive_eval`。
 
-FE-LLM v1 的研究重点不是和通用 LLM 比语言流畅性，而是证明一件更基础的事：语言系统可以先显式感到惊奇、更新 belief、选择 action，再生成文本，并把这条路径完整记录下来。
+## 快速开始
+
+```bash
+# 1. 安装依赖
+pip install -r requirements.txt
+
+# 2. 准备数据（codeparrot-clean 清洗去重 GitHub Python，落盘 data/code/python_corpus.txt）
+python -m fe_llm.energy_lm.data.prepare_code --target-mb 200
+
+# 3. 冒烟自检（小配置验证显存 / 跑通）
+python -m fe_llm.energy_lm.training.code_train --smoke
+
+# 4. 从 0 训练 PER 代码模型
+python -m fe_llm.energy_lm.training.code_train --arch per --hours 4.5 --dim 768 --depth 12
+
+# 5. 标准 Transformer 对照（同 token 量口径）
+python -m fe_llm.energy_lm.training.code_train --arch transformer --dim 768 --depth 7 --max-steps 78000
+
+# 6. 采样生成
+python -m fe_llm.energy_lm.training.code_train --sample --arch per --prompt "def quicksort(arr):"
+```
+
+## 评测与复现
+
+```bash
+python -m fe_llm.energy_lm.evaluation.code_ab_eval               # PER vs Transformer A/B 对照
+python -m fe_llm.energy_lm.evaluation.code_generalization_eval   # seen vs 未见分片泛化
+python -m fe_llm.energy_lm.evaluation.code_trace_viz             # 可溯源六联图
+python -m fe_llm.energy_lm.evaluation.code_growth_eval           # 后天成长（synapse-only）
+python -m fe_llm.energy_lm.evaluation.code_growth_isolated_eval  # 真成长不覆盖（加容量 + 隔离）
+python -m fe_llm.energy_lm.evaluation.per_synapse_proof_eval     # 可学突触 #2 可溯源铁证
+python -m fe_llm.energy_lm.evaluation.per_synapse_lm_eval        # 真实聊天 LM 突触消融
+python -m fe_llm.energy_lm.evaluation.lm_scaling_eval            # 架构 scaling 对标 Transformer
+```
+
+## 包结构
+
+```
+fe_llm/
+├── energy_lm/         # 因果 PER 语言模型（SeqEnergyNet）
+│   ├── models/        #   seq_net (SeqEnergyNet) / transformer_lm (对照) / tokenizer
+│   ├── data/          #   prepare_code (代码语料) / corpus / teacher_gen
+│   ├── training/      #   code_train (主入口) / chat_train / seq_train
+│   ├── evaluation/    #   code_* / per_synapse_* / lm_scaling 等评测
+│   ├── generation/    #   生成相关
+│   ├── diagnostics/   #   能量坍缩 / 塌缩诊断
+│   └── demos/         #   code_web / growth_web 等网页 demo
+└── config.py          # 设备探测 + 教师模型配置（读 .env）
+```
+
+## 核心机制
+
+**SeqEnergyNet = 因果 PER（预测-误差-弛豫）**：每个位置向其它位置发预测，按「突触电导」
+（可学突触基底 #2，经验刻高 = 低阻通路）汇聚预期，用预测误差驱动弛豫到稳定。标准注意力是
+它的退化特例。生成 = 标准自回归 next-char，但内核用 PER 弛豫而非纯 softmax 注意力。
+
+**可溯源**：逐字惊奇、跨层预测误差 ‖ε‖、各层弛豫率 η、可学突触 S、内容路由 g 全程可读
+（attention 给不了的结构化记忆）——见 `code_trace_viz`。
+
+**后天成长**：冻 backbone 只学突触 + 经验回放可长出新规则；每技能新开一块突触 + 冻旧块，
+旧技能 loss 数学保证不被覆盖（隔离不遗忘）——见 `growth.py::GrowthLearner`。
+
+## 诚实边界
+
+小模型字符级（此规模生成「成品度」弱），价值在**架构对标 / 可溯源 / 后天成长**，
+不在生成博学度与世界知识。A/B 为**同 token 量（数据效率）**口径，Transformer 每步更快，
+同墙钟差距会缩小——非碾压，是该规模 / 口径下的稳健小胜。

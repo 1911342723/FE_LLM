@@ -1,0 +1,191 @@
+{
+  "config": {
+    "corpus": "data\\code\\python_corpus.txt",
+    "device": "",
+    "ctx": 256,
+    "batch": 32,
+    "eval_batches": 400,
+    "min_char_freq": 10,
+    "val_frac": 0.01,
+    "max_train_mb": 0,
+    "seed": 42,
+    "temperature": 0.4,
+    "top_k": 20,
+    "top_p": 0.9,
+    "rep_penalty": 1.15,
+    "max_new": 200,
+    "amp": true
+  },
+  "results": [
+    {
+      "arch": "per",
+      "ckpt": "code_model.pt",
+      "params_M": 52.5,
+      "dim": 768,
+      "depth": 12,
+      "ctx": 256,
+      "step": 82009,
+      "train_val_bpc": 1.0329,
+      "val_bpc": 1.0365,
+      "val_ppl": 2.05,
+      "ast_valid_rate": 0.286,
+      "samples": [
+        {
+          "prompt": "def quicksort(arr):\n",
+          "text": "def quicksort(arr):\n                                                                                                                                                                                                        ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "def fibonacci(n):\n    ",
+          "text": "def fibonacci(n):\n    \"\"\"\n    Returns a list of fibonacci implementation of a fibonacci fibonacci fibonacci\n    \"\"\"\n    return fibonacci.fibonacci_fibonacci(n)\n\n\ndef fibonacci_fibonacci(n):\n    \"\"\"\n    Returns a list of fi",
+          "ast_ok": false
+        },
+        {
+          "prompt": "import numpy as np\n\n",
+          "text": "import numpy as np\n\nfrom django.conf import settings\nfrom django.contrib.auth.models import User\nfrom django.contrib.auth.models import UserManager\nfrom django.contrib.auth.models import UserManagerMixin\nfrom django.cont",
+          "ast_ok": false
+        },
+        {
+          "prompt": "class Stack:\n",
+          "text": "class Stack:\n    \"\"\"\n    A Stack that represents a stack of the stack in the stack.\n    \"\"\"\n    def __init__(self, stack):\n        super(StackStackStackStack, self).__init__(stack)\n        self.stack = stack\n\n    ",
+          "ast_ok": true
+        },
+        {
+          "prompt": "class Node:\n    def __init__(self, value):\n        ",
+          "text": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self._stream = value\n\n    def __getitem__(self, key):\n        return self.__getitem__(key)\n\n    def __getitem__(self, key):\n        return self.__getitem__(key)\n\n    def __g",
+          "ast_ok": false
+        },
+        {
+          "prompt": "for i in range(10):\n    ",
+          "text": "for i in range(10):\n                                                                                                                                                                                                            ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "while True:\n    ",
+          "text": "while True:\n            self._add_command('start', self._add_command)\n            self._add_command('end', self._add_command)\n            self._add_command('end', self._add_command)\n            self._add_command('end",
+          "ast_ok": false
+        },
+        {
+          "prompt": "try:\n    ",
+          "text": "try:\n                self._configure_state()\n            except Exception as e:\n                self._configure_state()\n                self._configure_state()\n            except Exception as e:\n              ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "with open(path) as f:\n    ",
+          "text": "with open(path) as f:\n                                                                                                                                                                                                            ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "if __name__ == \"__main__\":\n",
+          "text": "if __name__ == \"__main__\":\n    main()\n\n\n#!/usr/bin/python\n# -*- coding: utf-8 -*-\n\n# Copyright 2014 The Chromium Authors. All rights reserved.\n# Use of this source code is governed by a BSD-style license that can be\n# found in ",
+          "ast_ok": true
+        },
+        {
+          "prompt": "def main():\n    ",
+          "text": "def main():\n    \"\"\"Main command line to make sure the device will be processed.\"\"\"\n    sys.exit(1)\n\n    # If the command line is not supported, the command line is required\n    # and support makes the main line in th",
+          "ast_ok": true
+        },
+        {
+          "prompt": "@property\n    def ",
+          "text": "@property\n    def parse_params(self):\n        \"\"\"Return the parameters for this parameter.\"\"\"\n        return self._params\n\n    @property\n    def params(self):\n        \"\"\"Return the parameters for this parameter.\"\"\"\n   ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "return [x for x in ",
+          "text": "return [x for x in self.__dict__]\n\n    def __iter__(self):\n        return self.__dict__\n\n    def __iter__(self):\n        return self.__dict__\n\n    def __iter__(self):\n        return self.__dict__\n\n    def __getattr__(se",
+          "ast_ok": false
+        },
+        {
+          "prompt": "def __init__(self):\n        self.",
+          "text": "def __init__(self):\n        self.config = {}\n        self.config['parent'] = None\n        self.config['subject'] = None\n        self.config['subject'] = None\n        self.config['subject'] = None\n        self.config['subject'] = None",
+          "ast_ok": true
+        }
+      ]
+    },
+    {
+      "arch": "transformer",
+      "ckpt": "code_model_tf.pt",
+      "params_M": 51.69,
+      "dim": 768,
+      "depth": 7,
+      "ctx": 256,
+      "step": 82009,
+      "train_val_bpc": 1.1914,
+      "val_bpc": 1.1949,
+      "val_ppl": 2.29,
+      "ast_valid_rate": 0.214,
+      "samples": [
+        {
+          "prompt": "def quicksort(arr):\n",
+          "text": "def quicksort(arr):\n            return '%s.%s' % (arr, compat_url)\n        else:\n            return '%s.%s' % (arr, compat_url)\n\n    def __getitem__(self, obj):\n        if obj is None:\n            return '%s.%s' % (obj, ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "def fibonacci(n):\n    ",
+          "text": "def fibonacci(n):\n                return self._check_method(self._check_method)\n            else:\n                return self._check_method(self._check_method, self._check_method)\n\n        # Check method to see if we're no",
+          "ast_ok": false
+        },
+        {
+          "prompt": "import numpy as np\n\n",
+          "text": "import numpy as np\n\nfrom django.conf import settings\nfrom django.conf import settings\nfrom django.conf import settings\nfrom django.conf import settings\nfrom django.conf import settings\nfrom django.conf import settings\nfr",
+          "ast_ok": true
+        },
+        {
+          "prompt": "class Stack:\n",
+          "text": "class Stack:\n                                                                                                                                                                                                        ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "class Node:\n    def __init__(self, value):\n        ",
+          "text": "class Node:\n    def __init__(self, value):\n        self.value = value\n        self.value = value\n        self.value = value\n        self.value = value\n        self.value = value\n        self.value = value\n        self.value = value\n        self.value ",
+          "ast_ok": true
+        },
+        {
+          "prompt": "for i in range(10):\n    ",
+          "text": "for i in range(10):\n                                                                                                                                                                                                            ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "while True:\n    ",
+          "text": "while True:\n                                                                                                                                                                                                            ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "try:\n    ",
+          "text": "try:\n                                                                                                                                                                                                            ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "with open(path) as f:\n    ",
+          "text": "with open(path) as f:\n                return self._get_value(path)\n            except Exception, e:\n                return None\n\n    def _get_value(self, path):\n        \"\"\"\n        Convert the value of the value of the value o",
+          "ast_ok": false
+        },
+        {
+          "prompt": "if __name__ == \"__main__\":\n",
+          "text": "if __name__ == \"__main__\":\n    run()\n\n\n# -*- coding: utf-8 -*-\n\n# Copyright 2013 OpenStack Foundation (ASF) under one or more contributors (see CONTRIBUTORS.md)\n# Copyright 2014 The Chromium Authors. All rights reserved.\n#\n# Li",
+          "ast_ok": true
+        },
+        {
+          "prompt": "def main():\n    ",
+          "text": "def main():\n    \"\"\"Returns the main for the main for the main for the main for the main for the main for the main for the main for the main for the main for the main for the main for the main for the main for the mai",
+          "ast_ok": false
+        },
+        {
+          "prompt": "@property\n    def ",
+          "text": "@property\n    def get_basic(self):\n        \"\"\"Return the basic parameter.\"\"\"\n        return self._basic_parameters(self._basic_parameters, self._basic_parameters)\n\n    def get_basic_parameters(self):\n        \"\"\"Return ",
+          "ast_ok": false
+        },
+        {
+          "prompt": "return [x for x in ",
+          "text": "return [x for x in self.config.app_labels]\n\n    def __init__(self, x, y):\n        return self.config.get(x, y)\n\n    def __iter__(self):\n        return self.config.get(x, y)\n\n    def __repr__(self):\n        return self.c",
+          "ast_ok": false
+        },
+        {
+          "prompt": "def __init__(self):\n        self.",
+          "text": "def __init__(self):\n        self._set_params()\n        self._set_params()\n        self._set_params()\n\n    def __getitem__(self, obj):\n        return self._set_params()\n\n    def __getitem__(self, obj):\n        return self._set_params(",
+          "ast_ok": false
+        }
+      ]
+    }
+  ]
+}

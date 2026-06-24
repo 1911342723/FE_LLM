@@ -2,7 +2,7 @@
 """
 config.py —— 统一配置中心
 ==========================
-所有外部依赖（向量 API / PostgreSQL / 训练设备）的配置都集中从 .env 读取，
+训练设备探测与教师模型（生成训练语料用）的配置都集中从 .env 读取，
 绝不在代码里硬编码密钥。其它模块只从这里取配置，便于统一管理与替换。
 """
 
@@ -22,58 +22,12 @@ except ImportError:  # pragma: no cover
 
 
 @dataclass(frozen=True)
-class EmbeddingConfig:
-    """嵌入模型配置（阿里云 DashScope，OpenAI 兼容协议）。"""
-
-    api_key: str
-    base_url: str
-    model: str
-    dimension: int
-
-
-@dataclass(frozen=True)
 class TeacherConfig:
     """DeepSeek 教师模型配置（用于蒸馏生成训练数据）。"""
 
     api_key: str
     base_url: str
     model: str
-
-
-@dataclass(frozen=True)
-class PgConfig:
-    """PostgreSQL + pgvector 连接配置。"""
-
-    host: str
-    port: int
-    database: str
-    user: str
-    password: str
-    table: str
-
-    def conninfo(self, dbname: str | None = None) -> dict:
-        """生成 psycopg.connect 所需的连接参数字典。"""
-        return {
-            "host": self.host,
-            "port": self.port,
-            "dbname": dbname or self.database,
-            "user": self.user,
-            "password": self.password,
-        }
-
-
-@lru_cache(maxsize=1)
-def get_embedding_config() -> EmbeddingConfig:
-    """读取嵌入配置（带缓存，进程内只解析一次）。"""
-    return EmbeddingConfig(
-        api_key=os.environ.get("DASHSCOPE_API_KEY", ""),
-        base_url=os.environ.get(
-            "DASHSCOPE_BASE_URL",
-            "https://dashscope.aliyuncs.com/compatible-mode/v1",
-        ),
-        model=os.environ.get("EMBEDDING_MODEL", "text-embedding-v4"),
-        dimension=int(os.environ.get("EMBEDDING_DIMENSION", "1536")),
-    )
 
 
 @lru_cache(maxsize=1)
@@ -84,19 +38,6 @@ def get_teacher_config() -> TeacherConfig:
         base_url=os.environ.get("DEEPSEEK_BASE_URL",
                                 "https://api.deepseek.com").strip(),
         model=os.environ.get("DEEPSEEK_MODEL", "deepseek-chat").strip(),
-    )
-
-
-@lru_cache(maxsize=1)
-def get_pg_config() -> PgConfig:
-    """读取 PostgreSQL 配置。"""
-    return PgConfig(
-        host=os.environ.get("PG_HOST", "localhost"),
-        port=int(os.environ.get("PG_PORT", "5432")),
-        database=os.environ.get("PG_DATABASE", "fe_llm"),
-        user=os.environ.get("PG_USER", "postgres"),
-        password=os.environ.get("PG_PASSWORD", "postgres"),
-        table=os.environ.get("PG_TABLE", "concepts"),
     )
 
 
