@@ -33,8 +33,11 @@
 | 知识可定位编辑 | ❌ 殃及旁观(特异性0) | ✅ 特异性 0.77、旁观 0 影响 | A |
 | 自动成长 + 路由 | ❌ | ✅ surprise 门控自动长块、路由 94% | Router |
 | 前向迁移（且不忘） | ✅ 但会忘 | ✅ +34% 且 Δ0 | E |
+| 真实库 API 知识上验证 | — | ✅ 不忘100% / 编辑+1.00 / import路由100% | Real |
 
-6 个对照实验脚本：`code_forgetting_compare` / `code_param_efficiency_eval` / `code_lora_isolation_eval` / `code_knowledge_editing_eval` / `code_router_growth_eval` / `code_progressive_eval`。
+7 个对照实验脚本：`code_forgetting_compare` / `code_param_efficiency_eval` / `code_lora_isolation_eval` / `code_knowledge_editing_eval` / `code_router_growth_eval` / `code_progressive_eval` / `code_real_library_eval`。
+
+> **新会话快速接续**：先读 **[项目现状与下一步.md](项目现状与下一步.md)**（交接文档：现状/文件地图/边界/下一步）。
 
 ## 快速开始
 
