@@ -1,0 +1,72 @@
+{
+  "config": {
+    "interactions": 40,
+    "steps": 4,
+    "replay": 4,
+    "lora_lr": 0.002,
+    "rank": 8,
+    "alpha": 16,
+    "n_libs": 4,
+    "n_teach": 8,
+    "device": "",
+    "seed": 0
+  },
+  "device": "cuda",
+  "base_acc": {
+    "numpy": 0.0,
+    "pandas": 0.0,
+    "torch": 0.0,
+    "requests": 0.0,
+    "json": 0.0,
+    "re": 0.0,
+    "hashlib": 0.0,
+    "os": 0.0
+  },
+  "libs": [
+    "numpy",
+    "pandas",
+    "torch",
+    "requests"
+  ],
+  "n_lora_per_block_k": 163.4,
+  "retention": {
+    "numpy": 1.0,
+    "pandas": 1.0,
+    "torch": 1.0,
+    "requests": 1.0
+  },
+  "retention_mean": 1.0,
+  "edits": [
+    {
+      "target": "numpy",
+      "target_drop": 1.0,
+      "bystander_drop": 0.0,
+      "specificity": 1.0
+    },
+    {
+      "target": "pandas",
+      "target_drop": 1.0,
+      "bystander_drop": 0.0,
+      "specificity": 1.0
+    },
+    {
+      "target": "torch",
+      "target_drop": 1.0,
+      "bystander_drop": 0.0,
+      "specificity": 1.0
+    },
+    {
+      "target": "requests",
+      "target_drop": 1.0,
+      "bystander_drop": 0.0,
+      "specificity": 1.0
+    }
+  ],
+  "edit_specificity": 1.0,
+  "route_acc": {
+    "trigger": 1.0,
+    "energy": 0.4375
+  },
+  "verdict": "【真实库 API 知识·整套机制】在 ['numpy', 'pandas', 'torch', 'requests'] 上（base 最不会的真实库）：\n  1) 隔离不忘：顺序学 4 个库，各库用正确块平均 acc 100%（隔离数学保证 Δ0）。\n  2) 可定位编辑：卸载某库块 → 平均编辑特异性 +1.00（目标失效、旁观基本不动）。\n  3) 按 import 路由：触发词(import) 100%（真实可靠）/ 能量 44%。\n结论：整套机制（隔离不忘 + 可定位编辑 + 路由）在**真实库 API 知识**上成立——不只合成玩具；代码里 import 即天然路由信号，按 import 路由稳定可靠。",
+  "fig": "docs\\reports\\figs\\code_real_library.png"
+}
