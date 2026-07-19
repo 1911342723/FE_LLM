@@ -16,6 +16,10 @@
 > 第四项参数效率裁决：低秩生成性修正 rank-8 仅用完整新通路 `8.2%` 参数，保持新结构
 > `99.9%`、OOD 能量路由 `96.5%`、ID 留旧通路 `97.5%`；详见
 > [free_energy_low_rank_growth_eval.md](reports/free_energy_low_rank_growth_eval.md)。
+> 第五项把低秩生长接入真实 OPUS 字符流：rank-16 仅用完整端到端生长 `19.2%` 参数，
+> 结构可约 `31.0%`、噪声 `23.1%`、BPC 仅比完整高 `4.2%`、结构路由 `99.8%`；
+> rank-8 稳定欠容量、不会被错误固化。详见
+> [free_energy_low_rank_char_eval.md](reports/free_energy_low_rank_char_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >

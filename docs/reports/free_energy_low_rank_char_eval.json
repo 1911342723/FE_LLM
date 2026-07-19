@@ -1,0 +1,1745 @@
+{
+  "task": "real char stream full vs low-rank free-energy growth",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "device": "cuda",
+    "seeds": "81,82,83",
+    "ranks": "8,16,20",
+    "sentences": 12000,
+    "base_steps": 350,
+    "probe_steps": 240,
+    "readout_steps": 240,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 128,
+    "length": 32,
+    "dim": 64,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.004,
+    "readout_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "min_growth_fraction": 0.25,
+    "min_reducibility": 0.3,
+    "probe_noise": 0.001,
+    "complexity_quantile": 0.95,
+    "complexity_margin": 0.0001,
+    "max_relative_bpc_gap": 0.1,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 34,
+    "sentence_counts": {
+      "base_train": 7200,
+      "base_valid": 1800,
+      "structure_train": 1500,
+      "structure_valid": 1500
+    }
+  },
+  "rows": [
+    {
+      "seed": 81,
+      "arm": "full",
+      "rank": null,
+      "transition_params": 16576,
+      "head_params": 2210,
+      "added_params": 18786,
+      "full_added_params": 18786,
+      "transition_ratio": 1.0,
+      "total_ratio": 1.0,
+      "structure_reducibility": 0.379244,
+      "noise_reducibility": 0.260268,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.973099,
+        "bpc": 5.731971,
+        "accuracy": 0.103411,
+        "residual": 0.063825
+      },
+      "structure_probe": {
+        "ce": 4.581669,
+        "bpc": 6.609952,
+        "accuracy": 0.058468,
+        "residual": 0.03962
+      },
+      "structure_consolidated": {
+        "ce": 2.381856,
+        "bpc": 3.436292,
+        "accuracy": 0.302923,
+        "residual": 0.03962
+      },
+      "noise_before": {
+        "ce": 4.372728,
+        "bpc": 6.308514,
+        "accuracy": 0.076193,
+        "residual": 0.063348
+      },
+      "noise_after": {
+        "ce": 4.242217,
+        "bpc": 6.120225,
+        "accuracy": 0.088878,
+        "residual": 0.04686
+      },
+      "complexity_cost": 0.009667,
+      "base_route_accuracy": 0.953125,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 4.019791,
+          "residual": 0.063903
+        },
+        {
+          "step": 60,
+          "ce": 4.578809,
+          "residual": 0.041409
+        },
+        {
+          "step": 120,
+          "ce": 4.620264,
+          "residual": 0.040828
+        },
+        {
+          "step": 180,
+          "ce": 4.68656,
+          "residual": 0.04005
+        },
+        {
+          "step": 240,
+          "ce": 4.553509,
+          "residual": 0.039438
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.568041
+        },
+        {
+          "step": 60,
+          "ce": 2.489165
+        },
+        {
+          "step": 120,
+          "ce": 2.378415
+        },
+        {
+          "step": 180,
+          "ce": 2.421946
+        },
+        {
+          "step": 240,
+          "ce": 2.330822
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.377951,
+          "residual": 0.063332
+        },
+        {
+          "step": 60,
+          "ce": 4.275504,
+          "residual": 0.046907
+        },
+        {
+          "step": 120,
+          "ce": 4.25003,
+          "residual": 0.04703
+        },
+        {
+          "step": 180,
+          "ce": 4.307366,
+          "residual": 0.046873
+        },
+        {
+          "step": 240,
+          "ce": 4.200241,
+          "residual": 0.04688
+        }
+      ],
+      "seconds": 163.24
+    },
+    {
+      "seed": 81,
+      "arm": "r8",
+      "rank": 8,
+      "transition_params": 1024,
+      "head_params": 784,
+      "added_params": 1808,
+      "full_added_params": 18786,
+      "transition_ratio": 0.061776,
+      "total_ratio": 0.096242,
+      "structure_reducibility": 0.258667,
+      "noise_reducibility": 0.186197,
+      "reducible": false,
+      "structure_before": {
+        "ce": 3.973099,
+        "bpc": 5.731971,
+        "accuracy": 0.103411,
+        "residual": 0.063825
+      },
+      "structure_probe": {
+        "ce": 4.496724,
+        "bpc": 6.487401,
+        "accuracy": 0.061156,
+        "residual": 0.047316
+      },
+      "structure_consolidated": {
+        "ce": 4.496724,
+        "bpc": 6.487401,
+        "accuracy": 0.061156,
+        "residual": 0.047316
+      },
+      "noise_before": {
+        "ce": 4.372728,
+        "bpc": 6.308514,
+        "accuracy": 0.076193,
+        "residual": 0.063348
+      },
+      "noise_after": {
+        "ce": 4.241783,
+        "bpc": 6.119599,
+        "accuracy": 0.087618,
+        "residual": 0.051553
+      },
+      "complexity_cost": null,
+      "base_route_accuracy": null,
+      "structure_route_accuracy": null,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 4.019791,
+          "residual": 0.063903
+        },
+        {
+          "step": 60,
+          "ce": 4.373284,
+          "residual": 0.050313
+        },
+        {
+          "step": 120,
+          "ce": 4.488688,
+          "residual": 0.048644
+        },
+        {
+          "step": 180,
+          "ce": 4.542165,
+          "residual": 0.047758
+        },
+        {
+          "step": 240,
+          "ce": 4.469447,
+          "residual": 0.0473
+        }
+      ],
+      "readout_history": [],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.377951,
+          "residual": 0.063332
+        },
+        {
+          "step": 60,
+          "ce": 4.275486,
+          "residual": 0.053387
+        },
+        {
+          "step": 120,
+          "ce": 4.243176,
+          "residual": 0.052128
+        },
+        {
+          "step": 180,
+          "ce": 4.314542,
+          "residual": 0.051819
+        },
+        {
+          "step": 240,
+          "ce": 4.202425,
+          "residual": 0.051634
+        }
+      ],
+      "seconds": 116.87
+    },
+    {
+      "seed": 81,
+      "arm": "r16",
+      "rank": 16,
+      "transition_params": 2048,
+      "head_params": 1568,
+      "added_params": 3616,
+      "full_added_params": 18786,
+      "transition_ratio": 0.123552,
+      "total_ratio": 0.192484,
+      "structure_reducibility": 0.315889,
+      "noise_reducibility": 0.236204,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.973099,
+        "bpc": 5.731971,
+        "accuracy": 0.103411,
+        "residual": 0.063825
+      },
+      "structure_probe": {
+        "ce": 4.51078,
+        "bpc": 6.50768,
+        "accuracy": 0.06292,
+        "residual": 0.043664
+      },
+      "structure_consolidated": {
+        "ce": 2.486554,
+        "bpc": 3.587339,
+        "accuracy": 0.313172,
+        "residual": 0.043664
+      },
+      "noise_before": {
+        "ce": 4.372728,
+        "bpc": 6.308514,
+        "accuracy": 0.076193,
+        "residual": 0.063348
+      },
+      "noise_after": {
+        "ce": 4.230894,
+        "bpc": 6.10389,
+        "accuracy": 0.088458,
+        "residual": 0.048385
+      },
+      "complexity_cost": 0.00757,
+      "base_route_accuracy": 0.955729,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 4.019791,
+          "residual": 0.063903
+        },
+        {
+          "step": 60,
+          "ce": 4.430533,
+          "residual": 0.046604
+        },
+        {
+          "step": 120,
+          "ce": 4.496219,
+          "residual": 0.044716
+        },
+        {
+          "step": 180,
+          "ce": 4.589271,
+          "residual": 0.044002
+        },
+        {
+          "step": 240,
+          "ce": 4.49937,
+          "residual": 0.043705
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.500966
+        },
+        {
+          "step": 60,
+          "ce": 3.121392
+        },
+        {
+          "step": 120,
+          "ce": 2.660983
+        },
+        {
+          "step": 180,
+          "ce": 2.580396
+        },
+        {
+          "step": 240,
+          "ce": 2.437567
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.377951,
+          "residual": 0.063332
+        },
+        {
+          "step": 60,
+          "ce": 4.270251,
+          "residual": 0.049912
+        },
+        {
+          "step": 120,
+          "ce": 4.240016,
+          "residual": 0.048954
+        },
+        {
+          "step": 180,
+          "ce": 4.306124,
+          "residual": 0.048444
+        },
+        {
+          "step": 240,
+          "ce": 4.191595,
+          "residual": 0.048384
+        }
+      ],
+      "seconds": 155.74
+    },
+    {
+      "seed": 81,
+      "arm": "r20",
+      "rank": 20,
+      "transition_params": 2560,
+      "head_params": 1960,
+      "added_params": 4520,
+      "full_added_params": 18786,
+      "transition_ratio": 0.15444,
+      "total_ratio": 0.240605,
+      "structure_reducibility": 0.333448,
+      "noise_reducibility": 0.247844,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.973099,
+        "bpc": 5.731971,
+        "accuracy": 0.103411,
+        "residual": 0.063825
+      },
+      "structure_probe": {
+        "ce": 4.499772,
+        "bpc": 6.491798,
+        "accuracy": 0.062752,
+        "residual": 0.042543
+      },
+      "structure_consolidated": {
+        "ce": 2.419146,
+        "bpc": 3.49009,
+        "accuracy": 0.319052,
+        "residual": 0.042543
+      },
+      "noise_before": {
+        "ce": 4.372728,
+        "bpc": 6.308514,
+        "accuracy": 0.076193,
+        "residual": 0.063348
+      },
+      "noise_after": {
+        "ce": 4.231196,
+        "bpc": 6.104325,
+        "accuracy": 0.089466,
+        "residual": 0.047647
+      },
+      "complexity_cost": 0.008345,
+      "base_route_accuracy": 0.955729,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 4.019791,
+          "residual": 0.063903
+        },
+        {
+          "step": 60,
+          "ce": 4.497618,
+          "residual": 0.044761
+        },
+        {
+          "step": 120,
+          "ce": 4.524099,
+          "residual": 0.043529
+        },
+        {
+          "step": 180,
+          "ce": 4.584536,
+          "residual": 0.042876
+        },
+        {
+          "step": 240,
+          "ce": 4.482438,
+          "residual": 0.04251
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.492745
+        },
+        {
+          "step": 60,
+          "ce": 2.994623
+        },
+        {
+          "step": 120,
+          "ce": 2.551451
+        },
+        {
+          "step": 180,
+          "ce": 2.490664
+        },
+        {
+          "step": 240,
+          "ce": 2.351409
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.377951,
+          "residual": 0.063332
+        },
+        {
+          "step": 60,
+          "ce": 4.269744,
+          "residual": 0.049021
+        },
+        {
+          "step": 120,
+          "ce": 4.245646,
+          "residual": 0.04817
+        },
+        {
+          "step": 180,
+          "ce": 4.306156,
+          "residual": 0.047743
+        },
+        {
+          "step": 240,
+          "ce": 4.192316,
+          "residual": 0.047677
+        }
+      ],
+      "seconds": 167.11
+    },
+    {
+      "seed": 82,
+      "arm": "full",
+      "rank": null,
+      "transition_params": 16576,
+      "head_params": 2210,
+      "added_params": 18786,
+      "full_added_params": 18786,
+      "transition_ratio": 1.0,
+      "total_ratio": 1.0,
+      "structure_reducibility": 0.370341,
+      "noise_reducibility": 0.257442,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.957863,
+        "bpc": 5.70999,
+        "accuracy": 0.109879,
+        "residual": 0.063282
+      },
+      "structure_probe": {
+        "ce": 4.594519,
+        "bpc": 6.62849,
+        "accuracy": 0.057544,
+        "residual": 0.039846
+      },
+      "structure_consolidated": {
+        "ce": 2.381764,
+        "bpc": 3.436159,
+        "accuracy": 0.307208,
+        "residual": 0.039846
+      },
+      "noise_before": {
+        "ce": 4.408655,
+        "bpc": 6.360345,
+        "accuracy": 0.075689,
+        "residual": 0.06374
+      },
+      "noise_after": {
+        "ce": 4.268935,
+        "bpc": 6.158772,
+        "accuracy": 0.086946,
+        "residual": 0.04733
+      },
+      "complexity_cost": 0.009362,
+      "base_route_accuracy": 0.950521,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.98076,
+          "residual": 0.06283
+        },
+        {
+          "step": 60,
+          "ce": 4.571644,
+          "residual": 0.04125
+        },
+        {
+          "step": 120,
+          "ce": 4.56987,
+          "residual": 0.040954
+        },
+        {
+          "step": 180,
+          "ce": 4.65938,
+          "residual": 0.040279
+        },
+        {
+          "step": 240,
+          "ce": 4.559241,
+          "residual": 0.039579
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.717327
+        },
+        {
+          "step": 60,
+          "ce": 2.51352
+        },
+        {
+          "step": 120,
+          "ce": 2.419119
+        },
+        {
+          "step": 180,
+          "ce": 2.391392
+        },
+        {
+          "step": 240,
+          "ce": 2.333683
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.37646,
+          "residual": 0.063344
+        },
+        {
+          "step": 60,
+          "ce": 4.241716,
+          "residual": 0.047329
+        },
+        {
+          "step": 120,
+          "ce": 4.217904,
+          "residual": 0.047179
+        },
+        {
+          "step": 180,
+          "ce": 4.245875,
+          "residual": 0.047414
+        },
+        {
+          "step": 240,
+          "ce": 4.267402,
+          "residual": 0.047395
+        }
+      ],
+      "seconds": 158.94
+    },
+    {
+      "seed": 82,
+      "arm": "r8",
+      "rank": 8,
+      "transition_params": 1024,
+      "head_params": 784,
+      "added_params": 1808,
+      "full_added_params": 18786,
+      "transition_ratio": 0.061776,
+      "total_ratio": 0.096242,
+      "structure_reducibility": 0.244737,
+      "noise_reducibility": 0.179628,
+      "reducible": false,
+      "structure_before": {
+        "ce": 3.957863,
+        "bpc": 5.70999,
+        "accuracy": 0.109879,
+        "residual": 0.063282
+      },
+      "structure_probe": {
+        "ce": 4.495262,
+        "bpc": 6.485292,
+        "accuracy": 0.075101,
+        "residual": 0.047794
+      },
+      "structure_consolidated": {
+        "ce": 4.495262,
+        "bpc": 6.485292,
+        "accuracy": 0.075101,
+        "residual": 0.047794
+      },
+      "noise_before": {
+        "ce": 4.408655,
+        "bpc": 6.360345,
+        "accuracy": 0.075689,
+        "residual": 0.06374
+      },
+      "noise_after": {
+        "ce": 4.256592,
+        "bpc": 6.140965,
+        "accuracy": 0.102151,
+        "residual": 0.05229
+      },
+      "complexity_cost": null,
+      "base_route_accuracy": null,
+      "structure_route_accuracy": null,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.98076,
+          "residual": 0.06283
+        },
+        {
+          "step": 60,
+          "ce": 4.33317,
+          "residual": 0.050552
+        },
+        {
+          "step": 120,
+          "ce": 4.437388,
+          "residual": 0.048392
+        },
+        {
+          "step": 180,
+          "ce": 4.551029,
+          "residual": 0.047871
+        },
+        {
+          "step": 240,
+          "ce": 4.48157,
+          "residual": 0.047415
+        }
+      ],
+      "readout_history": [],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.37646,
+          "residual": 0.063344
+        },
+        {
+          "step": 60,
+          "ce": 4.243162,
+          "residual": 0.054071
+        },
+        {
+          "step": 120,
+          "ce": 4.215044,
+          "residual": 0.05273
+        },
+        {
+          "step": 180,
+          "ce": 4.261973,
+          "residual": 0.052528
+        },
+        {
+          "step": 240,
+          "ce": 4.259006,
+          "residual": 0.052362
+        }
+      ],
+      "seconds": 123.2
+    },
+    {
+      "seed": 82,
+      "arm": "r16",
+      "rank": 16,
+      "transition_params": 2048,
+      "head_params": 1568,
+      "added_params": 3616,
+      "full_added_params": 18786,
+      "transition_ratio": 0.123552,
+      "total_ratio": 0.192484,
+      "structure_reducibility": 0.306991,
+      "noise_reducibility": 0.230549,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.957863,
+        "bpc": 5.70999,
+        "accuracy": 0.109879,
+        "residual": 0.063282
+      },
+      "structure_probe": {
+        "ce": 4.562733,
+        "bpc": 6.582633,
+        "accuracy": 0.061324,
+        "residual": 0.043855
+      },
+      "structure_consolidated": {
+        "ce": 2.488779,
+        "bpc": 3.59055,
+        "accuracy": 0.311828,
+        "residual": 0.043855
+      },
+      "noise_before": {
+        "ce": 4.408655,
+        "bpc": 6.360345,
+        "accuracy": 0.075689,
+        "residual": 0.06374
+      },
+      "noise_after": {
+        "ce": 4.258645,
+        "bpc": 6.143925,
+        "accuracy": 0.092994,
+        "residual": 0.049045
+      },
+      "complexity_cost": 0.007684,
+      "base_route_accuracy": 0.953125,
+      "structure_route_accuracy": 0.997396,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.98076,
+          "residual": 0.06283
+        },
+        {
+          "step": 60,
+          "ce": 4.52628,
+          "residual": 0.045811
+        },
+        {
+          "step": 120,
+          "ce": 4.512639,
+          "residual": 0.044464
+        },
+        {
+          "step": 180,
+          "ce": 4.63259,
+          "residual": 0.043791
+        },
+        {
+          "step": 240,
+          "ce": 4.534313,
+          "residual": 0.043577
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.682791
+        },
+        {
+          "step": 60,
+          "ce": 3.126551
+        },
+        {
+          "step": 120,
+          "ce": 2.733455
+        },
+        {
+          "step": 180,
+          "ce": 2.571069
+        },
+        {
+          "step": 240,
+          "ce": 2.469122
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.37646,
+          "residual": 0.063344
+        },
+        {
+          "step": 60,
+          "ce": 4.240489,
+          "residual": 0.050633
+        },
+        {
+          "step": 120,
+          "ce": 4.221248,
+          "residual": 0.049226
+        },
+        {
+          "step": 180,
+          "ce": 4.242633,
+          "residual": 0.049196
+        },
+        {
+          "step": 240,
+          "ce": 4.272576,
+          "residual": 0.049103
+        }
+      ],
+      "seconds": 163.78
+    },
+    {
+      "seed": 82,
+      "arm": "r20",
+      "rank": 20,
+      "transition_params": 2560,
+      "head_params": 1960,
+      "added_params": 4520,
+      "full_added_params": 18786,
+      "transition_ratio": 0.15444,
+      "total_ratio": 0.240605,
+      "structure_reducibility": 0.324864,
+      "noise_reducibility": 0.243072,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.957863,
+        "bpc": 5.70999,
+        "accuracy": 0.109879,
+        "residual": 0.063282
+      },
+      "structure_probe": {
+        "ce": 4.555223,
+        "bpc": 6.571798,
+        "accuracy": 0.057376,
+        "residual": 0.042724
+      },
+      "structure_consolidated": {
+        "ce": 2.421597,
+        "bpc": 3.493626,
+        "accuracy": 0.314096,
+        "residual": 0.042724
+      },
+      "noise_before": {
+        "ce": 4.408655,
+        "bpc": 6.360345,
+        "accuracy": 0.075689,
+        "residual": 0.06374
+      },
+      "noise_after": {
+        "ce": 4.258032,
+        "bpc": 6.143042,
+        "accuracy": 0.091398,
+        "residual": 0.048246
+      },
+      "complexity_cost": 0.008268,
+      "base_route_accuracy": 0.953125,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.98076,
+          "residual": 0.06283
+        },
+        {
+          "step": 60,
+          "ce": 4.541363,
+          "residual": 0.044299
+        },
+        {
+          "step": 120,
+          "ce": 4.525414,
+          "residual": 0.043209
+        },
+        {
+          "step": 180,
+          "ce": 4.630166,
+          "residual": 0.042646
+        },
+        {
+          "step": 240,
+          "ce": 4.541085,
+          "residual": 0.042319
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.669687
+        },
+        {
+          "step": 60,
+          "ce": 2.988092
+        },
+        {
+          "step": 120,
+          "ce": 2.608972
+        },
+        {
+          "step": 180,
+          "ce": 2.476966
+        },
+        {
+          "step": 240,
+          "ce": 2.380883
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.37646,
+          "residual": 0.063344
+        },
+        {
+          "step": 60,
+          "ce": 4.23308,
+          "residual": 0.049353
+        },
+        {
+          "step": 120,
+          "ce": 4.213393,
+          "residual": 0.048328
+        },
+        {
+          "step": 180,
+          "ce": 4.24903,
+          "residual": 0.04844
+        },
+        {
+          "step": 240,
+          "ce": 4.265211,
+          "residual": 0.048285
+        }
+      ],
+      "seconds": 162.8
+    },
+    {
+      "seed": 83,
+      "arm": "full",
+      "rank": null,
+      "transition_params": 16576,
+      "head_params": 2210,
+      "added_params": 18786,
+      "full_added_params": 18786,
+      "transition_ratio": 1.0,
+      "total_ratio": 1.0,
+      "structure_reducibility": 0.368488,
+      "noise_reducibility": 0.251993,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.950592,
+        "bpc": 5.6995,
+        "accuracy": 0.101647,
+        "residual": 0.063502
+      },
+      "structure_probe": {
+        "ce": 4.575747,
+        "bpc": 6.601408,
+        "accuracy": 0.057292,
+        "residual": 0.040102
+      },
+      "structure_consolidated": {
+        "ce": 2.362659,
+        "bpc": 3.408597,
+        "accuracy": 0.321153,
+        "residual": 0.040102
+      },
+      "noise_before": {
+        "ce": 4.333611,
+        "bpc": 6.25208,
+        "accuracy": 0.080561,
+        "residual": 0.06322
+      },
+      "noise_after": {
+        "ce": 4.226314,
+        "bpc": 6.097282,
+        "accuracy": 0.087366,
+        "residual": 0.047289
+      },
+      "complexity_cost": 0.009257,
+      "base_route_accuracy": 0.953125,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.937977,
+          "residual": 0.063059
+        },
+        {
+          "step": 60,
+          "ce": 4.43504,
+          "residual": 0.041896
+        },
+        {
+          "step": 120,
+          "ce": 4.467091,
+          "residual": 0.040969
+        },
+        {
+          "step": 180,
+          "ce": 4.602281,
+          "residual": 0.040909
+        },
+        {
+          "step": 240,
+          "ce": 4.570768,
+          "residual": 0.040136
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.495011
+        },
+        {
+          "step": 60,
+          "ce": 2.529898
+        },
+        {
+          "step": 120,
+          "ce": 2.430697
+        },
+        {
+          "step": 180,
+          "ce": 2.34561
+        },
+        {
+          "step": 240,
+          "ce": 2.360914
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.356281,
+          "residual": 0.063214
+        },
+        {
+          "step": 60,
+          "ce": 4.25168,
+          "residual": 0.047382
+        },
+        {
+          "step": 120,
+          "ce": 4.180271,
+          "residual": 0.047472
+        },
+        {
+          "step": 180,
+          "ce": 4.18579,
+          "residual": 0.047099
+        },
+        {
+          "step": 240,
+          "ce": 4.252299,
+          "residual": 0.047304
+        }
+      ],
+      "seconds": 148.4
+    },
+    {
+      "seed": 83,
+      "arm": "r8",
+      "rank": 8,
+      "transition_params": 1024,
+      "head_params": 784,
+      "added_params": 1808,
+      "full_added_params": 18786,
+      "transition_ratio": 0.061776,
+      "total_ratio": 0.096242,
+      "structure_reducibility": 0.242976,
+      "noise_reducibility": 0.176046,
+      "reducible": false,
+      "structure_before": {
+        "ce": 3.950592,
+        "bpc": 5.6995,
+        "accuracy": 0.101647,
+        "residual": 0.063502
+      },
+      "structure_probe": {
+        "ce": 4.428018,
+        "bpc": 6.38828,
+        "accuracy": 0.062248,
+        "residual": 0.048072
+      },
+      "structure_consolidated": {
+        "ce": 4.428018,
+        "bpc": 6.38828,
+        "accuracy": 0.062248,
+        "residual": 0.048072
+      },
+      "noise_before": {
+        "ce": 4.333611,
+        "bpc": 6.25208,
+        "accuracy": 0.080561,
+        "residual": 0.06322
+      },
+      "noise_after": {
+        "ce": 4.218792,
+        "bpc": 6.08643,
+        "accuracy": 0.095346,
+        "residual": 0.05209
+      },
+      "complexity_cost": null,
+      "base_route_accuracy": null,
+      "structure_route_accuracy": null,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.937977,
+          "residual": 0.063059
+        },
+        {
+          "step": 60,
+          "ce": 4.289491,
+          "residual": 0.050895
+        },
+        {
+          "step": 120,
+          "ce": 4.318785,
+          "residual": 0.048758
+        },
+        {
+          "step": 180,
+          "ce": 4.453751,
+          "residual": 0.048685
+        },
+        {
+          "step": 240,
+          "ce": 4.435634,
+          "residual": 0.047756
+        }
+      ],
+      "readout_history": [],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.356281,
+          "residual": 0.063214
+        },
+        {
+          "step": 60,
+          "ce": 4.237662,
+          "residual": 0.053604
+        },
+        {
+          "step": 120,
+          "ce": 4.160804,
+          "residual": 0.052652
+        },
+        {
+          "step": 180,
+          "ce": 4.198042,
+          "residual": 0.051929
+        },
+        {
+          "step": 240,
+          "ce": 4.24317,
+          "residual": 0.052233
+        }
+      ],
+      "seconds": 113.66
+    },
+    {
+      "seed": 83,
+      "arm": "r16",
+      "rank": 16,
+      "transition_params": 2048,
+      "head_params": 1568,
+      "added_params": 3616,
+      "full_added_params": 18786,
+      "transition_ratio": 0.123552,
+      "total_ratio": 0.192484,
+      "structure_reducibility": 0.308615,
+      "noise_reducibility": 0.224927,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.950592,
+        "bpc": 5.6995,
+        "accuracy": 0.101647,
+        "residual": 0.063502
+      },
+      "structure_probe": {
+        "ce": 4.491901,
+        "bpc": 6.480443,
+        "accuracy": 0.066028,
+        "residual": 0.043904
+      },
+      "structure_consolidated": {
+        "ce": 2.45329,
+        "bpc": 3.53935,
+        "accuracy": 0.315692,
+        "residual": 0.043904
+      },
+      "noise_before": {
+        "ce": 4.333611,
+        "bpc": 6.25208,
+        "accuracy": 0.080561,
+        "residual": 0.06322
+      },
+      "noise_after": {
+        "ce": 4.212251,
+        "bpc": 6.076994,
+        "accuracy": 0.095262,
+        "residual": 0.049
+      },
+      "complexity_cost": 0.008039,
+      "base_route_accuracy": 0.950521,
+      "structure_route_accuracy": 0.997396,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.937977,
+          "residual": 0.063059
+        },
+        {
+          "step": 60,
+          "ce": 4.358783,
+          "residual": 0.046363
+        },
+        {
+          "step": 120,
+          "ce": 4.374879,
+          "residual": 0.044353
+        },
+        {
+          "step": 180,
+          "ce": 4.53333,
+          "residual": 0.044385
+        },
+        {
+          "step": 240,
+          "ce": 4.498824,
+          "residual": 0.043717
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.420979
+        },
+        {
+          "step": 60,
+          "ce": 3.112118
+        },
+        {
+          "step": 120,
+          "ce": 2.710984
+        },
+        {
+          "step": 180,
+          "ce": 2.510147
+        },
+        {
+          "step": 240,
+          "ce": 2.457255
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.356281,
+          "residual": 0.063214
+        },
+        {
+          "step": 60,
+          "ce": 4.240632,
+          "residual": 0.050354
+        },
+        {
+          "step": 120,
+          "ce": 4.167136,
+          "residual": 0.049429
+        },
+        {
+          "step": 180,
+          "ce": 4.192301,
+          "residual": 0.048827
+        },
+        {
+          "step": 240,
+          "ce": 4.242716,
+          "residual": 0.048939
+        }
+      ],
+      "seconds": 150.64
+    },
+    {
+      "seed": 83,
+      "arm": "r20",
+      "rank": 20,
+      "transition_params": 2560,
+      "head_params": 1960,
+      "added_params": 4520,
+      "full_added_params": 18786,
+      "transition_ratio": 0.15444,
+      "total_ratio": 0.240605,
+      "structure_reducibility": 0.325422,
+      "noise_reducibility": 0.237663,
+      "reducible": true,
+      "structure_before": {
+        "ce": 3.950592,
+        "bpc": 5.6995,
+        "accuracy": 0.101647,
+        "residual": 0.063502
+      },
+      "structure_probe": {
+        "ce": 4.466444,
+        "bpc": 6.443717,
+        "accuracy": 0.064348,
+        "residual": 0.042837
+      },
+      "structure_consolidated": {
+        "ce": 2.358825,
+        "bpc": 3.403065,
+        "accuracy": 0.334257,
+        "residual": 0.042837
+      },
+      "noise_before": {
+        "ce": 4.333611,
+        "bpc": 6.25208,
+        "accuracy": 0.080561,
+        "residual": 0.06322
+      },
+      "noise_after": {
+        "ce": 4.211761,
+        "bpc": 6.076287,
+        "accuracy": 0.09039,
+        "residual": 0.048195
+      },
+      "complexity_cost": 0.008233,
+      "base_route_accuracy": 0.953125,
+      "structure_route_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "probe_history": [
+        {
+          "step": 1,
+          "ce": 3.937977,
+          "residual": 0.063059
+        },
+        {
+          "step": 60,
+          "ce": 4.36833,
+          "residual": 0.045057
+        },
+        {
+          "step": 120,
+          "ce": 4.366984,
+          "residual": 0.043299
+        },
+        {
+          "step": 180,
+          "ce": 4.507727,
+          "residual": 0.043405
+        },
+        {
+          "step": 240,
+          "ce": 4.450187,
+          "residual": 0.042782
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.390611
+        },
+        {
+          "step": 60,
+          "ce": 2.945808
+        },
+        {
+          "step": 120,
+          "ce": 2.552222
+        },
+        {
+          "step": 180,
+          "ce": 2.382674
+        },
+        {
+          "step": 240,
+          "ce": 2.346873
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.356281,
+          "residual": 0.063214
+        },
+        {
+          "step": 60,
+          "ce": 4.241558,
+          "residual": 0.049354
+        },
+        {
+          "step": 120,
+          "ce": 4.168279,
+          "residual": 0.048562
+        },
+        {
+          "step": 180,
+          "ce": 4.186162,
+          "residual": 0.048006
+        },
+        {
+          "step": 240,
+          "ce": 4.242127,
+          "residual": 0.048183
+        }
+      ],
+      "seconds": 151.79
+    }
+  ],
+  "summary": {
+    "full": {
+      "transition_params": 16576,
+      "head_params": 2210,
+      "added_params": 18786,
+      "transition_ratio": 1.0,
+      "total_ratio": 1.0,
+      "structure_reducibility": {
+        "mean": 0.372691,
+        "std": 0.004695
+      },
+      "noise_reducibility": {
+        "mean": 0.256568,
+        "std": 0.003434
+      },
+      "base_route_accuracy": {
+        "mean": 0.952257,
+        "std": 0.001228
+      },
+      "structure_route_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "structure_probe_bpc": {
+        "mean": 6.613283,
+        "std": 0.011304
+      },
+      "structure_probe_residual": {
+        "mean": 0.039856,
+        "std": 0.000197
+      },
+      "structure_probe_accuracy": {
+        "mean": 0.057768,
+        "std": 0.000506
+      },
+      "structure_consolidated_bpc": {
+        "mean": 3.427016,
+        "std": 0.013024
+      },
+      "structure_consolidated_residual": {
+        "mean": 0.039856,
+        "std": 0.000197
+      },
+      "structure_consolidated_accuracy": {
+        "mean": 0.310428,
+        "std": 0.007783
+      },
+      "noise_after_bpc": {
+        "mean": 6.125426,
+        "std": 0.025371
+      },
+      "noise_after_residual": {
+        "mean": 0.04716,
+        "std": 0.000213
+      },
+      "noise_after_accuracy": {
+        "mean": 0.08773,
+        "std": 0.00083
+      },
+      "reducible_rate": 1.0
+    },
+    "r16": {
+      "transition_params": 2048,
+      "head_params": 1568,
+      "added_params": 3616,
+      "transition_ratio": 0.123552,
+      "total_ratio": 0.192484,
+      "structure_reducibility": {
+        "mean": 0.310498,
+        "std": 0.003869
+      },
+      "noise_reducibility": {
+        "mean": 0.23056,
+        "std": 0.004604
+      },
+      "base_route_accuracy": {
+        "mean": 0.953125,
+        "std": 0.002126
+      },
+      "structure_route_accuracy": {
+        "mean": 0.998264,
+        "std": 0.001228
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "structure_probe_bpc": {
+        "mean": 6.523585,
+        "std": 0.043208
+      },
+      "structure_probe_residual": {
+        "mean": 0.043808,
+        "std": 0.000104
+      },
+      "structure_probe_accuracy": {
+        "mean": 0.063424,
+        "std": 0.001953
+      },
+      "structure_consolidated_bpc": {
+        "mean": 3.572413,
+        "std": 0.023416
+      },
+      "structure_consolidated_residual": {
+        "mean": 0.043808,
+        "std": 0.000104
+      },
+      "structure_consolidated_accuracy": {
+        "mean": 0.313564,
+        "std": 0.001602
+      },
+      "noise_after_bpc": {
+        "mean": 6.10827,
+        "std": 0.027499
+      },
+      "noise_after_residual": {
+        "mean": 0.04881,
+        "std": 0.000301
+      },
+      "noise_after_accuracy": {
+        "mean": 0.092238,
+        "std": 0.002829
+      },
+      "reducible_rate": 1.0
+    },
+    "r20": {
+      "transition_params": 2560,
+      "head_params": 1960,
+      "added_params": 4520,
+      "transition_ratio": 0.15444,
+      "total_ratio": 0.240605,
+      "structure_reducibility": {
+        "mean": 0.327911,
+        "std": 0.003922
+      },
+      "noise_reducibility": {
+        "mean": 0.24286,
+        "std": 0.004159
+      },
+      "base_route_accuracy": {
+        "mean": 0.953993,
+        "std": 0.001228
+      },
+      "structure_route_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "structure_probe_bpc": {
+        "mean": 6.502438,
+        "std": 0.052827
+      },
+      "structure_probe_residual": {
+        "mean": 0.042701,
+        "std": 0.000121
+      },
+      "structure_probe_accuracy": {
+        "mean": 0.061492,
+        "std": 0.002982
+      },
+      "structure_consolidated_bpc": {
+        "mean": 3.46226,
+        "std": 0.041882
+      },
+      "structure_consolidated_residual": {
+        "mean": 0.042701,
+        "std": 0.000121
+      },
+      "structure_consolidated_accuracy": {
+        "mean": 0.322468,
+        "std": 0.008578
+      },
+      "noise_after_bpc": {
+        "mean": 6.107885,
+        "std": 0.027369
+      },
+      "noise_after_residual": {
+        "mean": 0.048029,
+        "std": 0.000271
+      },
+      "noise_after_accuracy": {
+        "mean": 0.090418,
+        "std": 0.000789
+      },
+      "reducible_rate": 1.0
+    },
+    "r8": {
+      "transition_params": 1024,
+      "head_params": 784,
+      "added_params": 1808,
+      "transition_ratio": 0.061776,
+      "total_ratio": 0.096242,
+      "structure_reducibility": {
+        "mean": 0.248793,
+        "std": 0.007019
+      },
+      "noise_reducibility": {
+        "mean": 0.180624,
+        "std": 0.004204
+      },
+      "base_route_accuracy": {
+        "mean": null,
+        "std": null
+      },
+      "structure_route_accuracy": {
+        "mean": null,
+        "std": null
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "structure_probe_bpc": {
+        "mean": 6.453658,
+        "std": 0.046237
+      },
+      "structure_probe_residual": {
+        "mean": 0.047727,
+        "std": 0.000312
+      },
+      "structure_probe_accuracy": {
+        "mean": 0.066168,
+        "std": 0.006332
+      },
+      "structure_consolidated_bpc": {
+        "mean": 6.453658,
+        "std": 0.046237
+      },
+      "structure_consolidated_residual": {
+        "mean": 0.047727,
+        "std": 0.000312
+      },
+      "structure_consolidated_accuracy": {
+        "mean": 0.066168,
+        "std": 0.006332
+      },
+      "noise_after_bpc": {
+        "mean": 6.115665,
+        "std": 0.022437
+      },
+      "noise_after_residual": {
+        "mean": 0.051978,
+        "std": 0.000311
+      },
+      "noise_after_accuracy": {
+        "mean": 0.095038,
+        "std": 0.005937
+      },
+      "reducible_rate": 0.0
+    }
+  },
+  "best_low_rank": "r16",
+  "pass": true,
+  "verdict": "✅ 真实字符流低秩生长成立：r16 以完整端到端生长 19.2% 参数，通过结构可约性、噪声拒绝、字符 BPC、MDL 路由与旧态零变化全部判据。"
+}

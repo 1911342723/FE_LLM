@@ -3,7 +3,10 @@ from __future__ import annotations
 import torch
 import torch.nn as nn
 
-from fe_llm.energy_lm.models.low_rank_transition import LowRankGenerativeTransition
+from fe_llm.energy_lm.models.low_rank_transition import (
+    LowRankGenerativeTransition,
+    LowRankReadout,
+)
 
 
 def test_low_rank_transition_starts_as_exact_base_and_counts_only_delta() -> None:
@@ -36,3 +39,15 @@ def test_training_delta_does_not_modify_frozen_base() -> None:
     assert float(low_rank.up.weight.detach().abs().sum()) > 0
     for old, current in zip(before, base.parameters()):
         torch.testing.assert_close(current, old)
+
+
+def test_low_rank_readout_starts_as_exact_base_and_counts_delta_only() -> None:
+    torch.manual_seed(8)
+    base = nn.Linear(10, 7)
+    readout = LowRankReadout(base, in_dim=10, out_dim=7, rank=3)
+    state = torch.randn(4, 10)
+
+    torch.testing.assert_close(readout(state), base(state))
+    assert readout.added_parameter_count() == 3 * (10 + 7)
+    assert all(id(parameter) not in {id(p) for p in base.parameters()}
+               for parameter in readout.parameters())
