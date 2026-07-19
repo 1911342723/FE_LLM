@@ -1,5 +1,12 @@
 # FE-LLM 文档
 
+> **2026-07-19 核心重做：**项目正在从 attention-like 的旧 PER 原型回到“显式自由能下降即推理”这条
+> 原始主线。新核心、数学契约、已完成验证与边界见 **[自由能核心重做.md](自由能核心重做.md)**。
+> 下文的 SeqEnergyNet / LoRA 实验保留为历史基线，不再代表最终核心定义。
+>
+> 首项三种子裁决已通过：完整弛豫 `100%` vs 0-step `13.4%`，结构 surprise AUROC
+> `0.992±0.002`；详见 [free_energy_sequence_eval.md](reports/free_energy_sequence_eval.md)。
+
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
 > 以「状态趋稳 / 自由能最小化」为第一性原理的非自回归语言模型 **SeqEnergyNet**

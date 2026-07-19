@@ -1,2 +1,2 @@
 ﻿# -*- coding: utf-8 -*-
-"""模型定义：energy_net / seq_net / intent_model / slot_intent_model / tokenizer。"""
+"""模型定义：显式自由能核心、历史 PER 原型、Transformer 对照与 tokenizer。"""

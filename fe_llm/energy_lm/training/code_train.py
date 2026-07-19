@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-fe_llm/energy_lm/training/code_train.py —— 从 0 训练字符级代码模型（PER vs Transformer 对照）
-=================================================================================================
-用本项目自有的 **SeqEnergyNet**（因果预测-误差弛豫 + 可学突触基底 #2，**非 Transformer 底座**）
-从 0 训一个**字符级 Python 代码语言模型**；并支持 `--arch transformer` 用**标准 Transformer**
-在**同数据 / 同词表 / 同 ctx / 同参数量预算 / 同超参**下训练，做公平 A/B 对照。
+fe_llm/energy_lm/training/code_train.py —— 从 0 训练字符级代码模型（显式自由能 / PER / Transformer）
+=======================================================================================================
+默认使用 **FreeEnergyLM**：显式定义自由能，以共享动力学从不稳定状态弛豫到稳定状态；
+同时保留旧 **SeqEnergyNet**（`--arch per`）与标准 Transformer（`--arch transformer`）作为历史基线。
+三者共用字符语料、tokenizer、训练与评估路径，便于后续做诚实对照。
 
 为什么字符级：代码字符集小（ASCII 为主，词表一两百），局部结构强，字级无需 BPE 即可建模，
 且与本项目既有的字符级架构一致。指标用 **bits/char (bpc)**——跨 tokenizer/arch 可比。
@@ -12,13 +12,14 @@ fe_llm/energy_lm/training/code_train.py —— 从 0 训练字符级代码模型
 口径（标准自回归 next-char LM）：
     语料 = data/code/python_corpus.txt（prepare_code.py 产出的连续字符流）
     定长窗口切块；位置 i 预测下一字符；损失=交叉熵；指标=held-out bpc 与 ppl。
-    SeqEnergyNet 输出能量=-logits；Transformer 直接输出 logits；下游用 net.returns_energy 统一换算。
+    旧 SeqEnergyNet 输出 -logits；FreeEnergyLM/Transformer 直接输出 logits；下游统一换算。
 
 公平对照要点：两 arch 共用同一 corpus + 同 seed → **同一组验证块**；同 tokenizer（同 corpus 同 min_freq
 确定性一致）；同 ctx / batch / lr / 调度 / bf16；用 --max-steps 对齐"看到的 token 数"。
 
 运行：
     准备数据： python -m fe_llm.energy_lm.data.prepare_code --target-mb 200
+    新核心自检：python -m fe_llm.energy_lm.training.code_train --smoke --arch free_energy
     冒烟自检： python -m fe_llm.energy_lm.training.code_train --smoke --arch transformer
     PER 训练： python -m fe_llm.energy_lm.training.code_train --arch per --hours 4.5 --dim 768 --depth 12
     TF 对照：  python -m fe_llm.energy_lm.training.code_train --arch transformer --dim 768 --depth 7 --max-steps 78000
@@ -43,6 +44,7 @@ import torch
 import torch.nn.functional as F
 
 from fe_llm.config import get_device
+from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
 from fe_llm.energy_lm.models.seq_net import SeqEnergyNet
 from fe_llm.energy_lm.models.transformer_lm import CharTransformerLM
 from fe_llm.energy_lm.models.tokenizer import CharTokenizer
@@ -68,8 +70,8 @@ PROBES = [
 
 # ----------------------------------------------------------------------------- arch / 路径
 def ckpt_paths(arch: str):
-    """按 arch 区分 checkpoint 路径；tokenizer 两 arch 共用（同词表，可比）。"""
-    suffix = "" if arch == "per" else "_tf"
+    """按 arch 区分 checkpoint 路径；所有架构共用 tokenizer。"""
+    suffix = {"per": "", "transformer": "_tf", "free_energy": "_fe"}[arch]
     return (os.path.join(CKPT_DIR, f"code_model{suffix}.pt"),
             os.path.join(CKPT_DIR, f"code_model{suffix}_last.pt"),
             CKPT_TOK,
@@ -82,6 +84,11 @@ def build_model(args, vocab: int):
         net = CharTransformerLM(vocab, args.ctx, dim=args.dim, depth=args.depth,
                                 n_heads=args.heads, ffn_mult=args.ffn_mult, dropout=args.dropout)
         tag = f"标准 Transformer (ffn×{args.ffn_mult})"
+    elif args.arch == "free_energy":
+        net = FreeEnergyLM(vocab, args.ctx, dim=args.dim,
+                           relaxation_steps=args.relax_steps,
+                           tolerance=args.relax_tolerance)
+        tag = f"显式自由能动力学（共享弛豫×≤{args.relax_steps}）"
     else:
         net = SeqEnergyNet(vocab, args.ctx, dim=args.dim, depth=args.depth, n_heads=args.heads,
                            dropout=args.dropout, use_synapse=not args.no_synapse)
@@ -90,7 +97,7 @@ def build_model(args, vocab: int):
 
 
 def _logits(net, seq):
-    """统一换算：SeqEnergyNet 返回能量(-logits)，Transformer 返回 logits。"""
+    """统一换算：旧 SeqEnergyNet 返回 -logits，其余模型直接返回 logits。"""
     out = net(seq)
     return -out if getattr(net, "returns_energy", True) else out
 
@@ -100,6 +107,8 @@ def load_any(path: str, map_location: str = "cpu"):
     ck = torch.load(path, map_location=map_location, weights_only=False)
     if ck.get("arch") == "transformer":
         return CharTransformerLM.load(path, map_location)
+    if ck.get("arch") == "free_energy":
+        return FreeEnergyLM.load(path, map_location)
     return SeqEnergyNet.load(path, map_location)
 
 
@@ -250,7 +259,11 @@ def train(args) -> None:
     net, tag = build_model(args, tok.vocab_size)
     net = net.to(device)
     n_params = sum(p.numel() for p in net.parameters())
-    print(f"[code] 参数量={n_params/1e6:.2f}M  dim={args.dim} depth={args.depth} heads={args.heads} · {tag}", flush=True)
+    if isinstance(net, FreeEnergyLM):
+        shape = f"dim={net.dim} relax_steps≤{net.relaxation_steps} tol={net.tolerance:g}"
+    else:
+        shape = f"dim={net.dim} depth={net.depth} heads={net.n_heads}"
+    print(f"[code] 参数量={n_params/1e6:.2f}M  {shape} · {tag}", flush=True)
 
     opt = torch.optim.AdamW(net.parameters(), lr=args.lr, weight_decay=args.wd, betas=(0.9, 0.95))
     start_step = 0
@@ -287,6 +300,7 @@ def train(args) -> None:
     print(f"[code] 开始训练：{cap}，bs={bs}×accum{accum}，eval 每 {args.eval_min:.0f} 分钟", flush=True)
     net.train()
     running = 0.0
+    running_fe = 0.0
     nrun = 0
     stop = False
     while not stop:
@@ -301,10 +315,18 @@ def train(args) -> None:
             seq = torch.as_tensor(train_chunks[sel], device=device, dtype=torch.long)
             with torch.autocast(device_type=device.split(":")[0], dtype=amp_dtype, enabled=amp_dtype is not None):
                 logits = _logits(net, seq)
-                loss = F.cross_entropy(logits[:, :-1, :].reshape(-1, tok.vocab_size),
-                                       seq[:, 1:].reshape(-1))
+                task_loss = F.cross_entropy(logits[:, :-1, :].reshape(-1, tok.vocab_size),
+                                            seq[:, 1:].reshape(-1))
+                fe_loss = getattr(net, "last_free_energy_loss", None)
+                if isinstance(net, FreeEnergyLM) and fe_loss is not None:
+                    loss = task_loss + args.free_energy_weight * fe_loss
+                else:
+                    loss = task_loss
             (loss / accum).backward()
-            running += float(loss.detach()); nrun += 1
+            running += float(task_loss.detach())
+            if isinstance(net, FreeEnergyLM) and fe_loss is not None:
+                running_fe += float(fe_loss.detach())
+            nrun += 1
             if (step + 1) % accum == 0:
                 torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0)
                 for g in opt.param_groups:
@@ -324,10 +346,18 @@ def train(args) -> None:
                     print(f"[code] 实测步速 {per_step*1000:.0f}ms/step → 估算总步数≈{est_total}", flush=True)
 
             if step % args.log_every == 0:
-                avg = running / max(1, nrun); running = 0.0; nrun = 0
+                denom = max(1, nrun)
+                avg = running / denom
+                running = 0.0
+                fe_note = ""
+                if isinstance(net, FreeEnergyLM):
+                    fe_avg = running_fe / denom
+                    fe_note = f" | residual_F/dim {fe_avg:.4f}"
+                    running_fe = 0.0
+                nrun = 0
                 gpu = (torch.cuda.max_memory_allocated() / 1e9) if device.startswith("cuda") else 0.0
                 print(f"[code] step {step:>7} | loss {avg:.4f} bpc {avg/math.log(2):.3f} | "
-                      f"lr {opt.param_groups[0]['lr']:.2e} | {elapsed/60:.1f}min | peakGPU {gpu:.2f}G", flush=True)
+                      f"lr {opt.param_groups[0]['lr']:.2e}{fe_note} | {elapsed/60:.1f}min | peakGPU {gpu:.2f}G", flush=True)
 
             if time.time() - last_eval >= args.eval_min * 60:
                 _do_eval_and_ckpt(net, tok, val_chunks, device, bs, amp_dtype, args, step, t0,
@@ -382,7 +412,9 @@ def _do_eval_and_ckpt(net, tok, val_chunks, device, bs, amp_dtype, args, step, t
 
 
 def _save(net, step, path):
-    if getattr(net, "returns_energy", True):  # SeqEnergyNet / PER
+    if isinstance(net, FreeEnergyLM):
+        torch.save(net.checkpoint(step), path)
+    elif getattr(net, "returns_energy", True):  # SeqEnergyNet / PER
         torch.save({"arch": "per", "vocab_size": net.vocab_size, "max_len": net.max_len, "dim": net.dim,
                     "depth": net.depth, "n_heads": net.n_heads, "use_synapse": net.use_synapse,
                     "step": step, "state_dict": net.state_dict()}, path)
@@ -430,7 +462,11 @@ def smoke(args) -> None:
     net, tag = build_model(args, tok.vocab_size)
     net = net.to(device)
     n_params = sum(p.numel() for p in net.parameters())
-    print(f"[smoke] {tag} 参数={n_params/1e6:.2f}M dim={args.dim} depth={args.depth} ctx={args.ctx} bs={args.batch} vocab={tok.vocab_size}", flush=True)
+    if isinstance(net, FreeEnergyLM):
+        shape = f"dim={net.dim} relax_steps≤{net.relaxation_steps} tol={net.tolerance:g}"
+    else:
+        shape = f"dim={net.dim} depth={net.depth} heads={net.n_heads}"
+    print(f"[smoke] {tag} 参数={n_params/1e6:.2f}M {shape} ctx={args.ctx} bs={args.batch} vocab={tok.vocab_size}", flush=True)
     opt = torch.optim.AdamW(net.parameters(), lr=args.lr)
     net.train()
     t0 = time.time()
@@ -441,12 +477,18 @@ def smoke(args) -> None:
         seq = torch.as_tensor(chunks[sel], device=device, dtype=torch.long)
         with torch.autocast(device_type=device.split(":")[0], dtype=amp_dtype, enabled=amp_dtype is not None):
             logits = _logits(net, seq)
-            loss = F.cross_entropy(logits[:, :-1, :].reshape(-1, tok.vocab_size), seq[:, 1:].reshape(-1))
+            task_loss = F.cross_entropy(logits[:, :-1, :].reshape(-1, tok.vocab_size), seq[:, 1:].reshape(-1))
+            fe_loss = getattr(net, "last_free_energy_loss", None)
+            loss = (task_loss + args.free_energy_weight * fe_loss
+                    if isinstance(net, FreeEnergyLM) and fe_loss is not None else task_loss)
         opt.zero_grad(set_to_none=True); loss.backward()
         torch.nn.utils.clip_grad_norm_(net.parameters(), 1.0); opt.step()
     dt = (time.time() - t0) / nstep
     gpu = (torch.cuda.max_memory_allocated() / 1e9) if device.startswith("cuda") else 0.0
-    print(f"[smoke] {nstep} 步 OK | {dt*1000:.0f}ms/step | 峰值显存 {gpu:.2f}G | 末步 loss {float(loss.detach()):.3f}", flush=True)
+    fe_note = (f" | residual_F/dim {float(net.last_free_energy_loss.detach()):.3f}"
+               if isinstance(net, FreeEnergyLM) and net.last_free_energy_loss is not None else "")
+    print(f"[smoke] {nstep} 步 OK | {dt*1000:.0f}ms/step | 峰值显存 {gpu:.2f}G | "
+          f"末步 task_loss {float(task_loss.detach()):.3f}{fe_note}", flush=True)
     out = generate(net, tok, "def ", args.ctx, device, max_new=40, amp_dtype=amp_dtype)
     print(f"[smoke] 采样 'def ' → {('def ' + out)!r}", flush=True)
     if dt > 0:
@@ -455,9 +497,16 @@ def smoke(args) -> None:
 
 # ----------------------------------------------------------------------------- CLI
 def build_arg_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(description="从 0 训练字符级代码模型（PER vs Transformer 对照）。")
-    ap.add_argument("--arch", choices=["per", "transformer"], default="per", help="模型架构")
-    ap.add_argument("--ffn-mult", type=int, default=4, help="Transformer 前馈倍数（per 忽略）")
+    ap = argparse.ArgumentParser(description="从 0 训练字符级代码模型（显式自由能 / PER / Transformer）。")
+    ap.add_argument("--arch", choices=["free_energy", "per", "transformer"], default="free_energy",
+                    help="模型架构；默认使用显式自由能动力学")
+    ap.add_argument("--ffn-mult", type=int, default=4, help="Transformer 前馈倍数（其他架构忽略）")
+    ap.add_argument("--relax-steps", type=int, default=8,
+                    help="显式自由能模型的最大弛豫步数（不是网络层数）")
+    ap.add_argument("--relax-tolerance", type=float, default=1e-4,
+                    help="显式自由能模型逐位置自适应停止阈值")
+    ap.add_argument("--free-energy-weight", type=float, default=2.0,
+                    help="显式自由能模型外循环的残余自由能权重（机制裁决默认 2.0）")
     ap.add_argument("--corpus", default=CORPUS)
     ap.add_argument("--hours", type=float, default=4.5, help="训练时间预算（小时）")
     ap.add_argument("--max-steps", type=int, default=0, help=">0 时按步数停止（对齐两 arch 看到的 token）")

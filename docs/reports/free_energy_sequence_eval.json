@@ -1,0 +1,447 @@
+{
+  "task": "lag-2 contextual prediction vs lag-3 structural OOD",
+  "config": {
+    "device": "cuda",
+    "seeds": "41,42,43",
+    "steps": 150,
+    "batch": 128,
+    "eval_batch": 512,
+    "length": 14,
+    "vocab": 8,
+    "dim": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "log_every": 50,
+    "write_report": true
+  },
+  "rows": [
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.139648,
+      "relaxation_gain": 0.860352,
+      "ood_lag3_accuracy": 0.128018,
+      "id_surprise": 0.152041,
+      "ood_surprise": 0.45094,
+      "surprise_gap": 0.298899,
+      "surprise_auroc": 0.990692,
+      "id_residual_free_energy": 0.078245,
+      "ood_residual_free_energy": 0.227055,
+      "residual_auroc": 0.990746,
+      "free_energy_trace": [
+        140.601578,
+        73.813004,
+        70.923462,
+        70.798447,
+        70.793037,
+        70.793037
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 41,
+      "arm": "CE+F",
+      "seconds": 13.73,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.237753,
+          "residual_f": 0.281245,
+          "train_acc": 0.217448
+        },
+        {
+          "step": 50,
+          "ce": 0.162996,
+          "residual_f": 0.224534,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.094514,
+          "residual_f": 0.117908,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.059844,
+          "residual_f": 0.077563,
+          "train_acc": 1.0
+        }
+      ]
+    },
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.129883,
+      "relaxation_gain": 0.870117,
+      "ood_lag3_accuracy": 0.126776,
+      "id_surprise": 1.408145,
+      "ood_surprise": 1.285604,
+      "surprise_gap": -0.122541,
+      "surprise_auroc": 0.155182,
+      "id_residual_free_energy": 0.705642,
+      "ood_residual_free_energy": 0.645675,
+      "residual_auroc": 0.160561,
+      "free_energy_trace": [
+        926.219849,
+        482.941711,
+        463.763733,
+        462.934021,
+        462.898132,
+        462.898132
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 41,
+      "arm": "CE-only",
+      "seconds": 13.69,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.237753,
+          "residual_f": 0.281245,
+          "train_acc": 0.214193
+        },
+        {
+          "step": 50,
+          "ce": 0.029706,
+          "residual_f": 0.646492,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.009097,
+          "residual_f": 0.695115,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.005036,
+          "residual_f": 0.708237,
+          "train_acc": 1.0
+        }
+      ]
+    },
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.135742,
+      "relaxation_gain": 0.864258,
+      "ood_lag3_accuracy": 0.114347,
+      "id_surprise": 0.150921,
+      "ood_surprise": 0.462335,
+      "surprise_gap": 0.311414,
+      "surprise_auroc": 0.995237,
+      "id_residual_free_energy": 0.077739,
+      "ood_residual_free_energy": 0.232794,
+      "residual_auroc": 0.995272,
+      "free_energy_trace": [
+        135.920334,
+        71.383087,
+        68.590958,
+        68.470154,
+        68.464928,
+        68.464928
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 42,
+      "arm": "CE+F",
+      "seconds": 17.54,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.197926,
+          "residual_f": 0.283099,
+          "train_acc": 0.25
+        },
+        {
+          "step": 50,
+          "ce": 0.157477,
+          "residual_f": 0.225756,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.089752,
+          "residual_f": 0.116951,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.059614,
+          "residual_f": 0.077175,
+          "train_acc": 1.0
+        }
+      ]
+    },
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.154297,
+      "relaxation_gain": 0.845703,
+      "ood_lag3_accuracy": 0.112749,
+      "id_surprise": 1.382094,
+      "ood_surprise": 1.265002,
+      "surprise_gap": -0.117091,
+      "surprise_auroc": 0.115038,
+      "id_residual_free_energy": 0.692717,
+      "ood_residual_free_energy": 0.635401,
+      "residual_auroc": 0.118616,
+      "free_energy_trace": [
+        911.29071,
+        475.181274,
+        456.313416,
+        455.497131,
+        455.461853,
+        455.461853
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 42,
+      "arm": "CE-only",
+      "seconds": 16.46,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.197926,
+          "residual_f": 0.283099,
+          "train_acc": 0.253255
+        },
+        {
+          "step": 50,
+          "ce": 0.028591,
+          "residual_f": 0.638358,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.008801,
+          "residual_f": 0.682944,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.004894,
+          "residual_f": 0.695645,
+          "train_acc": 1.0
+        }
+      ]
+    },
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.12793,
+      "relaxation_gain": 0.87207,
+      "ood_lag3_accuracy": 0.117898,
+      "id_surprise": 0.152508,
+      "ood_surprise": 0.458082,
+      "surprise_gap": 0.305574,
+      "surprise_auroc": 0.991333,
+      "id_residual_free_energy": 0.078461,
+      "ood_residual_free_energy": 0.230602,
+      "residual_auroc": 0.991333,
+      "free_energy_trace": [
+        136.540375,
+        71.687088,
+        68.881271,
+        68.759888,
+        68.754631,
+        68.754631
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 43,
+      "arm": "CE+F",
+      "seconds": 16.94,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.255317,
+          "residual_f": 0.281167,
+          "train_acc": 0.203776
+        },
+        {
+          "step": 50,
+          "ce": 0.155218,
+          "residual_f": 0.234174,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.089384,
+          "residual_f": 0.120145,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.05841,
+          "residual_f": 0.078486,
+          "train_acc": 1.0
+        }
+      ]
+    },
+    {
+      "id_accuracy": 1.0,
+      "id_accuracy_zero_relax": 0.126953,
+      "relaxation_gain": 0.873047,
+      "ood_lag3_accuracy": 0.115945,
+      "id_surprise": 1.411918,
+      "ood_surprise": 1.294879,
+      "surprise_gap": -0.117039,
+      "surprise_auroc": 0.183407,
+      "id_residual_free_energy": 0.707465,
+      "ood_residual_free_energy": 0.65034,
+      "residual_auroc": 0.189289,
+      "free_energy_trace": [
+        930.220703,
+        484.986847,
+        465.724274,
+        464.890869,
+        464.854797,
+        464.854797
+      ],
+      "energy_monotonic": true,
+      "mean_relax_steps": 4.0,
+      "seed": 43,
+      "arm": "CE-only",
+      "seconds": 14.78,
+      "params": 10472,
+      "history": [
+        {
+          "step": 1,
+          "ce": 2.255317,
+          "residual_f": 0.281167,
+          "train_acc": 0.210286
+        },
+        {
+          "step": 50,
+          "ce": 0.028318,
+          "residual_f": 0.655081,
+          "train_acc": 1.0
+        },
+        {
+          "step": 100,
+          "ce": 0.008514,
+          "residual_f": 0.696206,
+          "train_acc": 1.0
+        },
+        {
+          "step": 150,
+          "ce": 0.004764,
+          "residual_f": 0.709556,
+          "train_acc": 1.0
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "CE+F": {
+      "id_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "id_accuracy_zero_relax": {
+        "mean": 0.13444,
+        "std": 0.004872
+      },
+      "relaxation_gain": {
+        "mean": 0.86556,
+        "std": 0.004872
+      },
+      "ood_lag3_accuracy": {
+        "mean": 0.120088,
+        "std": 0.005792
+      },
+      "id_surprise": {
+        "mean": 0.151823,
+        "std": 0.000666
+      },
+      "ood_surprise": {
+        "mean": 0.457119,
+        "std": 0.004702
+      },
+      "surprise_gap": {
+        "mean": 0.305296,
+        "std": 0.005113
+      },
+      "surprise_auroc": {
+        "mean": 0.992421,
+        "std": 0.002009
+      },
+      "id_residual_free_energy": {
+        "mean": 0.078148,
+        "std": 0.000303
+      },
+      "ood_residual_free_energy": {
+        "mean": 0.23015,
+        "std": 0.002365
+      },
+      "residual_auroc": {
+        "mean": 0.99245,
+        "std": 0.00201
+      },
+      "mean_relax_steps": {
+        "mean": 4.0,
+        "std": 0.0
+      },
+      "all_energy_monotonic": true
+    },
+    "CE-only": {
+      "id_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "id_accuracy_zero_relax": {
+        "mean": 0.137044,
+        "std": 0.012258
+      },
+      "relaxation_gain": {
+        "mean": 0.862956,
+        "std": 0.012258
+      },
+      "ood_lag3_accuracy": {
+        "mean": 0.11849,
+        "std": 0.006003
+      },
+      "id_surprise": {
+        "mean": 1.400719,
+        "std": 0.01326
+      },
+      "ood_surprise": {
+        "mean": 1.281828,
+        "std": 0.012486
+      },
+      "surprise_gap": {
+        "mean": -0.11889,
+        "std": 0.002581
+      },
+      "surprise_auroc": {
+        "mean": 0.151209,
+        "std": 0.028053
+      },
+      "id_residual_free_energy": {
+        "mean": 0.701941,
+        "std": 0.006565
+      },
+      "ood_residual_free_energy": {
+        "mean": 0.643805,
+        "std": 0.00624
+      },
+      "residual_auroc": {
+        "mean": 0.156155,
+        "std": 0.02902
+      },
+      "mean_relax_steps": {
+        "mean": 4.0,
+        "std": 0.0
+      },
+      "all_energy_monotonic": true
+    }
+  },
+  "mechanism_pass": true,
+  "verdict": "✅ 稳定化成为真实计算：完整弛豫学会 lag-2，而 0-step 不能；CE+F 的自由能可区分未见结构，满足用 residual surprise 触发生长的前提。"
+}
