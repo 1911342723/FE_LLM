@@ -209,6 +209,7 @@ class FreeEnergyLM(nn.Module):
         adaptive: bool = True,
         max_relax_steps: int | None = None,
         return_trace: bool = False,
+        transition_override: nn.Module | None = None,
     ) -> tuple[torch.Tensor, dict[str, Any] | None]:
         """按因果顺序推断每个前缀的稳定信念状态。"""
         budget = self.relaxation_steps if max_relax_steps is None else int(max_relax_steps)
@@ -217,6 +218,7 @@ class FreeEnergyLM(nn.Module):
 
         batch, length, _ = observations.shape
         previous = self.root_state.expand(batch, -1)
+        transition_model = self.transition if transition_override is None else transition_override
         states: list[torch.Tensor] = []
         final_energies: list[torch.Tensor] = []
         initial_surprises: list[torch.Tensor] = []
@@ -224,7 +226,7 @@ class FreeEnergyLM(nn.Module):
 
         for position in range(length):
             observation = observations[:, position]
-            prior = self.transition(self.transition_norm(previous))
+            prior = transition_model(self.transition_norm(previous))
             _, _, initial_prediction_error, _ = self._energy_components(
                 observation, observation, prior, self._precisions())
             state, local_trace = self._relax_position(
@@ -290,6 +292,7 @@ class FreeEnergyLM(nn.Module):
         return_trace: bool = False,
         adaptive: bool = True,
         max_relax_steps: int | None = None,
+        transition_override: nn.Module | None = None,
     ):
         if ids.ndim != 2:
             raise ValueError(f"ids 应为 (B,L)，收到 {tuple(ids.shape)}。")
@@ -302,6 +305,7 @@ class FreeEnergyLM(nn.Module):
             adaptive=adaptive,
             max_relax_steps=max_relax_steps,
             return_trace=return_trace,
+            transition_override=transition_override,
         )
         logits = self.head(self.readout_norm(states))
         self.last_trace = trace

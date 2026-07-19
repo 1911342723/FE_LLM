@@ -1,0 +1,243 @@
+{
+  "task": "residual-F triggered lag-2 to lag-3 structural growth",
+  "config": {
+    "device": "cuda",
+    "seeds": "51,52,53",
+    "base_steps": 150,
+    "growth_steps": 180,
+    "batch": 128,
+    "eval_batch": 384,
+    "calibration_batch": 1024,
+    "stream_batch": 128,
+    "length": 14,
+    "vocab": 8,
+    "dim": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "growth_lr": 0.002,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "threshold_quantile": 0.99,
+    "min_growth_fraction": 0.5,
+    "growth_noise": 0.001,
+    "log_every": 60,
+    "write_report": true
+  },
+  "rows": [
+    {
+      "seed": 51,
+      "growth_triggered": true,
+      "known_false_trigger": false,
+      "threshold": 0.102605,
+      "known_pressure_fraction": 0.0,
+      "novel_pressure_fraction": 0.992188,
+      "known_stream_energy": 0.078126,
+      "novel_stream_energy": 0.229792,
+      "base_id_accuracy_before": 1.0,
+      "base_id_accuracy_after": 1.0,
+      "base_retention_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "base_ood_accuracy_before": 0.133049,
+      "new_ood_accuracy": 1.0,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.958333,
+      "id_pathway_energy": [
+        0.077377,
+        0.201589
+      ],
+      "ood_pathway_energy": [
+        0.229057,
+        0.097783
+      ],
+      "core_params": 10472,
+      "added_params": 9360,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.440989,
+          "residual_f": 0.230615
+        },
+        {
+          "step": 60,
+          "ce": 0.150746,
+          "residual_f": 0.152974
+        },
+        {
+          "step": 120,
+          "ce": 0.078427,
+          "residual_f": 0.111361
+        },
+        {
+          "step": 180,
+          "ce": 0.069647,
+          "residual_f": 0.096632
+        }
+      ],
+      "seconds": 40.67
+    },
+    {
+      "seed": 52,
+      "growth_triggered": true,
+      "known_false_trigger": false,
+      "threshold": 0.088863,
+      "known_pressure_fraction": 0.0,
+      "novel_pressure_fraction": 0.96875,
+      "known_stream_energy": 0.076582,
+      "novel_stream_energy": 0.198157,
+      "base_id_accuracy_before": 1.0,
+      "base_id_accuracy_after": 1.0,
+      "base_retention_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "base_ood_accuracy_before": 0.112689,
+      "new_ood_accuracy": 1.0,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.984375,
+      "id_pathway_energy": [
+        0.076886,
+        0.182235
+      ],
+      "ood_pathway_energy": [
+        0.207306,
+        0.095838
+      ],
+      "core_params": 10472,
+      "added_params": 9360,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.496359,
+          "residual_f": 0.207828
+        },
+        {
+          "step": 60,
+          "ce": 0.177473,
+          "residual_f": 0.150689
+        },
+        {
+          "step": 120,
+          "ce": 0.075913,
+          "residual_f": 0.111304
+        },
+        {
+          "step": 180,
+          "ce": 0.067803,
+          "residual_f": 0.095419
+        }
+      ],
+      "seconds": 41.82
+    },
+    {
+      "seed": 53,
+      "growth_triggered": true,
+      "known_false_trigger": false,
+      "threshold": 0.090378,
+      "known_pressure_fraction": 0.0,
+      "novel_pressure_fraction": 0.984375,
+      "known_stream_energy": 0.075576,
+      "novel_stream_energy": 0.23113,
+      "base_id_accuracy_before": 1.0,
+      "base_id_accuracy_after": 1.0,
+      "base_retention_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "base_ood_accuracy_before": 0.136364,
+      "new_ood_accuracy": 1.0,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.989583,
+      "id_pathway_energy": [
+        0.076574,
+        0.188089
+      ],
+      "ood_pathway_energy": [
+        0.217231,
+        0.094973
+      ],
+      "core_params": 10472,
+      "added_params": 9360,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.269929,
+          "residual_f": 0.215143
+        },
+        {
+          "step": 60,
+          "ce": 0.154942,
+          "residual_f": 0.148146
+        },
+        {
+          "step": 120,
+          "ce": 0.077665,
+          "residual_f": 0.108022
+        },
+        {
+          "step": 180,
+          "ce": 0.069079,
+          "residual_f": 0.095206
+        }
+      ],
+      "seconds": 45.85
+    }
+  ],
+  "summary": {
+    "growth_trigger_rate": 1.0,
+    "known_false_trigger_rate": 0.0,
+    "known_pressure_fraction": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "novel_pressure_fraction": {
+      "mean": 0.981771,
+      "std": 0.009744
+    },
+    "base_id_accuracy_before": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "base_id_accuracy_after": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "base_retention_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "base_ood_accuracy_before": {
+      "mean": 0.127367,
+      "std": 0.010467
+    },
+    "new_ood_accuracy": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "routed_id_accuracy": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "routed_ood_accuracy": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "id_route_base_accuracy": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "ood_route_new_accuracy": {
+      "mean": 0.97743,
+      "std": 0.01367
+    }
+  },
+  "pass": true,
+  "verdict": "✅ ‘穷则变’闭环成立：残余自由能自动识别现有结构解释失败，按需长出冻结隔离的新生成性通路；最低自由能在推理时恢复正确结构，旧稳定态逐 logit 不变。"
+}

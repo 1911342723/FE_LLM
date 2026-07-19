@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import copy
+
 import torch
 import torch.nn.functional as F
 
@@ -100,6 +102,21 @@ def test_zero_step_ablation_removes_contextual_relaxation() -> None:
     assert trace["free_energy"].numel() == 1
     assert int(trace["steps_per_position"].max()) == 0
     assert trace["max_relax_steps"] == 0
+
+
+def test_transition_can_be_overridden_without_mutating_base_pathway() -> None:
+    net = _model().eval()
+    ids = torch.randint(0, net.vocab_size, (2, 8))
+    base_before = net(ids)
+    alternative = copy.deepcopy(net.transition)
+    with torch.no_grad():
+        alternative[2].bias.add_(0.5)
+
+    alt_logits = net(ids, transition_override=alternative)
+    base_after = net(ids)
+
+    assert not torch.allclose(alt_logits, base_before)
+    torch.testing.assert_close(base_after, base_before)
 
 
 def test_checkpoint_round_trip_preserves_dynamics(tmp_path) -> None:
