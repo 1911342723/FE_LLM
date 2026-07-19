@@ -1,0 +1,238 @@
+{
+  "task": "verified persistent archive for low-rank free-energy basins",
+  "config": {
+    "device": "cuda",
+    "seeds": "142,143,144",
+    "vocab": 8,
+    "length": 14,
+    "dim": 48,
+    "rank": 8,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "base_steps": 150,
+    "growth_steps": 180,
+    "batch": 128,
+    "calibration_batch": 192,
+    "eval_batch": 384,
+    "lr": 0.002,
+    "growth_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "energy_start": 3,
+    "complexity_quantile": 0.9,
+    "complexity_margin": 0.0001,
+    "min_task_accuracy": 0.95,
+    "min_route_accuracy": 0.9,
+    "min_reactivation_fraction": 0.9,
+    "log_every": 60,
+    "write_report": true
+  },
+  "rows": [
+    {
+      "seed": 142,
+      "task_accuracy": 1.0,
+      "training": {
+        "lag": 3,
+        "pathway": 1,
+        "complexity_cost": 0.0001,
+        "history": [
+          {
+            "step": 1,
+            "ce": 3.449831,
+            "residual": 0.242826
+          },
+          {
+            "step": 60,
+            "ce": 1.118,
+            "residual": 0.187008
+          },
+          {
+            "step": 120,
+            "ce": 0.527963,
+            "residual": 0.169404
+          },
+          {
+            "step": 180,
+            "ce": 0.3441,
+            "residual": 0.15209
+          }
+        ]
+      },
+      "active_params_before_archive": 768,
+      "active_params_cold": 0,
+      "manifest": {
+        "format_version": 1,
+        "core_fingerprint": "ddce8039d9e77c3ce35d21bc601b4566a9c2c07debf4cb38ff5d78aba98de79b",
+        "archive_count": 1,
+        "payload_digest": "328fb2ac6dd714542d10efbd137fab5c467abdc8a57d9c83fba6bda10335b9ae",
+        "file_sha256": "c07b42dfde50e8484f907f3aabedeb4b0e8bb5de8c19ad346bba34352548165f",
+        "file_size": 5829
+      },
+      "atomic_temp_files_remaining": 0,
+      "loaded_archive_ids": [
+        0
+      ],
+      "energy_max_delta": 0.0,
+      "archive_better_fraction": 0.981771,
+      "restored_logit_max_delta": 0.0,
+      "new_route_accuracy": 0.981771,
+      "base_route_accuracy": 0.924479,
+      "core_mismatch_rejected": true,
+      "tamper_rejected": true,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 30.25
+    },
+    {
+      "seed": 143,
+      "task_accuracy": 0.998343,
+      "training": {
+        "lag": 3,
+        "pathway": 1,
+        "complexity_cost": 0.0001,
+        "history": [
+          {
+            "step": 1,
+            "ce": 3.47039,
+            "residual": 0.237011
+          },
+          {
+            "step": 60,
+            "ce": 1.052333,
+            "residual": 0.198251
+          },
+          {
+            "step": 120,
+            "ce": 0.474514,
+            "residual": 0.173888
+          },
+          {
+            "step": 180,
+            "ce": 0.265339,
+            "residual": 0.150508
+          }
+        ]
+      },
+      "active_params_before_archive": 768,
+      "active_params_cold": 0,
+      "manifest": {
+        "format_version": 1,
+        "core_fingerprint": "c5e392132044e8f8ec9914b5c14f0e66840650da735b02a58b03fde9820e6c37",
+        "archive_count": 1,
+        "payload_digest": "a6285f19716600b9882ec9161629f4c861f18a6750f7dd22054069a59ca856f1",
+        "file_sha256": "b8cf0c2ca2f559d21eb0704cd67658f027cce1b74046c52271425c2d6f87ab3a",
+        "file_size": 5829
+      },
+      "atomic_temp_files_remaining": 0,
+      "loaded_archive_ids": [
+        0
+      ],
+      "energy_max_delta": 0.0,
+      "archive_better_fraction": 0.976562,
+      "restored_logit_max_delta": 0.0,
+      "new_route_accuracy": 0.976562,
+      "base_route_accuracy": 1.0,
+      "core_mismatch_rejected": true,
+      "tamper_rejected": true,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 29.69
+    },
+    {
+      "seed": 144,
+      "task_accuracy": 0.999763,
+      "training": {
+        "lag": 3,
+        "pathway": 1,
+        "complexity_cost": 0.0001,
+        "history": [
+          {
+            "step": 1,
+            "ce": 3.369846,
+            "residual": 0.213532
+          },
+          {
+            "step": 60,
+            "ce": 1.123475,
+            "residual": 0.198384
+          },
+          {
+            "step": 120,
+            "ce": 0.397845,
+            "residual": 0.164343
+          },
+          {
+            "step": 180,
+            "ce": 0.228879,
+            "residual": 0.14169
+          }
+        ]
+      },
+      "active_params_before_archive": 768,
+      "active_params_cold": 0,
+      "manifest": {
+        "format_version": 1,
+        "core_fingerprint": "5081db6ffd47ce6ed901fef358993dc1700c52cc00470eaf6df1845c72b9ea6d",
+        "archive_count": 1,
+        "payload_digest": "826b25ebf31db143dc43f56c6dca15077fd373025666f6575b08517943a7f016",
+        "file_sha256": "bbc2b3a6105e9f9f6e4934ca7a9b57e64bd54f3d0696780a69bbe38fcc4d91dc",
+        "file_size": 5829
+      },
+      "atomic_temp_files_remaining": 0,
+      "loaded_archive_ids": [
+        0
+      ],
+      "energy_max_delta": 0.0,
+      "archive_better_fraction": 0.971354,
+      "restored_logit_max_delta": 0.0,
+      "new_route_accuracy": 0.971354,
+      "base_route_accuracy": 0.942708,
+      "core_mismatch_rejected": true,
+      "tamper_rejected": true,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 29.86
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "core_mismatch_reject_rate": 1.0,
+    "tamper_reject_rate": 1.0,
+    "atomic_save_rate": 1.0,
+    "task_accuracy": {
+      "mean": 0.999369,
+      "std": 0.000732
+    },
+    "energy_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "archive_better_fraction": {
+      "mean": 0.976562,
+      "std": 0.004253
+    },
+    "restored_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "new_route_accuracy": {
+      "mean": 0.976562,
+      "std": 0.004253
+    },
+    "base_route_accuracy": {
+      "mean": 0.955729,
+      "std": 0.032177
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "file_size": {
+      "mean": 5829.0,
+      "std": 0.0
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 可校验盆地持久化成立：冷盆地以受限张量格式原子落盘；不同基础稳定态和被篡改权重均拒绝；新系统加载后 residual-F 精确复现，归档重新成为低能解释才无训练恢复，输出与基础稳定态均严格不变。"
+}

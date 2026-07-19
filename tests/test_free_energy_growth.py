@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+import copy
+
+import pytest
 import torch
 
 from fe_llm.energy_lm.free_energy_growth import (
@@ -316,3 +319,54 @@ def test_recalibrating_committed_cost_protects_stable_reference_after_merge() ->
 
     assert cost >= 0
     assert float((choices == 0).float().mean()) >= 0.89
+
+
+def test_archive_disk_roundtrip_restores_energy_and_logits(tmp_path) -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (12, 9))
+    transition = LowRankGenerativeTransition(system.core.transition, dim=12, rank=3)
+    head = system.create_provisional_head()
+    with torch.no_grad():
+        transition.up.weight.normal_(std=0.04)
+        head.weight.add_(0.02)
+    pathway = system.commit_pathway(transition, complexity_cost=0.017, head=head)
+    expected_logits = system.forward_pathway(ids, pathway).detach().clone()
+    expected_score = (
+        system.residual_scores(ids, pathway) + system.pathway_costs[pathway]).clone()
+    cloned_core = copy.deepcopy(system.core)
+    system.archive_pathway(pathway)
+    archive_path = tmp_path / "basins.pt"
+
+    manifest = system.save_archives(str(archive_path))
+    restored_system = FreeEnergyGrowthSystem(cloned_core).eval()
+    loaded = restored_system.load_archives(str(archive_path))
+
+    assert manifest["archive_count"] == 1
+    assert len(manifest["file_sha256"]) == 64
+    assert loaded == [0]
+    torch.testing.assert_close(restored_system.archived_scores(ids, 0), expected_score)
+    restored = restored_system.restore_archived_pathway(0)
+    torch.testing.assert_close(
+        restored_system.forward_pathway(ids, restored), expected_logits)
+
+
+def test_archive_load_rejects_core_mismatch_and_tensor_tampering(tmp_path) -> None:
+    system = _system().eval()
+    transition = LowRankGenerativeTransition(system.core.transition, dim=12, rank=3)
+    pathway = system.commit_pathway(transition, complexity_cost=0.01)
+    system.archive_pathway(pathway)
+    archive_path = tmp_path / "basins.pt"
+    system.save_archives(str(archive_path))
+
+    mismatched = FreeEnergyGrowthSystem(copy.deepcopy(system.core)).eval()
+    with torch.no_grad():
+        mismatched.core.root_state.add_(0.1)
+    with pytest.raises(ValueError, match="核心指纹"):
+        mismatched.load_archives(str(archive_path))
+
+    payload = torch.load(archive_path, map_location="cpu", weights_only=True)
+    payload["entries"][0]["transition"]["state"]["up.weight"][0, 0] += 1.0
+    torch.save(payload, archive_path)
+    matching = FreeEnergyGrowthSystem(copy.deepcopy(system.core)).eval()
+    with pytest.raises(ValueError, match="摘要"):
+        matching.load_archives(str(archive_path))

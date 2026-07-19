@@ -16,6 +16,9 @@
 from __future__ import annotations
 
 import copy
+import hashlib
+import json
+import os
 from dataclasses import dataclass
 
 import torch
@@ -23,10 +26,35 @@ import torch.nn as nn
 
 from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
 
+ARCHIVE_FORMAT_VERSION = 1
+
+
+def _update_digest_with_tensor(digest, name: str, tensor: torch.Tensor) -> None:
+    value = tensor.detach().cpu().contiguous()
+    digest.update(name.encode("utf-8"))
+    digest.update(str(value.dtype).encode("ascii"))
+    digest.update(json.dumps(list(value.shape)).encode("ascii"))
+    digest.update(value.reshape(-1).view(torch.uint8).numpy().tobytes())
+
+
+def _state_digest(metadata: dict, state: dict[str, torch.Tensor]) -> str:
+    digest = hashlib.sha256()
+    digest.update(json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+    for name in sorted(state):
+        _update_digest_with_tensor(digest, name, state[name])
+    return digest.hexdigest()
+
+
+def _state_dict_cpu(module: nn.Module) -> dict[str, torch.Tensor]:
+    return {
+        name: value.detach().cpu().clone()
+        for name, value in module.state_dict().items()
+    }
+
 
 @dataclass
 class ArchivedPathway:
-    """从活动路由卸下的冻结盆地；第一版只保证进程内 CPU 冷存储。"""
+    """从活动路由卸下的冻结盆地，可保存为受限、可校验的低秩归档。"""
 
     transition: nn.Module
     head: nn.Module | None
@@ -358,6 +386,220 @@ class FreeEnergyGrowthSystem(nn.Module):
         )
         self.archived_pathways[archive_id] = None
         return pathway
+
+    def core_fingerprint(self) -> str:
+        """基础稳定态的逐张量 SHA-256；归档不能静默迁移到另一个核心。"""
+        metadata = {"kind": "FreeEnergyLM", "state_keys": sorted(self.core.state_dict())}
+        state = {
+            name: value.detach().cpu()
+            for name, value in self.core.state_dict().items()
+        }
+        return _state_digest(metadata, state)
+
+    @staticmethod
+    def _serialize_archived_module(module: nn.Module, role: str) -> dict:
+        from fe_llm.energy_lm.models.low_rank_transition import (
+            LowRankGenerativeTransition,
+            LowRankReadout,
+        )
+
+        if role == "transition" and isinstance(module, LowRankGenerativeTransition):
+            metadata = {
+                "kind": "low_rank_transition",
+                "dim": module.dim,
+                "rank": module.rank,
+                "alpha": module.alpha,
+            }
+        elif role == "head" and isinstance(module, LowRankReadout):
+            metadata = {
+                "kind": "low_rank_readout",
+                "in_dim": module.in_dim,
+                "out_dim": module.out_dim,
+                "rank": module.rank,
+                "alpha": module.alpha,
+            }
+        elif role == "head" and isinstance(module, nn.Linear):
+            metadata = {
+                "kind": "linear_readout",
+                "in_features": module.in_features,
+                "out_features": module.out_features,
+                "bias": module.bias is not None,
+            }
+        else:
+            raise TypeError(
+                f"归档仅支持低秩生成性转移及低秩/线性读出，收到 {type(module).__name__}。")
+        state = _state_dict_cpu(module)
+        return {
+            "metadata": metadata,
+            "state": state,
+            "digest": _state_digest(metadata, state),
+        }
+
+    def _deserialize_archived_module(self, record: dict, role: str) -> nn.Module:
+        from fe_llm.energy_lm.models.low_rank_transition import (
+            LowRankGenerativeTransition,
+            LowRankReadout,
+        )
+
+        if not isinstance(record, dict):
+            raise ValueError("归档模块记录格式错误。")
+        metadata = record.get("metadata")
+        state = record.get("state")
+        expected_digest = record.get("digest")
+        if not isinstance(metadata, dict) or not isinstance(state, dict):
+            raise ValueError("归档模块缺少 metadata/state。")
+        if _state_digest(metadata, state) != expected_digest:
+            raise ValueError("归档模块摘要不匹配，文件可能损坏或被篡改。")
+        kind = metadata.get("kind")
+        if role == "transition" and kind == "low_rank_transition":
+            module = LowRankGenerativeTransition(
+                self.core.transition,
+                dim=int(metadata["dim"]),
+                rank=int(metadata["rank"]),
+                alpha=float(metadata["alpha"]),
+            )
+        elif role == "head" and kind == "low_rank_readout":
+            module = LowRankReadout(
+                self.core.head,
+                in_dim=int(metadata["in_dim"]),
+                out_dim=int(metadata["out_dim"]),
+                rank=int(metadata["rank"]),
+                alpha=float(metadata["alpha"]),
+            )
+        elif role == "head" and kind == "linear_readout":
+            module = nn.Linear(
+                int(metadata["in_features"]),
+                int(metadata["out_features"]),
+                bias=bool(metadata["bias"]),
+            )
+        else:
+            raise ValueError(f"不支持的归档模块 kind={kind!r} role={role!r}。")
+        module.load_state_dict(state, strict=True)
+        module.eval()
+        for parameter in module.parameters():
+            parameter.requires_grad_(False)
+        return module.cpu()
+
+    def save_archives(self, path: str) -> dict:
+        """原子保存所有冷盆地，并返回可审计 manifest。"""
+        entries = []
+        for archive_id, entry in enumerate(self.archived_pathways):
+            if entry is None:
+                continue
+            transition = self._serialize_archived_module(entry.transition, "transition")
+            head = (
+                None if entry.head is None
+                else self._serialize_archived_module(entry.head, "head"))
+            entry_metadata = {
+                "archive_id": archive_id,
+                "complexity_cost": entry.complexity_cost,
+                "original_index": entry.original_index,
+                "offload_device": "cpu",
+                "transition_digest": transition["digest"],
+                "head_digest": None if head is None else head["digest"],
+            }
+            entries.append({"metadata": entry_metadata,
+                            "transition": transition, "head": head})
+        core_fingerprint = self.core_fingerprint()
+        payload_metadata = {
+            "format_version": ARCHIVE_FORMAT_VERSION,
+            "core_fingerprint": core_fingerprint,
+            "entries": [entry["metadata"] for entry in entries],
+        }
+        payload_digest = hashlib.sha256(
+            json.dumps(payload_metadata, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        payload = {
+            **payload_metadata,
+            "payload_digest": payload_digest,
+            "entries": entries,
+        }
+
+        absolute = os.path.abspath(path)
+        os.makedirs(os.path.dirname(absolute), exist_ok=True)
+        temporary = f"{absolute}.tmp-{os.getpid()}"
+        try:
+            torch.save(payload, temporary)
+            os.replace(temporary, absolute)
+        finally:
+            if os.path.exists(temporary):
+                os.remove(temporary)
+        file_digest = hashlib.sha256()
+        with open(absolute, "rb") as file:
+            for chunk in iter(lambda: file.read(1 << 20), b""):
+                file_digest.update(chunk)
+        return {
+            "format_version": ARCHIVE_FORMAT_VERSION,
+            "core_fingerprint": core_fingerprint,
+            "archive_count": len(entries),
+            "payload_digest": payload_digest,
+            "file_sha256": file_digest.hexdigest(),
+            "file_size": os.path.getsize(absolute),
+        }
+
+    def load_archives(
+        self,
+        path: str,
+        *,
+        strict_core: bool = True,
+        replace: bool = False,
+    ) -> list[int]:
+        """安全加载受限张量归档；校验格式、核心指纹、payload 与逐模块摘要。"""
+        payload = torch.load(path, map_location="cpu", weights_only=True)
+        if not isinstance(payload, dict):
+            raise ValueError("归档 payload 必须是字典。")
+        if payload.get("format_version") != ARCHIVE_FORMAT_VERSION:
+            raise ValueError("不支持的归档格式版本。")
+        archived_core = payload.get("core_fingerprint")
+        if strict_core and archived_core != self.core_fingerprint():
+            raise ValueError("归档基础核心指纹不匹配，拒绝恢复。")
+        entries = payload.get("entries")
+        if not isinstance(entries, list):
+            raise ValueError("归档 entries 格式错误。")
+        payload_metadata = {
+            "format_version": payload["format_version"],
+            "core_fingerprint": archived_core,
+            "entries": [entry.get("metadata") for entry in entries],
+        }
+        actual_payload_digest = hashlib.sha256(
+            json.dumps(payload_metadata, sort_keys=True, separators=(",", ":")).encode("utf-8")
+        ).hexdigest()
+        if actual_payload_digest != payload.get("payload_digest"):
+            raise ValueError("归档 payload 摘要不匹配。")
+
+        loaded = []
+        for record in entries:
+            if not isinstance(record, dict) or not isinstance(record.get("metadata"), dict):
+                raise ValueError("归档 entry 格式错误。")
+            metadata = record["metadata"]
+            transition_record = record.get("transition")
+            head_record = record.get("head")
+            if metadata.get("transition_digest") != transition_record.get("digest"):
+                raise ValueError("归档 transition 摘要引用不匹配。")
+            if metadata.get("head_digest") != (
+                    None if head_record is None else head_record.get("digest")):
+                raise ValueError("归档 head 摘要引用不匹配。")
+            cost = float(metadata["complexity_cost"])
+            if cost < 0:
+                raise ValueError("归档 complexity_cost 不能为负。")
+            transition = self._deserialize_archived_module(transition_record, "transition")
+            head = (
+                None if head_record is None
+                else self._deserialize_archived_module(head_record, "head"))
+            entry = ArchivedPathway(
+                transition=transition,
+                head=head,
+                complexity_cost=cost,
+                original_index=int(metadata["original_index"]),
+                offload_device="cpu",
+            )
+            if replace and not loaded:
+                self.archived_pathways = []
+            self.archived_pathways.append(entry)
+            loaded.append(len(self.archived_pathways) - 1)
+        if replace and not entries:
+            self.archived_pathways = []
+        return loaded
 
     @torch.no_grad()
     def pathway_statistics(self, ids: torch.Tensor, start: int = 1) -> dict[str, torch.Tensor]:

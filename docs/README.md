@@ -39,6 +39,9 @@
 > held-out 能量合并覆盖 `99.7%`，BPC 只变 `+0.33%`，活动参数减半；CPU 冷存储期间
 > 活动新增参数归零，返回后无训练恢复 logits 差为 `0`。详见
 > [free_energy_independent_merge_archive_eval.md](reports/free_energy_independent_merge_archive_eval.md)。
+> 第十一项把冷盆地升级为受限磁盘归档：原子保存、核心错配拒绝、张量篡改拒绝均为
+> `100%`，跨系统 residual-F 与恢复 logits 差均为 `0`；归档返回能量胜率 `97.7%`。
+> 详见 [free_energy_archive_persistence_eval.md](reports/free_energy_archive_persistence_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
