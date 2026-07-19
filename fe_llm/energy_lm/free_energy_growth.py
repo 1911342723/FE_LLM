@@ -4,9 +4,10 @@
 这里的“生长”不是人为指定技能名后挂一个 adapter，而是模型选择过程：
 
 1. 用已解释经验的 residual free-energy 分布校准稳定区间；
-2. 新经验在所有现有生成性通路下仍长期高能，才判定现有结构“穷”；
-3. 复制最接近的通路作为新容量并只训练新通路，旧通路冻结；
-4. 推理时让各通路解释输入，选择残余自由能最低者。
+2. 新经验在所有现有生成性通路下仍长期高能，只获得临时 probe；
+3. 临时通路只有在独立 held-out 上能泛化降低自由能才固化，不可约噪声直接丢弃；
+4. 新通路支付由旧稳定流校准的结构复杂度代价，防止通用低能盆地抢走旧路由；
+5. 冻结旧通路；推理时选择“残余自由能 + 结构代价”最低的解释。
 
 通路只包含共享信念空间上的生成性转移 ``T(z_prev)``；embedding、观测模型与 readout
 由核心共享。它不是 Q/K attention，也不是按关键词路由的 MoE。
@@ -29,6 +30,8 @@ class FreeEnergyGrowthSystem(nn.Module):
         super().__init__()
         self.core = core
         self.grown_pathways = nn.ModuleList()
+        self.grown_heads = nn.ModuleDict()
+        self.register_buffer("pathway_costs", torch.zeros(1))
         self.growth_threshold: float | None = None
 
     @property
@@ -42,18 +45,72 @@ class FreeEnergyGrowthSystem(nn.Module):
             return self.grown_pathways[pathway - 1]
         raise IndexError(f"pathway={pathway} 超出 [0,{self.pathway_count - 1}]。")
 
+    def head_for(self, pathway: int) -> nn.Module:
+        if pathway == 0:
+            return self.core.head
+        return self.grown_heads[str(pathway)] if str(pathway) in self.grown_heads else self.core.head
+
     def forward_pathway(self, ids: torch.Tensor, pathway: int, **kwargs):
-        return self.core(ids, transition_override=self.transition_for(pathway), **kwargs)
+        head = self.head_for(pathway)
+        head_override = None if head is self.core.head else head
+        return self.core(ids, transition_override=self.transition_for(pathway),
+                         head_override=head_override, **kwargs)
 
     def add_pathway(self, source: int = 0, noise_std: float = 1e-3) -> int:
-        """从最低能的已有假设复制出新容量；微扰只用于打破完全相同的初态。"""
+        """从已有假设复制并立即固化新容量。严肃生长应先走 provisional probe。"""
+        return self.commit_pathway(self.create_provisional_pathway(source, noise_std))
+
+    def create_provisional_pathway(
+        self,
+        source: int = 0,
+        noise_std: float = 1e-3,
+    ) -> nn.Module:
+        """创建未注册的临时通路；只有 held-out 自由能可约才应固化。"""
         new_path = copy.deepcopy(self.transition_for(source))
         if noise_std > 0:
             with torch.no_grad():
                 for parameter in new_path.parameters():
                     parameter.add_(torch.randn_like(parameter) * noise_std)
-        self.grown_pathways.append(new_path)
-        return self.pathway_count - 1
+        return new_path
+
+    def commit_pathway(
+        self,
+        provisional: nn.Module,
+        complexity_cost: float = 0.0,
+        head: nn.Module | None = None,
+    ) -> int:
+        """把通过可约性检验的临时通路转成持久容量。"""
+        if complexity_cost < 0:
+            raise ValueError("complexity_cost 不能为负。")
+        self.grown_pathways.append(provisional)
+        index = self.pathway_count - 1
+        if head is not None:
+            self.grown_heads[str(index)] = head
+        cost = torch.tensor([complexity_cost], device=self.pathway_costs.device,
+                            dtype=self.pathway_costs.dtype)
+        self.pathway_costs = torch.cat((self.pathway_costs, cost))
+        return index
+
+    def train_only_provisional(self, provisional: nn.Module) -> list[nn.Parameter]:
+        """冻结现有系统，只开放尚未固化的临时通路。"""
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        params = list(provisional.parameters())
+        for parameter in params:
+            parameter.requires_grad_(True)
+        return params
+
+    def create_provisional_head(self, source: int = 0) -> nn.Module:
+        return copy.deepcopy(self.head_for(source))
+
+    def train_only_provisional_head(self, head: nn.Module) -> list[nn.Parameter]:
+        """冻结稳定化动力学，只学习如何读出已通过可约性检验的新稳定态。"""
+        for parameter in self.parameters():
+            parameter.requires_grad_(False)
+        params = list(head.parameters())
+        for parameter in params:
+            parameter.requires_grad_(True)
+        return params
 
     def train_only_pathway(self, pathway: int) -> list[nn.Parameter]:
         """冻结共享核心与旧通路，只开放目标新通路。"""
@@ -73,13 +130,45 @@ class FreeEnergyGrowthSystem(nn.Module):
         return residual[:, start:].mean(dim=1)
 
     @torch.no_grad()
+    def provisional_scores(
+        self,
+        ids: torch.Tensor,
+        provisional: nn.Module,
+        start: int = 1,
+    ) -> torch.Tensor:
+        _, trace = self.core(ids, transition_override=provisional, return_trace=True)
+        residual = trace["residual_free_energy_per_dim"]
+        start = min(max(0, int(start)), residual.size(1) - 1)
+        return residual[:, start:].mean(dim=1)
+
+    @torch.no_grad()
+    def calibrate_complexity_cost(
+        self,
+        stable_ids: torch.Tensor,
+        provisional: nn.Module,
+        *,
+        start: int = 1,
+        quantile: float = 0.99,
+        margin: float = 1e-4,
+    ) -> float:
+        """用旧稳定流校准新增结构的 MDL 代价，防止通用低能盆地抢走旧路由。"""
+        if not 0.5 < quantile < 1.0:
+            raise ValueError("quantile 应在 (0.5,1.0) 内。")
+        existing_best = self.score_all(stable_ids, start=start).min(dim=1).values
+        provisional_raw = self.provisional_scores(stable_ids, provisional, start=start)
+        false_advantage = existing_best - provisional_raw
+        cost = torch.quantile(false_advantage, quantile).clamp_min(0) + max(0.0, margin)
+        return float(cost.cpu())
+
+    @torch.no_grad()
     def score_all(self, ids: torch.Tensor, start: int = 1) -> torch.Tensor:
         """返回 ``(B,K)``：每个样本在所有生成性通路下的残余自由能。"""
-        return torch.stack(
+        raw = torch.stack(
             [self.residual_scores(ids, pathway, start=start)
              for pathway in range(self.pathway_count)],
             dim=1,
         )
+        return raw + self.pathway_costs[:self.pathway_count].to(raw).unsqueeze(0)
 
     @torch.no_grad()
     def calibrate_threshold(
@@ -143,5 +232,8 @@ class FreeEnergyGrowthSystem(nn.Module):
         return candidates[batch_index, choices], choices
 
     def added_parameter_count(self) -> int:
-        return sum(parameter.numel() for pathway in self.grown_pathways
-                   for parameter in pathway.parameters())
+        transitions = sum(parameter.numel() for pathway in self.grown_pathways
+                          for parameter in pathway.parameters())
+        heads = sum(parameter.numel() for head in self.grown_heads.values()
+                    for parameter in head.parameters())
+        return transitions + heads

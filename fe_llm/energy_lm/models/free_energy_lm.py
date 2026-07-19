@@ -293,6 +293,7 @@ class FreeEnergyLM(nn.Module):
         adaptive: bool = True,
         max_relax_steps: int | None = None,
         transition_override: nn.Module | None = None,
+        head_override: nn.Module | None = None,
     ):
         if ids.ndim != 2:
             raise ValueError(f"ids 应为 (B,L)，收到 {tuple(ids.shape)}。")
@@ -307,7 +308,8 @@ class FreeEnergyLM(nn.Module):
             return_trace=return_trace,
             transition_override=transition_override,
         )
-        logits = self.head(self.readout_norm(states))
+        head_model = self.head if head_override is None else head_override
+        logits = head_model(self.readout_norm(states))
         self.last_trace = trace
         if return_trace:
             return logits, trace

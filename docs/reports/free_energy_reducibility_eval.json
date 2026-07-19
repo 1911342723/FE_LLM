@@ -1,0 +1,499 @@
+{
+  "task": "real English char stream: reducible reversed structure vs marginal-matched noise",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "device": "cuda",
+    "seeds": "61,62,63",
+    "sentences": 12000,
+    "base_steps": 350,
+    "probe_steps": 180,
+    "readout_steps": 180,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 128,
+    "length": 32,
+    "dim": 64,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.002,
+    "readout_lr": 0.002,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "min_growth_fraction": 0.25,
+    "min_reducibility": 0.3,
+    "complexity_quantile": 0.95,
+    "complexity_margin": 0.0001,
+    "probe_noise": 0.001,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 34,
+    "vocab": "\n !',-.?abcdefghijklmnopqrstuvwxyz",
+    "sentence_counts": {
+      "base_train": 7200,
+      "base_valid": 1800,
+      "structure_train": 1500,
+      "structure_valid": 1500
+    }
+  },
+  "rows": [
+    {
+      "seed": 61,
+      "threshold": 0.064554,
+      "structure_pressure_fraction": 0.421875,
+      "noise_pressure_fraction": 0.390625,
+      "structure_stream_energy": 0.063856,
+      "noise_stream_energy": 0.063567,
+      "structure_high_energy": true,
+      "noise_high_energy": true,
+      "structure_before": {
+        "ce": 3.98088,
+        "bpc": 5.743196,
+        "accuracy": 0.111643,
+        "residual": 0.063408
+      },
+      "structure_after": {
+        "ce": 4.584701,
+        "bpc": 6.614325,
+        "accuracy": 0.058804,
+        "residual": 0.040965
+      },
+      "structure_consolidated": {
+        "ce": 2.463708,
+        "bpc": 3.554379,
+        "accuracy": 0.275958,
+        "residual": 0.040965
+      },
+      "noise_before": {
+        "ce": 4.343143,
+        "bpc": 6.26583,
+        "accuracy": 0.081233,
+        "residual": 0.063025
+      },
+      "noise_after": {
+        "ce": 4.213253,
+        "bpc": 6.07844,
+        "accuracy": 0.084677,
+        "residual": 0.046999
+      },
+      "structure_reducibility": 0.353942,
+      "noise_reducibility": 0.254291,
+      "structure_committed": true,
+      "noise_committed": false,
+      "structure_complexity_cost": 0.011132,
+      "pathway_count": 2,
+      "base_metrics": {
+        "ce": 2.086921,
+        "bpc": 3.010791,
+        "accuracy": 0.387013,
+        "residual": 0.057646
+      },
+      "base_logit_max_delta": 0.0,
+      "base_route_accuracy": 0.950521,
+      "structure_route_accuracy": 0.997396,
+      "structure_history": [
+        {
+          "step": 1,
+          "ce": 4.00497,
+          "residual": 0.063487
+        },
+        {
+          "step": 60,
+          "ce": 4.533266,
+          "residual": 0.04202
+        },
+        {
+          "step": 120,
+          "ce": 4.521973,
+          "residual": 0.041736
+        },
+        {
+          "step": 180,
+          "ce": 4.660852,
+          "residual": 0.040718
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.591332
+        },
+        {
+          "step": 60,
+          "ce": 2.805852
+        },
+        {
+          "step": 120,
+          "ce": 2.472312
+        },
+        {
+          "step": 180,
+          "ce": 2.483598
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.344029,
+          "residual": 0.06267
+        },
+        {
+          "step": 60,
+          "ce": 4.240466,
+          "residual": 0.047211
+        },
+        {
+          "step": 120,
+          "ce": 4.249104,
+          "residual": 0.046859
+        },
+        {
+          "step": 180,
+          "ce": 4.229906,
+          "residual": 0.047042
+        }
+      ],
+      "seconds": 210.6
+    },
+    {
+      "seed": 62,
+      "threshold": 0.064005,
+      "structure_pressure_fraction": 0.382812,
+      "noise_pressure_fraction": 0.375,
+      "structure_stream_energy": 0.063415,
+      "noise_stream_energy": 0.063213,
+      "structure_high_energy": true,
+      "noise_high_energy": true,
+      "structure_before": {
+        "ce": 3.978781,
+        "bpc": 5.740167,
+        "accuracy": 0.102319,
+        "residual": 0.063523
+      },
+      "structure_after": {
+        "ce": 4.598962,
+        "bpc": 6.6349,
+        "accuracy": 0.06964,
+        "residual": 0.040604
+      },
+      "structure_consolidated": {
+        "ce": 2.478931,
+        "bpc": 3.576341,
+        "accuracy": 0.280578,
+        "residual": 0.040604
+      },
+      "noise_before": {
+        "ce": 4.407053,
+        "bpc": 6.358034,
+        "accuracy": 0.077705,
+        "residual": 0.063594
+      },
+      "noise_after": {
+        "ce": 4.285584,
+        "bpc": 6.182791,
+        "accuracy": 0.084929,
+        "residual": 0.046675
+      },
+      "structure_reducibility": 0.360799,
+      "noise_reducibility": 0.266041,
+      "structure_committed": true,
+      "noise_committed": false,
+      "structure_complexity_cost": 0.010755,
+      "pathway_count": 2,
+      "base_metrics": {
+        "ce": 2.127604,
+        "bpc": 3.069484,
+        "accuracy": 0.37416,
+        "residual": 0.056524
+      },
+      "base_logit_max_delta": 0.0,
+      "base_route_accuracy": 0.955729,
+      "structure_route_accuracy": 1.0,
+      "structure_history": [
+        {
+          "step": 1,
+          "ce": 3.990341,
+          "residual": 0.063097
+        },
+        {
+          "step": 60,
+          "ce": 4.462083,
+          "residual": 0.041625
+        },
+        {
+          "step": 120,
+          "ce": 4.629623,
+          "residual": 0.041113
+        },
+        {
+          "step": 180,
+          "ce": 4.596505,
+          "residual": 0.041031
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.627653
+        },
+        {
+          "step": 60,
+          "ce": 2.776664
+        },
+        {
+          "step": 120,
+          "ce": 2.518176
+        },
+        {
+          "step": 180,
+          "ce": 2.49186
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.362917,
+          "residual": 0.063184
+        },
+        {
+          "step": 60,
+          "ce": 4.232534,
+          "residual": 0.046544
+        },
+        {
+          "step": 120,
+          "ce": 4.239992,
+          "residual": 0.046521
+        },
+        {
+          "step": 180,
+          "ce": 4.31699,
+          "residual": 0.046601
+        }
+      ],
+      "seconds": 241.17
+    },
+    {
+      "seed": 63,
+      "threshold": 0.062836,
+      "structure_pressure_fraction": 0.578125,
+      "noise_pressure_fraction": 0.445312,
+      "structure_stream_energy": 0.063287,
+      "noise_stream_energy": 0.06255,
+      "structure_high_energy": true,
+      "noise_high_energy": true,
+      "structure_before": {
+        "ce": 3.934882,
+        "bpc": 5.676835,
+        "accuracy": 0.106771,
+        "residual": 0.063326
+      },
+      "structure_after": {
+        "ce": 4.522937,
+        "bpc": 6.525219,
+        "accuracy": 0.063676,
+        "residual": 0.041036
+      },
+      "structure_consolidated": {
+        "ce": 2.476392,
+        "bpc": 3.572678,
+        "accuracy": 0.291415,
+        "residual": 0.041036
+      },
+      "noise_before": {
+        "ce": 4.352639,
+        "bpc": 6.27953,
+        "accuracy": 0.075689,
+        "residual": 0.062523
+      },
+      "noise_after": {
+        "ce": 4.236526,
+        "bpc": 6.112016,
+        "accuracy": 0.085349,
+        "residual": 0.047142
+      },
+      "structure_reducibility": 0.351986,
+      "noise_reducibility": 0.246001,
+      "structure_committed": true,
+      "noise_committed": false,
+      "structure_complexity_cost": 0.010006,
+      "pathway_count": 2,
+      "base_metrics": {
+        "ce": 2.121042,
+        "bpc": 3.060017,
+        "accuracy": 0.371892,
+        "residual": 0.056235
+      },
+      "base_logit_max_delta": 0.0,
+      "base_route_accuracy": 0.950521,
+      "structure_route_accuracy": 1.0,
+      "structure_history": [
+        {
+          "step": 1,
+          "ce": 3.940222,
+          "residual": 0.063152
+        },
+        {
+          "step": 60,
+          "ce": 4.425684,
+          "residual": 0.042043
+        },
+        {
+          "step": 120,
+          "ce": 4.506145,
+          "residual": 0.041294
+        },
+        {
+          "step": 180,
+          "ce": 4.580153,
+          "residual": 0.040493
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.453321
+        },
+        {
+          "step": 60,
+          "ce": 2.764555
+        },
+        {
+          "step": 120,
+          "ce": 2.498917
+        },
+        {
+          "step": 180,
+          "ce": 2.471982
+        }
+      ],
+      "noise_history": [
+        {
+          "step": 1,
+          "ce": 4.354064,
+          "residual": 0.062345
+        },
+        {
+          "step": 60,
+          "ce": 4.244938,
+          "residual": 0.047138
+        },
+        {
+          "step": 120,
+          "ce": 4.23059,
+          "residual": 0.047149
+        },
+        {
+          "step": 180,
+          "ce": 4.224812,
+          "residual": 0.046997
+        }
+      ],
+      "seconds": 208.63
+    }
+  ],
+  "summary": {
+    "structure_commit_rate": 1.0,
+    "noise_commit_rate": 0.0,
+    "mean_pathway_count": 2.0,
+    "structure_pressure_fraction": {
+      "mean": 0.460937,
+      "std": 0.084385
+    },
+    "noise_pressure_fraction": {
+      "mean": 0.403646,
+      "std": 0.030145
+    },
+    "structure_reducibility": {
+      "mean": 0.355576,
+      "std": 0.003779
+    },
+    "noise_reducibility": {
+      "mean": 0.255444,
+      "std": 0.008222
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "base_route_accuracy": {
+      "mean": 0.952257,
+      "std": 0.002455
+    },
+    "structure_route_accuracy": {
+      "mean": 0.999132,
+      "std": 0.001228
+    },
+    "structure_complexity_cost": {
+      "mean": 0.010631,
+      "std": 0.000468
+    },
+    "structure_before_bpc": {
+      "mean": 5.720066,
+      "std": 0.030594
+    },
+    "structure_before_residual": {
+      "mean": 0.063419,
+      "std": 8.1e-05
+    },
+    "structure_before_accuracy": {
+      "mean": 0.106911,
+      "std": 0.003808
+    },
+    "structure_after_bpc": {
+      "mean": 6.591481,
+      "std": 0.047602
+    },
+    "structure_after_residual": {
+      "mean": 0.040868,
+      "std": 0.000189
+    },
+    "structure_after_accuracy": {
+      "mean": 0.06404,
+      "std": 0.004431
+    },
+    "noise_before_bpc": {
+      "mean": 6.301131,
+      "std": 0.040623
+    },
+    "noise_before_residual": {
+      "mean": 0.063047,
+      "std": 0.000438
+    },
+    "noise_before_accuracy": {
+      "mean": 0.078209,
+      "std": 0.002291
+    },
+    "noise_after_bpc": {
+      "mean": 6.124416,
+      "std": 0.043494
+    },
+    "noise_after_residual": {
+      "mean": 0.046939,
+      "std": 0.000195
+    },
+    "noise_after_accuracy": {
+      "mean": 0.084985,
+      "std": 0.000277
+    },
+    "structure_consolidated_bpc": {
+      "mean": 3.567799,
+      "std": 0.009607
+    },
+    "structure_consolidated_residual": {
+      "mean": 0.040868,
+      "std": 0.000189
+    },
+    "structure_consolidated_accuracy": {
+      "mean": 0.28265,
+      "std": 0.006478
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 高能后的可约性闸门成立：结构变化在独立 held-out 上的降能超过固化门槛；等字符边际噪声只有有限的边际可约性、未过门槛，临时容量被丢弃，旧稳定态不变。"
+}

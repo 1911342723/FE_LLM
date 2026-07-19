@@ -9,6 +9,10 @@
 > 第二项“穷则变”闭环也已通过：未知结构自动触发生长 `100%`、已知流误触发 `0%`、
 > 旧 logits 零变化、新通路学习 `100%`、最低能路由 `97.7%`；详见
 > [free_energy_growth_eval.md](reports/free_energy_growth_eval.md)。
+> 第三项真实字符流裁决解决“噪声不能盲目触发生长”：结构 residual-F 可约 `35.6%` 并
+> `100%` 固化，等字符边际噪声仅可约 `25.5%`、固化率 `0%`；MDL 代价使旧流路由
+> `95.2%`、结构流路由 `99.9%`。详见
+> [free_energy_reducibility_eval.md](reports/free_energy_reducibility_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
