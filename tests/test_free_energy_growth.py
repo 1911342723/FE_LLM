@@ -2,7 +2,10 @@ from __future__ import annotations
 
 import torch
 
-from fe_llm.energy_lm.free_energy_growth import FreeEnergyGrowthSystem
+from fe_llm.energy_lm.free_energy_growth import (
+    FreeEnergyGrowthSystem,
+    StructuralFreeEnergyStabilizer,
+)
 from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
 
 
@@ -155,3 +158,45 @@ def test_base_pathway_cannot_be_removed() -> None:
         assert "基础通路" in str(error)
     else:
         raise AssertionError("remove_pathway(0) 应拒绝删除共享稳定态")
+
+
+def test_structural_free_energy_is_monotonic_within_each_window() -> None:
+    stabilizer = StructuralFreeEnergyStabilizer()
+    _, _, trace = stabilizer.observe(0.7, return_trace=True)
+
+    assert trace is not None
+    energy = trace["free_energy"]
+    assert isinstance(energy, torch.Tensor)
+    assert torch.all(energy[1:] <= energy[:-1] + 1e-8)
+    assert float(energy[-1]) < float(energy[0])
+
+
+def test_single_burst_dissipates_but_sustained_instability_crosses_barrier() -> None:
+    stabilizer = StructuralFreeEnergyStabilizer()
+    for _ in range(5):
+        stabilizer.observe(0.01)
+    burst_state, burst_active, _ = stabilizer.observe(0.40)
+    assert not burst_active and float(burst_state) < stabilizer.activation_barrier
+    for _ in range(6):
+        stabilizer.observe(0.01)
+    assert float(stabilizer.state) < float(burst_state)
+
+    activated = False
+    for _ in range(10):
+        _, activated, _ = stabilizer.observe(0.60)
+        if activated:
+            break
+    assert activated
+
+
+def test_structural_hysteresis_resets_only_below_lower_barrier() -> None:
+    stabilizer = StructuralFreeEnergyStabilizer()
+    stabilizer.reset(0.30, active=True)
+    state, active, _ = stabilizer.observe(0.20)
+    assert active and stabilizer.reset_barrier < float(state) < stabilizer.activation_barrier + 0.1
+
+    for _ in range(20):
+        state, active, _ = stabilizer.observe(0.0)
+        if not active:
+            break
+    assert not active and float(state) <= stabilizer.reset_barrier

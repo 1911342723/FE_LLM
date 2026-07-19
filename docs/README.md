@@ -28,6 +28,9 @@
 > 比例单调上升，`10%` 局部污染不触发，真实代码/等边际噪声可约率为 `30.9% / 26.6%`，
 > 旧域/代码域路由 `90.5% / 92.4%`，held-out 代码 BPC `5.97→3.88`。详见
 > [free_energy_domain_drift_eval.md](reports/free_energy_domain_drift_eval.md)。
+> 第八项让结构不稳定性本身按显式自由能慢动力学弛豫：原单窗口规则对 `50%` 污染 burst
+> 会触发 `100%`，慢动力学触发 `0%`；持续漂移激活、概念回返复位和双势垒迟滞均为
+> `100%`。详见 [free_energy_online_drift_eval.md](reports/free_energy_online_drift_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >

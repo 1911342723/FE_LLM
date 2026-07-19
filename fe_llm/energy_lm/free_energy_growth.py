@@ -23,6 +23,139 @@ import torch.nn as nn
 from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
 
 
+class StructuralFreeEnergyStabilizer(nn.Module):
+    """让跨窗口结构不稳定性本身也经历显式自由能弛豫。
+
+    窗口 ``t`` 的高 residual-F 样本比例为 ``p_t``，慢状态为 ``s``：
+
+        G_t(s) = po/2 (s-p_t)^2 + pp/2 (s-s_{t-1})^2 + pc/2 s^2
+
+    ``pp`` 是结构惯性，阻止一次污染 burst 立刻改变模型结构；持续外部失稳则不断做功，
+    最终让稳定后的 ``s`` 越过生长势垒。环境改变会让不同窗口的初始自由能升高，但每个
+    窗口内部的弛豫仍严格单调不增。
+    """
+
+    def __init__(
+        self,
+        *,
+        observation_precision: float = 1.0,
+        persistence_precision: float = 4.0,
+        complexity_precision: float = 0.01,
+        relaxation_steps: int = 8,
+        relaxation_fraction: float = 0.8,
+        tolerance: float = 1e-6,
+        activation_barrier: float = 0.25,
+        reset_barrier: float = 0.10,
+    ) -> None:
+        super().__init__()
+        if min(observation_precision, persistence_precision, complexity_precision) <= 0:
+            raise ValueError("结构自由能的三个精度必须为正。")
+        if relaxation_steps <= 0:
+            raise ValueError("relaxation_steps 必须为正。")
+        if not 0.0 < relaxation_fraction < 1.0:
+            raise ValueError("relaxation_fraction 必须在 (0,1) 内。")
+        if tolerance < 0:
+            raise ValueError("tolerance 不能为负。")
+        if not 0.0 <= reset_barrier < activation_barrier <= 1.0:
+            raise ValueError("势垒必须满足 0 <= reset < activation <= 1。")
+
+        self.relaxation_steps = int(relaxation_steps)
+        self.tolerance = float(tolerance)
+        self.activation_barrier = float(activation_barrier)
+        self.reset_barrier = float(reset_barrier)
+        self.register_buffer("observation_precision", torch.tensor(float(observation_precision)))
+        self.register_buffer("persistence_precision", torch.tensor(float(persistence_precision)))
+        self.register_buffer("complexity_precision", torch.tensor(float(complexity_precision)))
+        self.register_buffer("relaxation_fraction", torch.tensor(float(relaxation_fraction)))
+        self.register_buffer("state", torch.tensor(0.0))
+        self.register_buffer("active", torch.tensor(False))
+
+    def _energy(
+        self,
+        state: torch.Tensor,
+        observation: torch.Tensor,
+        prior: torch.Tensor,
+    ) -> torch.Tensor:
+        return (
+            0.5 * self.observation_precision * (state - observation).square()
+            + 0.5 * self.persistence_precision * (state - prior).square()
+            + 0.5 * self.complexity_precision * state.square()
+        )
+
+    @torch.no_grad()
+    def reset(self, state: float = 0.0, *, active: bool = False) -> None:
+        if not 0.0 <= state <= 1.0:
+            raise ValueError("state 必须在 [0,1] 内。")
+        self.state.fill_(float(state))
+        self.active.fill_(bool(active))
+
+    @torch.no_grad()
+    def observe(
+        self,
+        high_energy_fraction: float | torch.Tensor,
+        *,
+        return_trace: bool = False,
+    ) -> tuple[torch.Tensor, bool, dict[str, torch.Tensor | bool] | None]:
+        observation = torch.as_tensor(
+            high_energy_fraction, device=self.state.device, dtype=self.state.dtype)
+        if observation.numel() != 1:
+            raise ValueError("high_energy_fraction 必须是标量。")
+        observation = observation.reshape(())
+        if not bool(((observation >= 0) & (observation <= 1)).item()):
+            raise ValueError("high_energy_fraction 必须在 [0,1] 内。")
+
+        prior = self.state.detach().clone()
+        state = prior.clone()
+        curvature = (
+            self.observation_precision
+            + self.persistence_precision
+            + self.complexity_precision
+        )
+        step_size = 0.99 * self.relaxation_fraction / curvature
+        energy = self._energy(state, observation, prior)
+        energies = [energy.clone()]
+        states = [state.clone()]
+
+        for _ in range(self.relaxation_steps):
+            gradient = (
+                self.observation_precision * (state - observation)
+                + self.persistence_precision * (state - prior)
+                + self.complexity_precision * state
+            )
+            candidate = state - step_size * gradient
+            next_energy = self._energy(candidate, observation, prior)
+            if bool(next_energy > energy + 1e-8):
+                candidate = state
+                next_energy = energy
+            decrease = energy - next_energy
+            state, energy = candidate, next_energy
+            energies.append(energy.clone())
+            states.append(state.clone())
+            if float(decrease.cpu()) <= self.tolerance:
+                break
+
+        self.state.copy_(state.clamp(0.0, 1.0))
+        was_active = bool(self.active.item())
+        if not was_active and float(self.state.cpu()) >= self.activation_barrier:
+            self.active.fill_(True)
+        elif was_active and float(self.state.cpu()) <= self.reset_barrier:
+            self.active.fill_(False)
+        is_active = bool(self.active.item())
+
+        trace = None
+        if return_trace:
+            trace = {
+                "free_energy": torch.stack(energies),
+                "state": torch.stack(states),
+                "observation": observation.detach().clone(),
+                "prior": prior,
+                "step_size": step_size.detach().clone(),
+                "activated": (not was_active and is_active),
+                "deactivated": (was_active and not is_active),
+            }
+        return self.state.detach().clone(), is_active, trace
+
+
 class FreeEnergyGrowthSystem(nn.Module):
     """在共享 FreeEnergyLM 上按需增加生成性转移假设。"""
 
