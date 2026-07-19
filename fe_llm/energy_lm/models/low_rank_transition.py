@@ -95,3 +95,50 @@ class LowRankReadout(nn.Module):
 
     def added_parameter_count(self) -> int:
         return sum(parameter.numel() for parameter in self.parameters())
+
+
+class IndexedLowRankGenerativeTransition(nn.Module):
+    """在一个批次中让每个样本使用不同的低秩生成性修正。
+
+    ``down_weight/up_weight/scale`` 的首维与输入 batch 一一对应。它只用于冻结通路的
+    批量自由能求解，不注册新的可训练参数；所有样本仍共享同一个基础转移 ``T_base``。
+    """
+
+    def __init__(
+        self,
+        base_transition: nn.Module,
+        down_weight: torch.Tensor,
+        up_weight: torch.Tensor,
+        scale: torch.Tensor,
+    ) -> None:
+        super().__init__()
+        if down_weight.ndim != 3 or up_weight.ndim != 3:
+            raise ValueError("down_weight 与 up_weight 必须是三维张量。")
+        if down_weight.size(0) != up_weight.size(0):
+            raise ValueError("低秩权重 batch 维必须相同。")
+        if down_weight.size(1) != up_weight.size(2):
+            raise ValueError("低秩权重的 rank 维不一致。")
+        if down_weight.size(2) != up_weight.size(1):
+            raise ValueError("低秩权重的状态维不一致。")
+        if scale.numel() != down_weight.size(0):
+            raise ValueError("scale 必须为每个样本提供一个缩放。")
+        self._base_ref = weakref.ref(base_transition)
+        self.register_buffer("down_weight", down_weight)
+        self.register_buffer("up_weight", up_weight)
+        self.register_buffer("scale", scale.reshape(-1, 1))
+
+    @property
+    def base_transition(self) -> nn.Module:
+        base = self._base_ref()
+        if base is None:
+            raise RuntimeError("基础生成性转移已被释放。")
+        return base
+
+    def forward(self, state: torch.Tensor) -> torch.Tensor:
+        if state.ndim != 2 or state.size(0) != self.down_weight.size(0):
+            raise ValueError(
+                "state 必须是 (B,D)，且 B 与索引化低秩权重首维相同。")
+        hidden = torch.bmm(self.down_weight, state.unsqueeze(-1)).squeeze(-1)
+        correction = torch.bmm(
+            self.up_weight, torch.tanh(hidden).unsqueeze(-1)).squeeze(-1)
+        return self.base_transition(state) + correction * self.scale

@@ -1,0 +1,953 @@
+{
+  "task": "exact batched free-energy routing with rejected cascade hypothesis",
+  "config": {
+    "device": "cuda",
+    "seeds": "122,123,124",
+    "lags": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "pathway_count": 16,
+    "rank": 24,
+    "vocab": 8,
+    "length": 16,
+    "dim": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "base_steps": 150,
+    "growth_steps": 320,
+    "batch": 128,
+    "calibration_per_lag": 96,
+    "eval_per_lag": 192,
+    "lr": 0.003,
+    "growth_lr": 0.005,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "complexity_quantile": 0.9,
+    "complexity_margin": 0.0001,
+    "decoy_noise": 0.02,
+    "energy_start": 5,
+    "screen_prefix_lengths": "8",
+    "screen_steps": "2",
+    "shortlist_sizes": "2,4",
+    "benchmark_warmup": 1,
+    "benchmark_repeats": 4,
+    "min_task_accuracy": 0.95,
+    "min_oracle_domain_accuracy": 0.85,
+    "min_oracle_recall": 0.99,
+    "min_route_agreement": 0.99,
+    "max_domain_accuracy_gap": 0.01,
+    "min_speedup": 1.25,
+    "min_batched_speedup": 1.05,
+    "log_every": 60,
+    "write_report": true,
+    "min_batch_speedup": 5.0
+  },
+  "rows": [
+    {
+      "seed": 122,
+      "pathway_count": 16,
+      "learned_pathways": {
+        "2": 0,
+        "3": 1,
+        "4": 2,
+        "5": 3
+      },
+      "pathways": [
+        {
+          "lag": 3,
+          "pathway": 1,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 3.413428,
+              "residual": 0.1726
+            },
+            {
+              "step": 60,
+              "ce": 0.158882,
+              "residual": 0.110534
+            },
+            {
+              "step": 120,
+              "ce": 0.075454,
+              "residual": 0.073804
+            },
+            {
+              "step": 180,
+              "ce": 0.053784,
+              "residual": 0.062165
+            },
+            {
+              "step": 240,
+              "ce": 0.04525,
+              "residual": 0.057388
+            },
+            {
+              "step": 300,
+              "ce": 0.042363,
+              "residual": 0.055525
+            },
+            {
+              "step": 320,
+              "ce": 0.042466,
+              "residual": 0.05497
+            }
+          ]
+        },
+        {
+          "lag": 4,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 2.163117,
+              "residual": 0.130877
+            },
+            {
+              "step": 60,
+              "ce": 0.410675,
+              "residual": 0.106808
+            },
+            {
+              "step": 120,
+              "ce": 0.149143,
+              "residual": 0.09458
+            },
+            {
+              "step": 180,
+              "ce": 0.097724,
+              "residual": 0.084199
+            },
+            {
+              "step": 240,
+              "ce": 0.074238,
+              "residual": 0.0756
+            },
+            {
+              "step": 300,
+              "ce": 0.06322,
+              "residual": 0.071832
+            },
+            {
+              "step": 320,
+              "ce": 0.058324,
+              "residual": 0.070706
+            }
+          ]
+        },
+        {
+          "lag": 5,
+          "pathway": 3,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 4.093584,
+              "residual": 0.202342
+            },
+            {
+              "step": 60,
+              "ce": 1.184219,
+              "residual": 0.139794
+            },
+            {
+              "step": 120,
+              "ce": 0.731203,
+              "residual": 0.128423
+            },
+            {
+              "step": 180,
+              "ce": 0.408122,
+              "residual": 0.121615
+            },
+            {
+              "step": 240,
+              "ce": 0.283472,
+              "residual": 0.116701
+            },
+            {
+              "step": 300,
+              "ce": 0.185214,
+              "residual": 0.107386
+            },
+            {
+              "step": 320,
+              "ce": 0.162069,
+              "residual": 0.105883
+            }
+          ]
+        }
+      ],
+      "decoys": [
+        {
+          "pathway": 4,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 5,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 6,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 7,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 8,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 9,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 10,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 11,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 12,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 13,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 14,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 15,
+          "complexity_cost": 0.0001
+        }
+      ],
+      "learned_task_accuracy": {
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 0.995739
+      },
+      "oracle_domain_route_accuracy": 0.90625,
+      "full_route_seconds": 1.009866,
+      "batched_route_seconds": 0.07324,
+      "batched_route_agreement": 1.0,
+      "max_batched_score_delta": 0.0,
+      "arms": [
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 2,
+          "oracle_recall": 0.958333,
+          "route_agreement": 0.958333,
+          "domain_route_accuracy": 0.877604,
+          "mean_energy_regret": 5.5857e-05,
+          "p99_energy_regret": 0.001423221,
+          "seconds": 0.100612,
+          "speedup": 10.037221,
+          "speedup_vs_batched": 0.727942,
+          "ideal_relaxation_cost_ratio": 0.325
+        },
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 4,
+          "oracle_recall": 0.997396,
+          "route_agreement": 0.997396,
+          "domain_route_accuracy": 0.903646,
+          "mean_energy_regret": 1.2989e-05,
+          "p99_energy_regret": 0.0,
+          "seconds": 0.092933,
+          "speedup": 10.866596,
+          "speedup_vs_batched": 0.788092,
+          "ideal_relaxation_cost_ratio": 0.45
+        }
+      ],
+      "best": {
+        "screen_prefix_length": 8,
+        "screen_steps": 2,
+        "shortlist_size": 4,
+        "oracle_recall": 0.997396,
+        "route_agreement": 0.997396,
+        "domain_route_accuracy": 0.903646,
+        "mean_energy_regret": 1.2989e-05,
+        "p99_energy_regret": 0.0,
+        "seconds": 0.092933,
+        "speedup": 10.866596,
+        "speedup_vs_batched": 0.788092,
+        "ideal_relaxation_cost_ratio": 0.45
+      },
+      "pass": true,
+      "seconds": 136.26,
+      "batched_speedup": 13.788449,
+      "batched_pass": true,
+      "cascade_pass": false
+    },
+    {
+      "seed": 123,
+      "pathway_count": 16,
+      "learned_pathways": {
+        "2": 0,
+        "3": 1,
+        "4": 2,
+        "5": 3
+      },
+      "pathways": [
+        {
+          "lag": 3,
+          "pathway": 1,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 3.453087,
+              "residual": 0.191216
+            },
+            {
+              "step": 60,
+              "ce": 0.152084,
+              "residual": 0.104838
+            },
+            {
+              "step": 120,
+              "ce": 0.074531,
+              "residual": 0.075066
+            },
+            {
+              "step": 180,
+              "ce": 0.055808,
+              "residual": 0.063674
+            },
+            {
+              "step": 240,
+              "ce": 0.047483,
+              "residual": 0.058837
+            },
+            {
+              "step": 300,
+              "ce": 0.043993,
+              "residual": 0.056882
+            },
+            {
+              "step": 320,
+              "ce": 0.043151,
+              "residual": 0.056255
+            }
+          ]
+        },
+        {
+          "lag": 4,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 2.10595,
+              "residual": 0.141238
+            },
+            {
+              "step": 60,
+              "ce": 0.490971,
+              "residual": 0.109297
+            },
+            {
+              "step": 120,
+              "ce": 0.186611,
+              "residual": 0.094149
+            },
+            {
+              "step": 180,
+              "ce": 0.115029,
+              "residual": 0.086996
+            },
+            {
+              "step": 240,
+              "ce": 0.090927,
+              "residual": 0.080693
+            },
+            {
+              "step": 300,
+              "ce": 0.075977,
+              "residual": 0.078376
+            },
+            {
+              "step": 320,
+              "ce": 0.069555,
+              "residual": 0.075977
+            }
+          ]
+        },
+        {
+          "lag": 5,
+          "pathway": 3,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 4.254974,
+              "residual": 0.227391
+            },
+            {
+              "step": 60,
+              "ce": 1.235438,
+              "residual": 0.139548
+            },
+            {
+              "step": 120,
+              "ce": 0.564609,
+              "residual": 0.124181
+            },
+            {
+              "step": 180,
+              "ce": 0.350201,
+              "residual": 0.12434
+            },
+            {
+              "step": 240,
+              "ce": 0.216403,
+              "residual": 0.115895
+            },
+            {
+              "step": 300,
+              "ce": 0.157736,
+              "residual": 0.110304
+            },
+            {
+              "step": 320,
+              "ce": 0.143786,
+              "residual": 0.107961
+            }
+          ]
+        }
+      ],
+      "decoys": [
+        {
+          "pathway": 4,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 5,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 6,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 7,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 8,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 9,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 10,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 11,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 12,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 13,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 14,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 15,
+          "complexity_cost": 0.0001
+        }
+      ],
+      "learned_task_accuracy": {
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 1.0
+      },
+      "oracle_domain_route_accuracy": 0.856771,
+      "full_route_seconds": 1.041705,
+      "batched_route_seconds": 0.068423,
+      "batched_route_agreement": 1.0,
+      "max_batched_score_delta": 0.0,
+      "arms": [
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 2,
+          "oracle_recall": 0.947917,
+          "route_agreement": 0.947917,
+          "domain_route_accuracy": 0.834635,
+          "mean_energy_regret": 4.0192e-05,
+          "p99_energy_regret": 0.000326931,
+          "seconds": 0.090409,
+          "speedup": 11.522131,
+          "speedup_vs_batched": 0.756818,
+          "ideal_relaxation_cost_ratio": 0.325
+        },
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 4,
+          "oracle_recall": 0.994792,
+          "route_agreement": 0.994792,
+          "domain_route_accuracy": 0.859375,
+          "mean_energy_regret": 2.8119e-05,
+          "p99_energy_regret": 0.0,
+          "seconds": 0.089186,
+          "speedup": 11.680136,
+          "speedup_vs_batched": 0.767196,
+          "ideal_relaxation_cost_ratio": 0.45
+        }
+      ],
+      "best": {
+        "screen_prefix_length": 8,
+        "screen_steps": 2,
+        "shortlist_size": 4,
+        "oracle_recall": 0.994792,
+        "route_agreement": 0.994792,
+        "domain_route_accuracy": 0.859375,
+        "mean_energy_regret": 2.8119e-05,
+        "p99_energy_regret": 0.0,
+        "seconds": 0.089186,
+        "speedup": 11.680136,
+        "speedup_vs_batched": 0.767196,
+        "ideal_relaxation_cost_ratio": 0.45
+      },
+      "pass": true,
+      "seconds": 134.75,
+      "batched_speedup": 15.224486,
+      "batched_pass": true,
+      "cascade_pass": false
+    },
+    {
+      "seed": 124,
+      "pathway_count": 16,
+      "learned_pathways": {
+        "2": 0,
+        "3": 1,
+        "4": 2,
+        "5": 3
+      },
+      "pathways": [
+        {
+          "lag": 3,
+          "pathway": 1,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 3.544827,
+              "residual": 0.173325
+            },
+            {
+              "step": 60,
+              "ce": 0.165861,
+              "residual": 0.109759
+            },
+            {
+              "step": 120,
+              "ce": 0.07683,
+              "residual": 0.072714
+            },
+            {
+              "step": 180,
+              "ce": 0.053246,
+              "residual": 0.062769
+            },
+            {
+              "step": 240,
+              "ce": 0.046384,
+              "residual": 0.057086
+            },
+            {
+              "step": 300,
+              "ce": 0.041059,
+              "residual": 0.053954
+            },
+            {
+              "step": 320,
+              "ce": 0.040993,
+              "residual": 0.053617
+            }
+          ]
+        },
+        {
+          "lag": 4,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 2.146329,
+              "residual": 0.124543
+            },
+            {
+              "step": 60,
+              "ce": 0.405828,
+              "residual": 0.105348
+            },
+            {
+              "step": 120,
+              "ce": 0.154538,
+              "residual": 0.096054
+            },
+            {
+              "step": 180,
+              "ce": 0.098731,
+              "residual": 0.084846
+            },
+            {
+              "step": 240,
+              "ce": 0.07427,
+              "residual": 0.077878
+            },
+            {
+              "step": 300,
+              "ce": 0.062419,
+              "residual": 0.071481
+            },
+            {
+              "step": 320,
+              "ce": 0.063492,
+              "residual": 0.069535
+            }
+          ]
+        },
+        {
+          "lag": 5,
+          "pathway": 3,
+          "complexity_cost": 0.0001,
+          "history": [
+            {
+              "step": 1,
+              "ce": 4.087033,
+              "residual": 0.193311
+            },
+            {
+              "step": 60,
+              "ce": 1.179107,
+              "residual": 0.129127
+            },
+            {
+              "step": 120,
+              "ce": 0.59428,
+              "residual": 0.123749
+            },
+            {
+              "step": 180,
+              "ce": 0.328939,
+              "residual": 0.12052
+            },
+            {
+              "step": 240,
+              "ce": 0.237695,
+              "residual": 0.113774
+            },
+            {
+              "step": 300,
+              "ce": 0.194331,
+              "residual": 0.107427
+            },
+            {
+              "step": 320,
+              "ce": 0.165906,
+              "residual": 0.104766
+            }
+          ]
+        }
+      ],
+      "decoys": [
+        {
+          "pathway": 4,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 5,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 6,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 7,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 8,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 9,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 10,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 11,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 12,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 13,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 14,
+          "complexity_cost": 0.0001
+        },
+        {
+          "pathway": 15,
+          "complexity_cost": 0.0001
+        }
+      ],
+      "learned_task_accuracy": {
+        "2": 1.0,
+        "3": 1.0,
+        "4": 1.0,
+        "5": 0.998106
+      },
+      "oracle_domain_route_accuracy": 0.928385,
+      "full_route_seconds": 1.075729,
+      "batched_route_seconds": 0.066943,
+      "batched_route_agreement": 1.0,
+      "max_batched_score_delta": 0.0,
+      "arms": [
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 2,
+          "oracle_recall": 0.949219,
+          "route_agreement": 0.949219,
+          "domain_route_accuracy": 0.885417,
+          "mean_energy_regret": 0.000225272,
+          "p99_energy_regret": 0.001590721,
+          "seconds": 0.087817,
+          "speedup": 12.249608,
+          "speedup_vs_batched": 0.762298,
+          "ideal_relaxation_cost_ratio": 0.325
+        },
+        {
+          "screen_prefix_length": 8,
+          "screen_steps": 2,
+          "shortlist_size": 4,
+          "oracle_recall": 0.996094,
+          "route_agreement": 0.996094,
+          "domain_route_accuracy": 0.924479,
+          "mean_energy_regret": 0.000121593,
+          "p99_energy_regret": 0.0,
+          "seconds": 0.087189,
+          "speedup": 12.337962,
+          "speedup_vs_batched": 0.767796,
+          "ideal_relaxation_cost_ratio": 0.45
+        }
+      ],
+      "best": {
+        "screen_prefix_length": 8,
+        "screen_steps": 2,
+        "shortlist_size": 4,
+        "oracle_recall": 0.996094,
+        "route_agreement": 0.996094,
+        "domain_route_accuracy": 0.924479,
+        "mean_energy_regret": 0.000121593,
+        "p99_energy_regret": 0.0,
+        "seconds": 0.087189,
+        "speedup": 12.337962,
+        "speedup_vs_batched": 0.767796,
+        "ideal_relaxation_cost_ratio": 0.45
+      },
+      "pass": true,
+      "seconds": 129.6,
+      "batched_speedup": 16.069328,
+      "batched_pass": true,
+      "cascade_pass": false
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "batched_pass_rate": 1.0,
+    "cascade_pass_rate": 0.0,
+    "pathway_count": 16,
+    "oracle_domain_route_accuracy": {
+      "mean": 0.897135,
+      "std": 0.029938
+    },
+    "full_route_seconds": {
+      "mean": 1.042433,
+      "std": 0.026893
+    },
+    "batched_route_seconds": {
+      "mean": 0.069535,
+      "std": 0.002688
+    },
+    "batched_route_agreement": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "max_batched_score_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "batched_speedup": {
+      "mean": 15.027421,
+      "std": 0.941534
+    },
+    "arms": {
+      "p8_s2_k2": {
+        "screen_prefix_length": 8,
+        "screen_steps": 2,
+        "shortlist_size": 2,
+        "oracle_recall": {
+          "mean": 0.951823,
+          "std": 0.004634
+        },
+        "route_agreement": {
+          "mean": 0.951823,
+          "std": 0.004634
+        },
+        "domain_route_accuracy": {
+          "mean": 0.865885,
+          "std": 0.022326
+        },
+        "mean_energy_regret": {
+          "mean": 0.000107,
+          "std": 8.4e-05
+        },
+        "p99_energy_regret": {
+          "mean": 0.001114,
+          "std": 0.00056
+        },
+        "seconds": {
+          "mean": 0.092946,
+          "std": 0.005523
+        },
+        "speedup": {
+          "mean": 11.269653,
+          "std": 0.920678
+        },
+        "speedup_vs_batched": {
+          "mean": 0.749019,
+          "std": 0.015071
+        },
+        "ideal_relaxation_cost_ratio": {
+          "mean": 0.325,
+          "std": 0.0
+        }
+      },
+      "p8_s2_k4": {
+        "screen_prefix_length": 8,
+        "screen_steps": 2,
+        "shortlist_size": 4,
+        "oracle_recall": {
+          "mean": 0.996094,
+          "std": 0.001063
+        },
+        "route_agreement": {
+          "mean": 0.996094,
+          "std": 0.001063
+        },
+        "domain_route_accuracy": {
+          "mean": 0.895833,
+          "std": 0.027147
+        },
+        "mean_energy_regret": {
+          "mean": 5.4e-05,
+          "std": 4.8e-05
+        },
+        "p99_energy_regret": {
+          "mean": 0.0,
+          "std": 0.0
+        },
+        "seconds": {
+          "mean": 0.089769,
+          "std": 0.002381
+        },
+        "speedup": {
+          "mean": 11.628231,
+          "std": 0.601803
+        },
+        "speedup_vs_batched": {
+          "mean": 0.774361,
+          "std": 0.009712
+        },
+        "ideal_relaxation_cost_ratio": {
+          "mean": 0.45,
+          "std": 0.0
+        }
+      }
+    },
+    "best_arm": "p8_s2_k4",
+    "best": {
+      "screen_prefix_length": 8,
+      "screen_steps": 2,
+      "shortlist_size": 4,
+      "oracle_recall": {
+        "mean": 0.996094,
+        "std": 0.001063
+      },
+      "route_agreement": {
+        "mean": 0.996094,
+        "std": 0.001063
+      },
+      "domain_route_accuracy": {
+        "mean": 0.895833,
+        "std": 0.027147
+      },
+      "mean_energy_regret": {
+        "mean": 5.4e-05,
+        "std": 4.8e-05
+      },
+      "p99_energy_regret": {
+        "mean": 0.0,
+        "std": 0.0
+      },
+      "seconds": {
+        "mean": 0.089769,
+        "std": 0.002381
+      },
+      "speedup": {
+        "mean": 11.628231,
+        "std": 0.601803
+      },
+      "speedup_vs_batched": {
+        "mean": 0.774361,
+        "std": 0.009712
+      },
+      "ideal_relaxation_cost_ratio": {
+        "mean": 0.45,
+        "std": 0.0
+      }
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 精确批量自由能路由成立：16 通路与逐路完整求解 100.0% 一致、最大能量差 0.0e+00，GPU 实测加速 15.03×。短前缀级联 p8_s2_k4 虽有 99.6% oracle 入围，但相对批量穷举仅 0.77×，因此被拒绝。"
+}

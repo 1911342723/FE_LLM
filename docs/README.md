@@ -31,6 +31,10 @@
 > 第八项让结构不稳定性本身按显式自由能慢动力学弛豫：原单窗口规则对 `50%` 污染 burst
 > 会触发 `100%`，慢动力学触发 `0%`；持续漂移激活、概念回返复位和双势垒迟滞均为
 > `100%`。详见 [free_energy_online_drift_eval.md](reports/free_energy_online_drift_eval.md)。
+> 第九项解决逐通路 GPU 调用：16 条低秩盆地索引化批量完整求解与原穷举 `100%` 一致、
+> 最大能量差 `0`，实测加速 `15.03×`。短前缀级联虽有 `99.6%` oracle 入围，但相对
+> 批量穷举只有 `0.77×`，因此明确拒绝。详见
+> [free_energy_cascade_routing_eval.md](reports/free_energy_cascade_routing_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >

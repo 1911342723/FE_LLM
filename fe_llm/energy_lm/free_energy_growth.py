@@ -380,9 +380,17 @@ class FreeEnergyGrowthSystem(nn.Module):
         return params
 
     @torch.no_grad()
-    def residual_scores(self, ids: torch.Tensor, pathway: int, start: int = 1) -> torch.Tensor:
+    def residual_scores(
+        self,
+        ids: torch.Tensor,
+        pathway: int,
+        start: int = 1,
+        *,
+        max_relax_steps: int | None = None,
+    ) -> torch.Tensor:
         """返回每个样本在指定通路下的归一化稳定后残余自由能。"""
-        _, trace = self.forward_pathway(ids, pathway, return_trace=True)
+        _, trace = self.forward_pathway(
+            ids, pathway, return_trace=True, max_relax_steps=max_relax_steps)
         residual = trace["residual_free_energy_per_dim"]
         start = min(max(0, int(start)), residual.size(1) - 1)
         return residual[:, start:].mean(dim=1)
@@ -419,14 +427,165 @@ class FreeEnergyGrowthSystem(nn.Module):
         return float(cost.cpu())
 
     @torch.no_grad()
-    def score_all(self, ids: torch.Tensor, start: int = 1) -> torch.Tensor:
+    def score_all(
+        self,
+        ids: torch.Tensor,
+        start: int = 1,
+        *,
+        max_relax_steps: int | None = None,
+    ) -> torch.Tensor:
         """返回 ``(B,K)``：每个样本在所有生成性通路下的残余自由能。"""
         raw = torch.stack(
-            [self.residual_scores(ids, pathway, start=start)
+            [self.residual_scores(
+                ids, pathway, start=start, max_relax_steps=max_relax_steps)
              for pathway in range(self.pathway_count)],
             dim=1,
         )
         return raw + self.pathway_costs[:self.pathway_count].to(raw).unsqueeze(0)
+
+    def _stack_low_rank_parameters(
+        self,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """把共享同一底座、同一秩的低秩通路堆叠；基础通路用零修正表示。"""
+        from fe_llm.energy_lm.models.low_rank_transition import LowRankGenerativeTransition
+
+        if not self.grown_pathways:
+            raise RuntimeError("批量低秩路由至少需要一个新增通路。")
+        if not all(isinstance(pathway, LowRankGenerativeTransition)
+                   for pathway in self.grown_pathways):
+            raise TypeError("批量低秩路由要求所有新增通路都是 LowRankGenerativeTransition。")
+        first = self.grown_pathways[0]
+        rank = first.rank
+        if any(pathway.rank != rank or pathway.dim != self.core.dim
+               or pathway.base_transition is not self.core.transition
+               for pathway in self.grown_pathways):
+            raise ValueError("所有低秩通路必须共享核心底座、状态维与 rank。")
+
+        down = [torch.zeros_like(first.down.weight)]
+        up = [torch.zeros_like(first.up.weight)]
+        scale = [torch.zeros_like(first.scale)]
+        for pathway in self.grown_pathways:
+            down.append(pathway.down.weight)
+            up.append(pathway.up.weight)
+            scale.append(pathway.scale)
+        return torch.stack(down), torch.stack(up), torch.stack(scale)
+
+    @torch.no_grad()
+    def indexed_low_rank_scores(
+        self,
+        ids: torch.Tensor,
+        pathways: torch.Tensor,
+        *,
+        start: int = 1,
+        max_relax_steps: int | None = None,
+    ) -> torch.Tensor:
+        """批量计算逐样本指定低秩通路的 residual-F + MDL。"""
+        from fe_llm.energy_lm.models.low_rank_transition import (
+            IndexedLowRankGenerativeTransition,
+        )
+
+        if pathways.ndim != 1 or pathways.size(0) != ids.size(0):
+            raise ValueError("pathways 必须是与 ids batch 对齐的一维索引。")
+        if bool(((pathways < 0) | (pathways >= self.pathway_count)).any()):
+            raise IndexError("pathways 包含越界通路索引。")
+        down, up, scale = self._stack_low_rank_parameters()
+        pathways = pathways.to(device=down.device, dtype=torch.long)
+        transition = IndexedLowRankGenerativeTransition(
+            self.core.transition,
+            down[pathways],
+            up[pathways],
+            scale[pathways],
+        )
+        _, trace = self.core(
+            ids,
+            transition_override=transition,
+            return_trace=True,
+            max_relax_steps=max_relax_steps,
+        )
+        residual = trace["residual_free_energy_per_dim"]
+        start = min(max(0, int(start)), residual.size(1) - 1)
+        raw = residual[:, start:].mean(dim=1)
+        return raw + self.pathway_costs[pathways].to(raw)
+
+    @torch.no_grad()
+    def score_all_low_rank_batched(
+        self,
+        ids: torch.Tensor,
+        start: int = 1,
+        *,
+        max_relax_steps: int | None = None,
+    ) -> torch.Tensor:
+        """一次批量前向计算所有共享底座低秩通路的能量。"""
+        batch = ids.size(0)
+        pathways = torch.arange(self.pathway_count, device=ids.device)
+        expanded_pathways = pathways[:, None].expand(-1, batch).reshape(-1)
+        expanded_ids = ids.repeat(self.pathway_count, 1)
+        scores = self.indexed_low_rank_scores(
+            expanded_ids,
+            expanded_pathways,
+            start=start,
+            max_relax_steps=max_relax_steps,
+        )
+        return scores.view(self.pathway_count, batch).transpose(0, 1)
+
+    @torch.no_grad()
+    def route_low_rank_batched(
+        self,
+        ids: torch.Tensor,
+        start: int = 1,
+    ) -> tuple[torch.Tensor, torch.Tensor]:
+        scores = self.score_all_low_rank_batched(ids, start=start)
+        return scores.argmin(dim=1), scores
+
+    @torch.no_grad()
+    def route_cascade(
+        self,
+        ids: torch.Tensor,
+        *,
+        start: int = 1,
+        screen_relax_steps: int = 1,
+        shortlist_size: int = 2,
+        batched_low_rank: bool = False,
+        screen_prefix_length: int | None = None,
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        """用低预算自由能筛选，再只对候选做完整弛豫。
+
+        返回 ``choices, exact_shortlist_scores, shortlist, screen_scores``。最终选择仍来自
+        完整 residual-F + MDL，只是未进入 shortlist 的通路以 ``inf`` 标记、不做完整求解。
+        廉价阶段不训练额外 router，使用相同生成性动力学和相同显式自由能。
+        """
+        if not 0 <= screen_relax_steps < self.core.relaxation_steps:
+            raise ValueError(
+                f"screen_relax_steps 必须在 [0,{self.core.relaxation_steps - 1}] 内。")
+        if not 1 <= shortlist_size <= self.pathway_count:
+            raise ValueError(f"shortlist_size 必须在 [1,{self.pathway_count}] 内。")
+        prefix_length = ids.size(1) if screen_prefix_length is None else int(screen_prefix_length)
+        if not 1 <= prefix_length <= ids.size(1):
+            raise ValueError(f"screen_prefix_length 必须在 [1,{ids.size(1)}] 内。")
+
+        score_all = (
+            self.score_all_low_rank_batched if batched_low_rank else self.score_all)
+        screen_ids = ids[:, :prefix_length]
+        screen_start = min(start, prefix_length - 1)
+        screen_scores = score_all(
+            screen_ids, start=screen_start, max_relax_steps=screen_relax_steps)
+        shortlist = screen_scores.topk(
+            shortlist_size, dim=1, largest=False, sorted=True).indices
+        exact_scores = torch.full_like(screen_scores, float("inf"))
+        if batched_low_rank:
+            expanded_ids = ids[:, None, :].expand(
+                -1, shortlist_size, -1).reshape(-1, ids.size(1))
+            selected_scores = self.indexed_low_rank_scores(
+                expanded_ids, shortlist.reshape(-1), start=start)
+            exact_scores.scatter_(1, shortlist, selected_scores.view(ids.size(0), -1))
+        else:
+            for pathway in range(self.pathway_count):
+                selected = (shortlist == pathway).any(dim=1)
+                if bool(selected.any()):
+                    raw = self.residual_scores(ids[selected], pathway, start=start)
+                    exact_scores[selected, pathway] = (
+                        raw + self.pathway_costs[pathway].to(raw))
+        return exact_scores.argmin(dim=1), exact_scores, shortlist, screen_scores
 
     @torch.no_grad()
     def calibrate_threshold(

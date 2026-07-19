@@ -7,6 +7,7 @@ from fe_llm.energy_lm.free_energy_growth import (
     StructuralFreeEnergyStabilizer,
 )
 from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
+from fe_llm.energy_lm.models.low_rank_transition import LowRankGenerativeTransition
 
 
 def _system() -> FreeEnergyGrowthSystem:
@@ -200,3 +201,56 @@ def test_structural_hysteresis_resets_only_below_lower_barrier() -> None:
         if not active:
             break
     assert not active and float(state) <= stabilizer.reset_barrier
+
+
+def test_free_energy_cascade_with_full_shortlist_matches_exhaustive_route() -> None:
+    system = _system().eval()
+    system.add_pathway(noise_std=0.01)
+    system.add_pathway(noise_std=0.02)
+    ids = torch.randint(0, 17, (12, 9))
+
+    exhaustive_choices, exhaustive_scores = system.route(ids)
+    choices, exact_scores, shortlist, screen_scores = system.route_cascade(
+        ids, screen_relax_steps=1, shortlist_size=system.pathway_count)
+
+    torch.testing.assert_close(choices, exhaustive_choices)
+    torch.testing.assert_close(exact_scores, exhaustive_scores)
+    assert shortlist.shape == screen_scores.shape == (12, system.pathway_count)
+
+
+def test_free_energy_cascade_final_choice_always_comes_from_shortlist() -> None:
+    system = _system().eval()
+    for noise in (0.01, 0.02, 0.03):
+        system.add_pathway(noise_std=noise)
+    ids = torch.randint(0, 17, (16, 9))
+
+    choices, exact_scores, shortlist, _ = system.route_cascade(
+        ids, screen_relax_steps=1, shortlist_size=2)
+
+    assert torch.all((shortlist == choices[:, None]).any(dim=1))
+    assert torch.all(torch.isfinite(exact_scores.gather(1, shortlist)))
+    assert torch.all(torch.isinf(exact_scores).sum(dim=1) == system.pathway_count - 2)
+
+
+def test_batched_low_rank_scores_match_sequential_energy_solves() -> None:
+    system = _system().eval()
+    for rank_seed in range(3):
+        torch.manual_seed(30 + rank_seed)
+        pathway = LowRankGenerativeTransition(system.core.transition, dim=12, rank=3)
+        with torch.no_grad():
+            pathway.up.weight.normal_(std=0.03)
+        system.commit_pathway(pathway, complexity_cost=0.001 * rank_seed)
+    ids = torch.randint(0, 17, (10, 9))
+
+    sequential = system.score_all(ids)
+    batched = system.score_all_low_rank_batched(ids)
+    cascade_choices, cascade_scores, _, _ = system.route_cascade(
+        ids,
+        screen_relax_steps=1,
+        shortlist_size=system.pathway_count,
+        batched_low_rank=True,
+    )
+
+    torch.testing.assert_close(batched, sequential, atol=1e-6, rtol=1e-5)
+    torch.testing.assert_close(cascade_scores, sequential, atol=1e-6, rtol=1e-5)
+    torch.testing.assert_close(cascade_choices, sequential.argmin(dim=1))
