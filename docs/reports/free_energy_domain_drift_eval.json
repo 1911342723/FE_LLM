@@ -1,0 +1,832 @@
+{
+  "task": "real OPUS English to held-out Python domain drift",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "code_train": "data\\code\\python_corpus.txt",
+    "code_valid": "data\\code\\python_heldout.txt",
+    "device": "cuda",
+    "seeds": "104,105,106",
+    "sentences": 12000,
+    "code_train_chars": 4000000,
+    "code_valid_chars": 2000000,
+    "base_steps": 350,
+    "probe_steps": 240,
+    "readout_steps": 240,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 256,
+    "length": 32,
+    "dim": 64,
+    "rank": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.004,
+    "readout_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "energy_start": 2,
+    "min_growth_fraction": 0.25,
+    "min_reducibility": 0.3,
+    "complexity_quantile": 0.9,
+    "complexity_margin": 0.0001,
+    "local_pollution_fraction": 0.1,
+    "burst_pollution_fraction": 0.5,
+    "drift_fractions": "0,0.1,0.25,0.5,0.75,1",
+    "monotonic_tolerance": 0.02,
+    "min_route_accuracy": 0.9,
+    "min_mixed_route_accuracy": 0.9,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 69,
+    "vocab": "\n !\"#%&'()*+,-./0123456789:;<=>?@[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~",
+    "sizes": {
+      "base_train_chars": 249265,
+      "base_valid_chars": 84656,
+      "code_train_chars": 3379251,
+      "code_valid_chars": 1681024
+    },
+    "code_train_source": "CodeParrot shard 1 corpus",
+    "code_valid_source": "CodeParrot shard 2 held-out"
+  },
+  "capacity_pilot_seed_101": {
+    "r16": {
+      "code_reducibility": 0.26249,
+      "noise_reducibility": 0.236082,
+      "decision": "reject both"
+    },
+    "r32": {
+      "code_reducibility": 0.302715,
+      "noise_reducibility": 0.270675,
+      "decision": "code crosses threshold"
+    },
+    "r40": {
+      "code_reducibility": 0.30958,
+      "noise_reducibility": 0.275211,
+      "decision": "code crosses with wider margin"
+    },
+    "r48": {
+      "code_reducibility": 0.31389,
+      "noise_reducibility": 0.276272,
+      "decision": "selected before held-out seeds 104-106"
+    }
+  },
+  "rows": [
+    {
+      "seed": 104,
+      "threshold": 0.063966,
+      "base_before": {
+        "ce": 2.134129,
+        "bpc": 3.078897,
+        "accuracy": 0.367776,
+        "residual": 0.05735
+      },
+      "code_before": {
+        "ce": 4.191036,
+        "bpc": 6.046387,
+        "accuracy": 0.156334,
+        "residual": 0.065758
+      },
+      "noise_before": {
+        "ce": 5.077889,
+        "bpc": 7.325845,
+        "accuracy": 0.064852,
+        "residual": 0.067226
+      },
+      "gradual_drift": [
+        {
+          "shifted_fraction": 0.0,
+          "high_energy_fraction": 0.003906,
+          "mean_best_energy": 0.057342,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.1,
+          "high_energy_fraction": 0.070312,
+          "mean_best_energy": 0.058279,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.25,
+          "high_energy_fraction": 0.171875,
+          "mean_best_energy": 0.059466,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.5,
+          "high_energy_fraction": 0.3125,
+          "mean_best_energy": 0.061364,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 0.75,
+          "high_energy_fraction": 0.449219,
+          "mean_best_energy": 0.063158,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 1.0,
+          "high_energy_fraction": 0.617188,
+          "mean_best_energy": 0.065281,
+          "growth_triggered": true
+        }
+      ],
+      "gradual_pressure_monotonic": true,
+      "growth_onset_code_fraction": 0.5,
+      "local_pollution": {
+        "fraction": 0.1,
+        "growth_triggered": false,
+        "high_energy_fraction": 0.074219,
+        "mean_best_energy": 0.058365
+      },
+      "burst_pollution": {
+        "fraction": 0.5,
+        "growth_triggered": true,
+        "high_energy_fraction": 0.359375,
+        "mean_best_energy": 0.062338
+      },
+      "code_probe": {
+        "ce": 4.368709,
+        "bpc": 6.302715,
+        "accuracy": 0.130964,
+        "residual": 0.045875
+      },
+      "noise_probe": {
+        "ce": 5.002484,
+        "bpc": 7.217059,
+        "accuracy": 0.076277,
+        "residual": 0.049844
+      },
+      "code_reducibility": 0.302364,
+      "noise_reducibility": 0.258558,
+      "code_committed": true,
+      "noise_committed": false,
+      "full_growth_params": 21061,
+      "added_params": 12528,
+      "parameter_ratio": 0.594844,
+      "code_consolidated": {
+        "ce": 2.690912,
+        "bpc": 3.882166,
+        "accuracy": 0.270581,
+        "residual": 0.045875
+      },
+      "complexity_cost": 0.012059,
+      "base_route_accuracy": 0.903646,
+      "code_route_accuracy": 0.934896,
+      "mixed_routes": [
+        {
+          "code_fraction": 0.0,
+          "route_accuracy": 0.903646,
+          "route_to_code": 0.096354
+        },
+        {
+          "code_fraction": 0.1,
+          "route_accuracy": 0.90625,
+          "route_to_code": 0.171875
+        },
+        {
+          "code_fraction": 0.25,
+          "route_accuracy": 0.911458,
+          "route_to_code": 0.3125
+        },
+        {
+          "code_fraction": 0.5,
+          "route_accuracy": 0.903646,
+          "route_to_code": 0.523438
+        },
+        {
+          "code_fraction": 0.75,
+          "route_accuracy": 0.921875,
+          "route_to_code": 0.729167
+        },
+        {
+          "code_fraction": 1.0,
+          "route_accuracy": 0.934896,
+          "route_to_code": 0.934896
+        }
+      ],
+      "mixed_min_route_accuracy": 0.903646,
+      "base_logit_max_delta": 0.0,
+      "code_probe_history": [
+        {
+          "step": 1,
+          "ce": 4.394284,
+          "residual": 0.066728
+        },
+        {
+          "step": 60,
+          "ce": 4.46029,
+          "residual": 0.047531
+        },
+        {
+          "step": 120,
+          "ce": 4.374522,
+          "residual": 0.046215
+        },
+        {
+          "step": 180,
+          "ce": 4.43518,
+          "residual": 0.046569
+        },
+        {
+          "step": 240,
+          "ce": 4.42615,
+          "residual": 0.046012
+        }
+      ],
+      "noise_probe_history": [
+        {
+          "step": 1,
+          "ce": 5.109348,
+          "residual": 0.066988
+        },
+        {
+          "step": 60,
+          "ce": 5.029097,
+          "residual": 0.050714
+        },
+        {
+          "step": 120,
+          "ce": 4.897627,
+          "residual": 0.050052
+        },
+        {
+          "step": 180,
+          "ce": 4.924805,
+          "residual": 0.049953
+        },
+        {
+          "step": 240,
+          "ce": 4.973786,
+          "residual": 0.050081
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.371966
+        },
+        {
+          "step": 60,
+          "ce": 2.969313
+        },
+        {
+          "step": 120,
+          "ce": 2.826583
+        },
+        {
+          "step": 180,
+          "ce": 2.768842
+        },
+        {
+          "step": 240,
+          "ce": 2.68732
+        }
+      ],
+      "pass": true,
+      "seconds": 199.1
+    },
+    {
+      "seed": 105,
+      "threshold": 0.063785,
+      "base_before": {
+        "ce": 2.128683,
+        "bpc": 3.07104,
+        "accuracy": 0.372816,
+        "residual": 0.057633
+      },
+      "code_before": {
+        "ce": 4.107838,
+        "bpc": 5.926358,
+        "accuracy": 0.156838,
+        "residual": 0.064875
+      },
+      "noise_before": {
+        "ce": 4.981103,
+        "bpc": 7.186213,
+        "accuracy": 0.06334,
+        "residual": 0.066694
+      },
+      "gradual_drift": [
+        {
+          "shifted_fraction": 0.0,
+          "high_energy_fraction": 0.015625,
+          "mean_best_energy": 0.057649,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.1,
+          "high_energy_fraction": 0.0625,
+          "mean_best_energy": 0.05829,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.25,
+          "high_energy_fraction": 0.160156,
+          "mean_best_energy": 0.059511,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.5,
+          "high_energy_fraction": 0.304688,
+          "mean_best_energy": 0.06153,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 0.75,
+          "high_energy_fraction": 0.433594,
+          "mean_best_energy": 0.063072,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 1.0,
+          "high_energy_fraction": 0.566406,
+          "mean_best_energy": 0.064729,
+          "growth_triggered": true
+        }
+      ],
+      "gradual_pressure_monotonic": true,
+      "growth_onset_code_fraction": 0.5,
+      "local_pollution": {
+        "fraction": 0.1,
+        "growth_triggered": false,
+        "high_energy_fraction": 0.074219,
+        "mean_best_energy": 0.058491
+      },
+      "burst_pollution": {
+        "fraction": 0.5,
+        "growth_triggered": true,
+        "high_energy_fraction": 0.351562,
+        "mean_best_energy": 0.06237
+      },
+      "code_probe": {
+        "ce": 4.285949,
+        "bpc": 6.183317,
+        "accuracy": 0.116851,
+        "residual": 0.04468
+      },
+      "noise_probe": {
+        "ce": 4.949474,
+        "bpc": 7.140582,
+        "accuracy": 0.075773,
+        "residual": 0.04879
+      },
+      "code_reducibility": 0.311286,
+      "noise_reducibility": 0.268451,
+      "code_committed": true,
+      "noise_committed": false,
+      "full_growth_params": 21061,
+      "added_params": 12528,
+      "parameter_ratio": 0.594844,
+      "code_consolidated": {
+        "ce": 2.680482,
+        "bpc": 3.867118,
+        "accuracy": 0.283014,
+        "residual": 0.04468
+      },
+      "complexity_cost": 0.013195,
+      "base_route_accuracy": 0.90625,
+      "code_route_accuracy": 0.927083,
+      "mixed_routes": [
+        {
+          "code_fraction": 0.0,
+          "route_accuracy": 0.90625,
+          "route_to_code": 0.09375
+        },
+        {
+          "code_fraction": 0.1,
+          "route_accuracy": 0.916667,
+          "route_to_code": 0.171875
+        },
+        {
+          "code_fraction": 0.25,
+          "route_accuracy": 0.919271,
+          "route_to_code": 0.299479
+        },
+        {
+          "code_fraction": 0.5,
+          "route_accuracy": 0.919271,
+          "route_to_code": 0.523438
+        },
+        {
+          "code_fraction": 0.75,
+          "route_accuracy": 0.932292,
+          "route_to_code": 0.723958
+        },
+        {
+          "code_fraction": 1.0,
+          "route_accuracy": 0.927083,
+          "route_to_code": 0.927083
+        }
+      ],
+      "mixed_min_route_accuracy": 0.90625,
+      "base_logit_max_delta": 0.0,
+      "code_probe_history": [
+        {
+          "step": 1,
+          "ce": 4.107132,
+          "residual": 0.064796
+        },
+        {
+          "step": 60,
+          "ce": 4.277654,
+          "residual": 0.045968
+        },
+        {
+          "step": 120,
+          "ce": 4.320034,
+          "residual": 0.045342
+        },
+        {
+          "step": 180,
+          "ce": 4.156338,
+          "residual": 0.044558
+        },
+        {
+          "step": 240,
+          "ce": 4.429913,
+          "residual": 0.044886
+        }
+      ],
+      "noise_probe_history": [
+        {
+          "step": 1,
+          "ce": 5.040969,
+          "residual": 0.066912
+        },
+        {
+          "step": 60,
+          "ce": 4.976329,
+          "residual": 0.049444
+        },
+        {
+          "step": 120,
+          "ce": 4.966469,
+          "residual": 0.048678
+        },
+        {
+          "step": 180,
+          "ce": 4.924439,
+          "residual": 0.048941
+        },
+        {
+          "step": 240,
+          "ce": 5.057273,
+          "residual": 0.049022
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.274176
+        },
+        {
+          "step": 60,
+          "ce": 3.013866
+        },
+        {
+          "step": 120,
+          "ce": 2.83696
+        },
+        {
+          "step": 180,
+          "ce": 2.709788
+        },
+        {
+          "step": 240,
+          "ce": 2.711944
+        }
+      ],
+      "pass": true,
+      "seconds": 202.45
+    },
+    {
+      "seed": 106,
+      "threshold": 0.063759,
+      "base_before": {
+        "ce": 2.12156,
+        "bpc": 3.060765,
+        "accuracy": 0.370212,
+        "residual": 0.057227
+      },
+      "code_before": {
+        "ce": 4.114886,
+        "bpc": 5.936525,
+        "accuracy": 0.152638,
+        "residual": 0.066725
+      },
+      "noise_before": {
+        "ce": 5.013334,
+        "bpc": 7.232712,
+        "accuracy": 0.061072,
+        "residual": 0.06815
+      },
+      "gradual_drift": [
+        {
+          "shifted_fraction": 0.0,
+          "high_energy_fraction": 0.015625,
+          "mean_best_energy": 0.057035,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.1,
+          "high_energy_fraction": 0.085938,
+          "mean_best_energy": 0.058048,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.25,
+          "high_energy_fraction": 0.183594,
+          "mean_best_energy": 0.059441,
+          "growth_triggered": false
+        },
+        {
+          "shifted_fraction": 0.5,
+          "high_energy_fraction": 0.355469,
+          "mean_best_energy": 0.061949,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 0.75,
+          "high_energy_fraction": 0.523438,
+          "mean_best_energy": 0.064147,
+          "growth_triggered": true
+        },
+        {
+          "shifted_fraction": 1.0,
+          "high_energy_fraction": 0.691406,
+          "mean_best_energy": 0.066641,
+          "growth_triggered": true
+        }
+      ],
+      "gradual_pressure_monotonic": true,
+      "growth_onset_code_fraction": 0.5,
+      "local_pollution": {
+        "fraction": 0.1,
+        "growth_triggered": false,
+        "high_energy_fraction": 0.09375,
+        "mean_best_energy": 0.058201
+      },
+      "burst_pollution": {
+        "fraction": 0.5,
+        "growth_triggered": true,
+        "high_energy_fraction": 0.414062,
+        "mean_best_energy": 0.062547
+      },
+      "code_probe": {
+        "ce": 4.299531,
+        "bpc": 6.202913,
+        "accuracy": 0.120884,
+        "residual": 0.045803
+      },
+      "noise_probe": {
+        "ce": 4.963656,
+        "bpc": 7.161042,
+        "accuracy": 0.075857,
+        "residual": 0.049714
+      },
+      "code_reducibility": 0.313556,
+      "noise_reducibility": 0.270519,
+      "code_committed": true,
+      "noise_committed": false,
+      "full_growth_params": 21061,
+      "added_params": 12528,
+      "parameter_ratio": 0.594844,
+      "code_consolidated": {
+        "ce": 2.689121,
+        "bpc": 3.879582,
+        "accuracy": 0.282762,
+        "residual": 0.045803
+      },
+      "complexity_cost": 0.012831,
+      "base_route_accuracy": 0.90625,
+      "code_route_accuracy": 0.908854,
+      "mixed_routes": [
+        {
+          "code_fraction": 0.0,
+          "route_accuracy": 0.90625,
+          "route_to_code": 0.09375
+        },
+        {
+          "code_fraction": 0.1,
+          "route_accuracy": 0.919271,
+          "route_to_code": 0.169271
+        },
+        {
+          "code_fraction": 0.25,
+          "route_accuracy": 0.919271,
+          "route_to_code": 0.289062
+        },
+        {
+          "code_fraction": 0.5,
+          "route_accuracy": 0.90625,
+          "route_to_code": 0.489583
+        },
+        {
+          "code_fraction": 0.75,
+          "route_accuracy": 0.916667,
+          "route_to_code": 0.697917
+        },
+        {
+          "code_fraction": 1.0,
+          "route_accuracy": 0.908854,
+          "route_to_code": 0.908854
+        }
+      ],
+      "mixed_min_route_accuracy": 0.90625,
+      "base_logit_max_delta": 0.0,
+      "code_probe_history": [
+        {
+          "step": 1,
+          "ce": 4.210446,
+          "residual": 0.066641
+        },
+        {
+          "step": 60,
+          "ce": 4.302866,
+          "residual": 0.047107
+        },
+        {
+          "step": 120,
+          "ce": 4.391382,
+          "residual": 0.046416
+        },
+        {
+          "step": 180,
+          "ce": 4.354801,
+          "residual": 0.045816
+        },
+        {
+          "step": 240,
+          "ce": 4.470811,
+          "residual": 0.045852
+        }
+      ],
+      "noise_probe_history": [
+        {
+          "step": 1,
+          "ce": 5.090484,
+          "residual": 0.068493
+        },
+        {
+          "step": 60,
+          "ce": 5.061673,
+          "residual": 0.05075
+        },
+        {
+          "step": 120,
+          "ce": 4.918429,
+          "residual": 0.049579
+        },
+        {
+          "step": 180,
+          "ce": 5.102004,
+          "residual": 0.050087
+        },
+        {
+          "step": 240,
+          "ce": 5.103687,
+          "residual": 0.049974
+        }
+      ],
+      "readout_history": [
+        {
+          "step": 1,
+          "ce": 4.233807
+        },
+        {
+          "step": 60,
+          "ce": 3.015357
+        },
+        {
+          "step": 120,
+          "ce": 2.81381
+        },
+        {
+          "step": 180,
+          "ce": 2.717025
+        },
+        {
+          "step": 240,
+          "ce": 2.718331
+        }
+      ],
+      "pass": true,
+      "seconds": 204.83
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "monotonic_rate": 1.0,
+    "local_pollution_trigger_rate": 0.0,
+    "burst_pollution_trigger_rate": 1.0,
+    "code_commit_rate": 1.0,
+    "noise_commit_rate": 0.0,
+    "full_growth_params": 21061,
+    "added_params": 12528,
+    "parameter_ratio": 0.594844,
+    "growth_onset_code_fraction": {
+      "mean": 0.5,
+      "std": 0.0
+    },
+    "code_reducibility": {
+      "mean": 0.309069,
+      "std": 0.004831
+    },
+    "noise_reducibility": {
+      "mean": 0.265843,
+      "std": 0.00522
+    },
+    "base_route_accuracy": {
+      "mean": 0.905382,
+      "std": 0.001228
+    },
+    "code_route_accuracy": {
+      "mean": 0.923611,
+      "std": 0.010911
+    },
+    "mixed_min_route_accuracy": {
+      "mean": 0.905382,
+      "std": 0.001228
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "code_before_bpc": {
+      "mean": 5.969757,
+      "std": 0.054345
+    },
+    "code_before_residual": {
+      "mean": 0.065786,
+      "std": 0.000756
+    },
+    "code_before_accuracy": {
+      "mean": 0.15527,
+      "std": 0.001872
+    },
+    "code_consolidated_bpc": {
+      "mean": 3.876289,
+      "std": 0.00657
+    },
+    "code_consolidated_residual": {
+      "mean": 0.045453,
+      "std": 0.000547
+    },
+    "code_consolidated_accuracy": {
+      "mean": 0.278786,
+      "std": 0.005802
+    },
+    "gradual_curve": [
+      {
+        "code_fraction": 0.0,
+        "high_energy_fraction": {
+          "mean": 0.011719,
+          "std": 0.005524
+        }
+      },
+      {
+        "code_fraction": 0.1,
+        "high_energy_fraction": {
+          "mean": 0.072917,
+          "std": 0.009744
+        }
+      },
+      {
+        "code_fraction": 0.25,
+        "high_energy_fraction": {
+          "mean": 0.171875,
+          "std": 0.009569
+        }
+      },
+      {
+        "code_fraction": 0.5,
+        "high_energy_fraction": {
+          "mean": 0.324219,
+          "std": 0.022326
+        }
+      },
+      {
+        "code_fraction": 0.75,
+        "high_energy_fraction": {
+          "mean": 0.46875,
+          "std": 0.039193
+        }
+      },
+      {
+        "code_fraction": 1.0,
+        "high_energy_fraction": {
+          "mean": 0.625,
+          "std": 0.051329
+        }
+      }
+    ]
+  },
+  "pass": true,
+  "verdict": "✅ 真实领域漂移裁决成立：自由能压力随代码比例上升；局部污染不触发全局扩容，高能噪声虽进入 probe 但因 held-out 不可约而拒绝；真实代码形成可泛化低能盆地，最低能路由保持旧域且基础状态零变化。"
+}

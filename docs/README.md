@@ -24,6 +24,10 @@
 > `95.3% / 100% / 100%`，重复结构不再生长，冗余合并与非活跃回收均为 `100%`，
 > 基础 logits 仍零变化。详见
 > [free_energy_lifecycle_eval.md](reports/free_energy_lifecycle_eval.md)。
+> 第七项进入真实分布漂移：OPUS 英文→不同 CodeParrot 分片的 Python 代码。漂移压力随代码
+> 比例单调上升，`10%` 局部污染不触发，真实代码/等边际噪声可约率为 `30.9% / 26.6%`，
+> 旧域/代码域路由 `90.5% / 92.4%`，held-out 代码 BPC `5.97→3.88`。详见
+> [free_energy_domain_drift_eval.md](reports/free_energy_domain_drift_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
