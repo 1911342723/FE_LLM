@@ -1,0 +1,2417 @@
+{
+  "task": "interleaved online free-energy growth with atomic commit",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "code_train": "data\\code\\python_corpus.txt",
+    "code_valid": "data\\code\\python_heldout.txt",
+    "device": "cuda",
+    "seeds": "152,153,154",
+    "sentences": 12000,
+    "code_train_chars": 4000000,
+    "code_valid_chars": 2000000,
+    "base_steps": 350,
+    "probe_steps": 240,
+    "readout_steps": 240,
+    "probe_windows": 8,
+    "readout_windows": 8,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 256,
+    "length": 32,
+    "dim": 64,
+    "rank": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.004,
+    "readout_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "energy_start": 2,
+    "min_growth_fraction": 0.25,
+    "min_reducibility": 0.3,
+    "complexity_quantile": 0.9,
+    "complexity_margin": 0.0001,
+    "burst_pollution_fraction": 0.5,
+    "warmup_windows": 5,
+    "recovery_windows": 5,
+    "max_drift_windows": 10,
+    "structural_observation_precision": 1.0,
+    "structural_persistence_precision": 4.0,
+    "structural_complexity_precision": 0.01,
+    "structural_relax_steps": 8,
+    "structural_relaxation_fraction": 0.8,
+    "activation_barrier": 0.25,
+    "reset_barrier": 0.1,
+    "min_route_accuracy": 0.9,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 69,
+    "sizes": {
+      "base_train_chars": 249265,
+      "base_valid_chars": 84656,
+      "code_train_chars": 3379251,
+      "code_valid_chars": 1681024
+    }
+  },
+  "rows": [
+    {
+      "seed": 152,
+      "threshold": 0.062504,
+      "timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.001492,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.002696,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.003668,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.004452,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.005086,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "burst",
+          "label": "50% shuffled",
+          "instant_growth": true,
+          "high_energy_fraction": 0.445312,
+          "mean_best_energy": 0.062589,
+          "stable_instability": 0.092911,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.075772,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.062179,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.051302,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.042598,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.035633,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.800781,
+          "mean_best_energy": 0.066749,
+          "stable_instability": 0.188227,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.800781,
+          "mean_best_energy": 0.066749,
+          "stable_instability": 0.31007,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "burst_instant_trigger": true,
+      "burst_slow_trigger": false,
+      "code_activation_window": "code-2",
+      "code_before": {
+        "ce": 4.096651,
+        "bpc": 5.910218,
+        "accuracy": 0.159694,
+        "residual": 0.066305
+      },
+      "code_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.049348,
+          "heldout_bpc": 6.254178,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.046997,
+          "heldout_bpc": 6.221503,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.046408,
+          "heldout_bpc": 6.213018,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.046141,
+          "heldout_bpc": 6.182029,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.04596,
+          "heldout_bpc": 6.194551,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.045818,
+          "heldout_bpc": 6.184355,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.045711,
+          "heldout_bpc": 6.210583,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.04557,
+          "heldout_bpc": 6.217794,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_probe_metrics": {
+        "ce": 4.309846,
+        "bpc": 6.217794,
+        "accuracy": 0.121136,
+        "residual": 0.04557
+      },
+      "code_reducibility": 0.312721,
+      "code_readout": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_bpc": 4.618043,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_bpc": 4.251458,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_bpc": 4.122167,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_bpc": 4.037612,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_bpc": 3.982444,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_bpc": 3.932997,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_bpc": 3.899042,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_bpc": 3.874876,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_consolidated": {
+        "ce": 2.685859,
+        "bpc": 3.874876,
+        "accuracy": 0.266045,
+        "residual": 0.04557
+      },
+      "complexity_cost": 0.012512,
+      "precommit_pathway_count": 1,
+      "postcommit_pathway_count": 2,
+      "code_committed": true,
+      "code_route_accuracy": 0.958333,
+      "base_route_accuracy": 0.901042,
+      "noise_timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.001492,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.002696,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.003668,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.004452,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.007812,
+          "mean_best_energy": 0.057111,
+          "stable_instability": 0.005086,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.894531,
+          "mean_best_energy": 0.068226,
+          "stable_instability": 0.18254,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.894531,
+          "mean_best_energy": 0.068226,
+          "stable_instability": 0.324235,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_activation_window": "noise-2",
+      "noise_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.051714,
+          "heldout_bpc": 7.193289,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.050056,
+          "heldout_bpc": 7.190181,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.049662,
+          "heldout_bpc": 7.189458,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.049536,
+          "heldout_bpc": 7.185147,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.049464,
+          "heldout_bpc": 7.180747,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.0494,
+          "heldout_bpc": 7.185198,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.049376,
+          "heldout_bpc": 7.177278,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.049369,
+          "heldout_bpc": 7.200779,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_reducibility": 0.271138,
+      "noise_rejected": true,
+      "noise_pathway_count": 1,
+      "structural_energy_monotonic": true,
+      "service_interleavings": 44,
+      "service_all_finite": true,
+      "provisional_hidden_from_service": true,
+      "service_base_logit_max_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 226.57
+    },
+    {
+      "seed": 153,
+      "threshold": 0.064325,
+      "timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.006181,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.011128,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.015086,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.018254,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.020701,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "burst",
+          "label": "50% shuffled",
+          "instant_growth": true,
+          "high_energy_fraction": 0.441406,
+          "mean_best_energy": 0.063737,
+          "stable_instability": 0.1046,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.089884,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.078108,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.068685,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.061144,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.05511,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.675781,
+          "mean_best_energy": 0.0668,
+          "stable_instability": 0.178838,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.675781,
+          "mean_best_energy": 0.0668,
+          "stable_instability": 0.277633,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "burst_instant_trigger": true,
+      "burst_slow_trigger": false,
+      "code_activation_window": "code-2",
+      "code_before": {
+        "ce": 4.057957,
+        "bpc": 5.854394,
+        "accuracy": 0.169439,
+        "residual": 0.067026
+      },
+      "code_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.049577,
+          "heldout_bpc": 6.190257,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.047591,
+          "heldout_bpc": 6.152526,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.04702,
+          "heldout_bpc": 6.174624,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.046762,
+          "heldout_bpc": 6.180483,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.046552,
+          "heldout_bpc": 6.188573,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.046375,
+          "heldout_bpc": 6.196018,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.046222,
+          "heldout_bpc": 6.185589,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.046103,
+          "heldout_bpc": 6.16196,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_probe_metrics": {
+        "ce": 4.271145,
+        "bpc": 6.16196,
+        "accuracy": 0.119372,
+        "residual": 0.046103
+      },
+      "code_reducibility": 0.312166,
+      "code_readout": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_bpc": 4.636531,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_bpc": 4.268042,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_bpc": 4.120155,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_bpc": 4.034521,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_bpc": 3.97686,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_bpc": 3.936838,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_bpc": 3.897685,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_bpc": 3.871465,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_consolidated": {
+        "ce": 2.683495,
+        "bpc": 3.871465,
+        "accuracy": 0.269825,
+        "residual": 0.046103
+      },
+      "complexity_cost": 0.012958,
+      "precommit_pathway_count": 1,
+      "postcommit_pathway_count": 2,
+      "code_committed": true,
+      "code_route_accuracy": 0.953125,
+      "base_route_accuracy": 0.901042,
+      "noise_timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.006181,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.011128,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.015086,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.018254,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.03125,
+          "mean_best_energy": 0.058776,
+          "stable_instability": 0.020701,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.875,
+          "mean_best_energy": 0.06923,
+          "stable_instability": 0.191112,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.875,
+          "mean_best_energy": 0.06923,
+          "stable_instability": 0.327182,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_activation_window": "noise-2",
+      "noise_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.052695,
+          "heldout_bpc": 7.268994,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.051215,
+          "heldout_bpc": 7.251873,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.050842,
+          "heldout_bpc": 7.248454,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.050687,
+          "heldout_bpc": 7.241074,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.050621,
+          "heldout_bpc": 7.257333,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.050578,
+          "heldout_bpc": 7.250236,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.050524,
+          "heldout_bpc": 7.244468,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.05054,
+          "heldout_bpc": 7.244468,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_reducibility": 0.271204,
+      "noise_rejected": true,
+      "noise_pathway_count": 1,
+      "structural_energy_monotonic": true,
+      "service_interleavings": 44,
+      "service_all_finite": true,
+      "provisional_hidden_from_service": true,
+      "service_base_logit_max_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 225.93
+    },
+    {
+      "seed": 154,
+      "threshold": 0.063586,
+      "timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.002238,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.004044,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.005502,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.006679,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.007628,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "burst",
+          "label": "50% shuffled",
+          "instant_growth": true,
+          "high_energy_fraction": 0.363281,
+          "mean_best_energy": 0.062683,
+          "stable_instability": 0.078469,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.06511,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.05442,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.045866,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.039021,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "recovery",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.033543,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.59375,
+          "mean_best_energy": 0.065529,
+          "stable_instability": 0.14525,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.59375,
+          "mean_best_energy": 0.065529,
+          "stable_instability": 0.234447,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_code",
+          "label": "code-3",
+          "instant_growth": true,
+          "high_energy_fraction": 0.59375,
+          "mean_best_energy": 0.065529,
+          "stable_instability": 0.305563,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "burst_instant_trigger": true,
+      "burst_slow_trigger": false,
+      "code_activation_window": "code-3",
+      "code_before": {
+        "ce": 4.212269,
+        "bpc": 6.07702,
+        "accuracy": 0.148185,
+        "residual": 0.065478
+      },
+      "code_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.048399,
+          "heldout_bpc": 6.339369,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.046097,
+          "heldout_bpc": 6.334384,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.045474,
+          "heldout_bpc": 6.334625,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.045212,
+          "heldout_bpc": 6.333243,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.045012,
+          "heldout_bpc": 6.345456,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.044945,
+          "heldout_bpc": 6.351008,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.044766,
+          "heldout_bpc": 6.361527,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.044612,
+          "heldout_bpc": 6.33424,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_probe_metrics": {
+        "ce": 4.390561,
+        "bpc": 6.33424,
+        "accuracy": 0.111139,
+        "residual": 0.044612
+      },
+      "code_reducibility": 0.318665,
+      "code_readout": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_bpc": 4.674092,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_bpc": 4.231684,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_bpc": 4.063883,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_bpc": 3.971816,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_bpc": 3.907325,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_bpc": 3.855729,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_bpc": 3.817749,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_bpc": 3.786927,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "code_consolidated": {
+        "ce": 2.624898,
+        "bpc": 3.786927,
+        "accuracy": 0.295111,
+        "residual": 0.044612
+      },
+      "complexity_cost": 0.013738,
+      "precommit_pathway_count": 1,
+      "postcommit_pathway_count": 2,
+      "code_committed": true,
+      "code_route_accuracy": 0.90625,
+      "base_route_accuracy": 0.90625,
+      "noise_timeline": [
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.002238,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.004044,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.005502,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.006679,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "warmup",
+          "label": "base",
+          "instant_growth": false,
+          "high_energy_fraction": 0.011719,
+          "mean_best_energy": 0.057748,
+          "stable_instability": 0.007628,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-1",
+          "instant_growth": true,
+          "high_energy_fraction": 0.730469,
+          "mean_best_energy": 0.067693,
+          "stable_instability": 0.151837,
+          "slow_active": false,
+          "slow_activated": false,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "phase": "sustained_noise",
+          "label": "noise-2",
+          "instant_growth": true,
+          "high_energy_fraction": 0.730469,
+          "mean_best_energy": 0.067693,
+          "stable_instability": 0.266984,
+          "slow_active": true,
+          "slow_activated": true,
+          "structural_energy_monotonic": true,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_activation_window": "noise-2",
+      "noise_probe": [
+        {
+          "window": 1,
+          "global_step": 30,
+          "heldout_residual": 0.051559,
+          "heldout_bpc": 7.286387,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 2,
+          "global_step": 60,
+          "heldout_residual": 0.049519,
+          "heldout_bpc": 7.271607,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 3,
+          "global_step": 90,
+          "heldout_residual": 0.04915,
+          "heldout_bpc": 7.26869,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 4,
+          "global_step": 120,
+          "heldout_residual": 0.048934,
+          "heldout_bpc": 7.27584,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 5,
+          "global_step": 150,
+          "heldout_residual": 0.048896,
+          "heldout_bpc": 7.26708,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 6,
+          "global_step": 180,
+          "heldout_residual": 0.048838,
+          "heldout_bpc": 7.268656,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 7,
+          "global_step": 210,
+          "heldout_residual": 0.048766,
+          "heldout_bpc": 7.262838,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        },
+        {
+          "window": 8,
+          "global_step": 240,
+          "heldout_residual": 0.048766,
+          "heldout_bpc": 7.272143,
+          "service": {
+            "pathway_count": 1,
+            "finite": true,
+            "base_logit_max_delta": 0.0,
+            "route_histogram": [
+              256
+            ]
+          }
+        }
+      ],
+      "noise_reducibility": 0.278269,
+      "noise_rejected": true,
+      "noise_pathway_count": 1,
+      "structural_energy_monotonic": true,
+      "service_interleavings": 45,
+      "service_all_finite": true,
+      "provisional_hidden_from_service": true,
+      "service_base_logit_max_delta": 0.0,
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 223.01
+    }
+  ],
+  "summary": {
+    "pass_rate": 1.0,
+    "burst_instant_trigger_rate": 1.0,
+    "burst_slow_trigger_rate": 0.0,
+    "code_commit_rate": 1.0,
+    "noise_reject_rate": 1.0,
+    "structural_energy_monotonic_rate": 1.0,
+    "service_finite_rate": 1.0,
+    "provisional_hidden_rate": 1.0,
+    "code_reducibility": {
+      "mean": 0.314517,
+      "std": 0.002942
+    },
+    "noise_reducibility": {
+      "mean": 0.273537,
+      "std": 0.003346
+    },
+    "code_route_accuracy": {
+      "mean": 0.939236,
+      "std": 0.023421
+    },
+    "base_route_accuracy": {
+      "mean": 0.902778,
+      "std": 0.002455
+    },
+    "service_interleavings": {
+      "mean": 44.333333,
+      "std": 0.471405
+    },
+    "service_base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "code_before_bpc": {
+      "mean": 5.947211,
+      "std": 0.094576
+    },
+    "code_consolidated_bpc": {
+      "mean": 3.844423,
+      "std": 0.040679
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 交错在线自由能生长成立：慢结构动力学过滤单次 burst；持续真实漂移才启动未注册 probe；训练期间活动系统持续服务且旧 logits 不变；代码 held-out 可约后原子固化，持续噪声 probe 后仍不可约而拒绝。"
+}

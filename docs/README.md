@@ -42,6 +42,12 @@
 > 第十一项把冷盆地升级为受限磁盘归档：原子保存、核心错配拒绝、张量篡改拒绝均为
 > `100%`，跨系统 residual-F 与恢复 logits 差均为 `0`；归档返回能量胜率 `97.7%`。
 > 详见 [free_energy_archive_persistence_eval.md](reports/free_energy_archive_persistence_eval.md)。
+> 第十二项把真实 OPUS→Python 漂移、结构自由能慢动力学和临时盆地训练接成单进程在线闭环：
+> `50%` 噪声 burst 的单窗口触发率 `100%`、慢状态触发率 `0%`；持续漂移越过势垒后，
+> probe/readout 每个窗口之间继续服务，临时盆地隐藏率 `100%`、基础 logits 变化为 `0`。
+> 真实代码/等边际噪声 held-out 可约率为 `31.5% / 27.4%`，因此代码固化率与噪声拒绝率
+> 均为 `100%`，固化后基础/代码路由为 `90.3% / 93.9%`。详见
+> [free_energy_interleaved_online_growth_eval.md](reports/free_energy_interleaved_online_growth_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
