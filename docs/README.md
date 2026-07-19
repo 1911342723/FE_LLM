@@ -20,6 +20,10 @@
 > 结构可约 `31.0%`、噪声 `23.1%`、BPC 仅比完整高 `4.2%`、结构路由 `99.8%`；
 > rank-8 稳定欠容量、不会被错误固化。详见
 > [free_energy_low_rank_char_eval.md](reports/free_energy_low_rank_char_eval.md)。
+> 第六项把单次生长扩成多盆地生命周期：反向与排序结构连续固化后，三路最低能路由为
+> `95.3% / 100% / 100%`，重复结构不再生长，冗余合并与非活跃回收均为 `100%`，
+> 基础 logits 仍零变化。详见
+> [free_energy_lifecycle_eval.md](reports/free_energy_lifecycle_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >

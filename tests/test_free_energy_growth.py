@@ -92,3 +92,66 @@ def test_committed_pathway_can_have_its_own_readout_without_changing_base() -> N
 
     assert not torch.allclose(grown_logits, base_before)
     torch.testing.assert_close(base_after, base_before)
+
+
+def test_removing_pathway_reindexes_costs_and_private_heads_together() -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (3, 8))
+    transitions = []
+    for cost, shift in ((0.1, 0.1), (0.2, 0.2), (0.3, 0.3)):
+        transition = system.create_provisional_pathway(noise_std=0.0)
+        head = system.create_provisional_head()
+        with torch.no_grad():
+            head.bias.add_(shift)
+        system.commit_pathway(transition, complexity_cost=cost, head=head)
+        transitions.append(transition)
+
+    old_last_logits = system.forward_pathway(ids, 3)
+    mapping = system.remove_pathway(2)
+
+    assert mapping == {0: 0, 1: 1, 3: 2}
+    assert system.pathway_count == 3
+    assert system.transition_for(2) is transitions[2]
+    torch.testing.assert_close(system.pathway_costs, torch.tensor([0.0, 0.1, 0.3]))
+    torch.testing.assert_close(system.forward_pathway(ids, 2), old_last_logits)
+
+
+def test_energy_equivalent_duplicate_pathway_is_merged() -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (24, 9))
+    first = system.add_pathway(noise_std=0.0)
+    duplicate = system.add_pathway(noise_std=0.0)
+
+    merged, audit = system.merge_pathways_if_redundant(
+        first, duplicate, ids, energy_tolerance=1e-8)
+
+    assert merged
+    assert audit["covered_fraction"] == 1.0
+    assert audit["survivor"] == first
+    assert system.pathway_count == 2
+
+
+def test_high_cost_inactive_pathway_is_recycled_without_changing_base() -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (24, 9))
+    base_before = system.forward_pathway(ids, 0)
+    provisional = system.create_provisional_pathway(noise_std=0.0)
+    pathway = system.commit_pathway(provisional, complexity_cost=100.0)
+
+    retired, audit = system.retire_pathway_if_inactive(
+        pathway, ids, max_route_fraction=0.0)
+
+    assert retired
+    assert audit["route_fraction"] == 0.0
+    assert system.pathway_count == 1
+    torch.testing.assert_close(system.forward_pathway(ids, 0), base_before)
+
+
+def test_base_pathway_cannot_be_removed() -> None:
+    system = _system()
+    try:
+        system.remove_pathway(0)
+    except ValueError as error:
+        assert "基础通路" in str(error)
+    else:
+        raise AssertionError("remove_pathway(0) 应拒绝删除共享稳定态")

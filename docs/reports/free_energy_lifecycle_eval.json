@@ -1,0 +1,771 @@
+{
+  "task": "real char multi-basin free-energy lifecycle",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "device": "cuda",
+    "seeds": "91,92,93",
+    "sentences": 16000,
+    "base_steps": 350,
+    "probe_steps": 240,
+    "readout_steps": 240,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 128,
+    "length": 32,
+    "dim": 64,
+    "rank": 16,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.004,
+    "readout_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "energy_start": 2,
+    "min_growth_fraction": 0.25,
+    "min_reducibility": 0.3,
+    "complexity_quantile": 0.95,
+    "complexity_margin": 0.0001,
+    "duplicate_cost_margin": 0.001,
+    "merge_energy_tolerance": 1e-08,
+    "merge_min_covered": 1.0,
+    "retire_max_route_fraction": 0.03,
+    "min_route_accuracy": 0.9,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 34,
+    "vocab": "\n !',-.?abcdefghijklmnopqrstuvwxyz",
+    "sentence_counts": {
+      "base_train": 8000,
+      "base_valid": 2000,
+      "reverse_train": 1500,
+      "reverse_valid": 1500,
+      "sorted_train": 1500,
+      "sorted_valid": 1500
+    },
+    "transforms": {
+      "reverse": "reverse every sentence",
+      "sorted": "sort characters inside every sentence"
+    }
+  },
+  "rejected_pilot": {
+    "seed": 91,
+    "rank": 16,
+    "transform": "swap every adjacent character pair",
+    "outcome": "candidate rejected below the fixed 0.30 reducibility threshold"
+  },
+  "rows": [
+    {
+      "seed": 91,
+      "threshold": 0.062361,
+      "base": {
+        "ce": 2.11498,
+        "bpc": 3.05127,
+        "accuracy": 0.36786,
+        "residual": 0.056314
+      },
+      "growth": [
+        {
+          "name": "reverse",
+          "high_energy": true,
+          "growth_pressure": 0.765625,
+          "encounter_energy": 0.064223,
+          "before_best_residual": 0.064107,
+          "probe": {
+            "ce": 4.486078,
+            "bpc": 6.472042,
+            "accuracy": 0.067372,
+            "residual": 0.043849
+          },
+          "reducibility": 0.316002,
+          "committed": true,
+          "pathway": 1,
+          "complexity_cost": 0.006738,
+          "consolidated": {
+            "ce": 2.48478,
+            "bpc": 3.584779,
+            "accuracy": 0.316448,
+            "residual": 0.043849
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.981095,
+              "residual": 0.064043
+            },
+            {
+              "step": 60,
+              "ce": 4.407256,
+              "residual": 0.046062
+            },
+            {
+              "step": 120,
+              "ce": 4.44089,
+              "residual": 0.04462
+            },
+            {
+              "step": 180,
+              "ce": 4.388962,
+              "residual": 0.04402
+            },
+            {
+              "step": 240,
+              "ce": 4.498644,
+              "residual": 0.043796
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.53137
+            },
+            {
+              "step": 60,
+              "ce": 3.144045
+            },
+            {
+              "step": 120,
+              "ce": 2.723857
+            },
+            {
+              "step": 180,
+              "ce": 2.55633
+            },
+            {
+              "step": 240,
+              "ce": 2.441403
+            }
+          ]
+        },
+        {
+          "name": "sorted",
+          "high_energy": true,
+          "growth_pressure": 0.9375,
+          "encounter_energy": 0.065289,
+          "before_best_residual": 0.060806,
+          "probe": {
+            "ce": 5.291961,
+            "bpc": 7.634686,
+            "accuracy": 0.014617,
+            "residual": 0.031769
+          },
+          "reducibility": 0.477539,
+          "committed": true,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "consolidated": {
+            "ce": 1.315227,
+            "bpc": 1.897472,
+            "accuracy": 0.563088,
+            "residual": 0.031769
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 5.33424,
+              "residual": 0.065953
+            },
+            {
+              "step": 60,
+              "ce": 5.291595,
+              "residual": 0.035507
+            },
+            {
+              "step": 120,
+              "ce": 5.30219,
+              "residual": 0.032629
+            },
+            {
+              "step": 180,
+              "ce": 5.328574,
+              "residual": 0.032833
+            },
+            {
+              "step": 240,
+              "ce": 5.336558,
+              "residual": 0.032452
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 5.267681
+            },
+            {
+              "step": 60,
+              "ce": 2.695952
+            },
+            {
+              "step": 120,
+              "ce": 1.627536
+            },
+            {
+              "step": 180,
+              "ce": 1.41745
+            },
+            {
+              "step": 240,
+              "ce": 1.32566
+            }
+          ]
+        }
+      ],
+      "route_before_lifecycle": {
+        "base": 0.953125,
+        "reverse": 1.0,
+        "sorted": 1.0
+      },
+      "metrics_before_lifecycle": {
+        "reverse": {
+          "ce": 2.48478,
+          "bpc": 3.584779,
+          "accuracy": 0.316448,
+          "residual": 0.043849
+        },
+        "sorted": {
+          "ce": 1.315227,
+          "bpc": 1.897472,
+          "accuracy": 0.563088,
+          "residual": 0.031769
+        }
+      },
+      "repeat_reverse": {
+        "growth_triggered": false,
+        "growth_pressure": 0.0,
+        "energy": 0.050123,
+        "route_existing": 1.0
+      },
+      "merge": {
+        "fault_injection": "exact persisted snapshot duplicate",
+        "merged": true,
+        "covered_fraction": 1.0,
+        "mean_energy_increase": 0.0,
+        "survivor": 1,
+        "params_with_duplicate": 10848,
+        "params_after_merge": 7232
+      },
+      "retirement": {
+        "retired": true,
+        "recent_route_fraction": 0.023438,
+        "route_fraction": 0.023438,
+        "winning_energy_advantage": 0.000986,
+        "route_after": {
+          "base": 1.0,
+          "sorted": 1.0
+        },
+        "sorted_bpc_delta": 0.0,
+        "reverse_return_triggers_growth": true,
+        "reverse_return_pressure": 0.705729,
+        "reverse_return_energy": 0.063955
+      },
+      "path_counts": [
+        1,
+        2,
+        3,
+        3,
+        4,
+        3,
+        2
+      ],
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 269.14
+    },
+    {
+      "seed": 92,
+      "threshold": 0.062679,
+      "base": {
+        "ce": 2.105453,
+        "bpc": 3.037526,
+        "accuracy": 0.383821,
+        "residual": 0.056818
+      },
+      "growth": [
+        {
+          "name": "reverse",
+          "high_energy": true,
+          "growth_pressure": 0.648438,
+          "encounter_energy": 0.063664,
+          "before_best_residual": 0.063819,
+          "probe": {
+            "ce": 4.55188,
+            "bpc": 6.566975,
+            "accuracy": 0.064684,
+            "residual": 0.043376
+          },
+          "reducibility": 0.320333,
+          "committed": true,
+          "pathway": 1,
+          "complexity_cost": 0.009206,
+          "consolidated": {
+            "ce": 2.482219,
+            "bpc": 3.581086,
+            "accuracy": 0.315944,
+            "residual": 0.043376
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.970612,
+              "residual": 0.063462
+            },
+            {
+              "step": 60,
+              "ce": 4.4799,
+              "residual": 0.04562
+            },
+            {
+              "step": 120,
+              "ce": 4.451948,
+              "residual": 0.043907
+            },
+            {
+              "step": 180,
+              "ce": 4.465271,
+              "residual": 0.043202
+            },
+            {
+              "step": 240,
+              "ce": 4.507653,
+              "residual": 0.042923
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.523178
+            },
+            {
+              "step": 60,
+              "ce": 3.178539
+            },
+            {
+              "step": 120,
+              "ce": 2.704355
+            },
+            {
+              "step": 180,
+              "ce": 2.505105
+            },
+            {
+              "step": 240,
+              "ce": 2.478205
+            }
+          ]
+        },
+        {
+          "name": "sorted",
+          "high_energy": true,
+          "growth_pressure": 0.945312,
+          "encounter_energy": 0.066775,
+          "before_best_residual": 0.060354,
+          "probe": {
+            "ce": 5.312808,
+            "bpc": 7.664762,
+            "accuracy": 0.017977,
+            "residual": 0.032412
+          },
+          "reducibility": 0.462971,
+          "committed": true,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "consolidated": {
+            "ce": 1.307658,
+            "bpc": 1.886551,
+            "accuracy": 0.555948,
+            "residual": 0.032412
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 5.606885,
+              "residual": 0.06699
+            },
+            {
+              "step": 60,
+              "ce": 5.245787,
+              "residual": 0.03546
+            },
+            {
+              "step": 120,
+              "ce": 5.376127,
+              "residual": 0.033665
+            },
+            {
+              "step": 180,
+              "ce": 5.328927,
+              "residual": 0.032583
+            },
+            {
+              "step": 240,
+              "ce": 5.422535,
+              "residual": 0.032284
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 5.26119
+            },
+            {
+              "step": 60,
+              "ce": 2.728493
+            },
+            {
+              "step": 120,
+              "ce": 1.644943
+            },
+            {
+              "step": 180,
+              "ce": 1.418158
+            },
+            {
+              "step": 240,
+              "ce": 1.310241
+            }
+          ]
+        }
+      ],
+      "route_before_lifecycle": {
+        "base": 0.955729,
+        "reverse": 1.0,
+        "sorted": 1.0
+      },
+      "metrics_before_lifecycle": {
+        "reverse": {
+          "ce": 2.482219,
+          "bpc": 3.581086,
+          "accuracy": 0.315944,
+          "residual": 0.043376
+        },
+        "sorted": {
+          "ce": 1.307658,
+          "bpc": 1.886551,
+          "accuracy": 0.555948,
+          "residual": 0.032412
+        }
+      },
+      "repeat_reverse": {
+        "growth_triggered": false,
+        "growth_pressure": 0.0,
+        "energy": 0.052318,
+        "route_existing": 1.0
+      },
+      "merge": {
+        "fault_injection": "exact persisted snapshot duplicate",
+        "merged": true,
+        "covered_fraction": 1.0,
+        "mean_energy_increase": 0.0,
+        "survivor": 1,
+        "params_with_duplicate": 10848,
+        "params_after_merge": 7232
+      },
+      "retirement": {
+        "retired": true,
+        "recent_route_fraction": 0.022135,
+        "route_fraction": 0.022135,
+        "winning_energy_advantage": 0.001208,
+        "route_after": {
+          "base": 1.0,
+          "sorted": 1.0
+        },
+        "sorted_bpc_delta": 0.0,
+        "reverse_return_triggers_growth": true,
+        "reverse_return_pressure": 0.6875,
+        "reverse_return_energy": 0.06369
+      },
+      "path_counts": [
+        1,
+        2,
+        3,
+        3,
+        4,
+        3,
+        2
+      ],
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 283.1
+    },
+    {
+      "seed": 93,
+      "threshold": 0.0623,
+      "base": {
+        "ce": 2.122499,
+        "bpc": 3.062118,
+        "accuracy": 0.378528,
+        "residual": 0.055863
+      },
+      "growth": [
+        {
+          "name": "reverse",
+          "high_energy": true,
+          "growth_pressure": 0.617188,
+          "encounter_energy": 0.06337,
+          "before_best_residual": 0.063316,
+          "probe": {
+            "ce": 4.557205,
+            "bpc": 6.574657,
+            "accuracy": 0.069472,
+            "residual": 0.043934
+          },
+          "reducibility": 0.306124,
+          "committed": true,
+          "pathway": 1,
+          "complexity_cost": 0.007301,
+          "consolidated": {
+            "ce": 2.483444,
+            "bpc": 3.582853,
+            "accuracy": 0.310484,
+            "residual": 0.043934
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.939625,
+              "residual": 0.063103
+            },
+            {
+              "step": 60,
+              "ce": 4.47197,
+              "residual": 0.046182
+            },
+            {
+              "step": 120,
+              "ce": 4.486762,
+              "residual": 0.044358
+            },
+            {
+              "step": 180,
+              "ce": 4.528963,
+              "residual": 0.043978
+            },
+            {
+              "step": 240,
+              "ce": 4.585549,
+              "residual": 0.043395
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.55044
+            },
+            {
+              "step": 60,
+              "ce": 3.119035
+            },
+            {
+              "step": 120,
+              "ce": 2.69385
+            },
+            {
+              "step": 180,
+              "ce": 2.564223
+            },
+            {
+              "step": 240,
+              "ce": 2.414976
+            }
+          ]
+        },
+        {
+          "name": "sorted",
+          "high_energy": true,
+          "growth_pressure": 0.960938,
+          "encounter_energy": 0.06614,
+          "before_best_residual": 0.061359,
+          "probe": {
+            "ce": 5.39468,
+            "bpc": 7.782878,
+            "accuracy": 0.020833,
+            "residual": 0.0319
+          },
+          "reducibility": 0.480109,
+          "committed": true,
+          "pathway": 2,
+          "complexity_cost": 0.0001,
+          "consolidated": {
+            "ce": 1.324204,
+            "bpc": 1.910423,
+            "accuracy": 0.557292,
+            "residual": 0.0319
+          },
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 5.481029,
+              "residual": 0.065758
+            },
+            {
+              "step": 60,
+              "ce": 5.389696,
+              "residual": 0.035544
+            },
+            {
+              "step": 120,
+              "ce": 5.419392,
+              "residual": 0.032814
+            },
+            {
+              "step": 180,
+              "ce": 5.438649,
+              "residual": 0.032174
+            },
+            {
+              "step": 240,
+              "ce": 5.400971,
+              "residual": 0.03211
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 5.426359
+            },
+            {
+              "step": 60,
+              "ce": 2.922903
+            },
+            {
+              "step": 120,
+              "ce": 1.751178
+            },
+            {
+              "step": 180,
+              "ce": 1.427165
+            },
+            {
+              "step": 240,
+              "ce": 1.342209
+            }
+          ]
+        }
+      ],
+      "route_before_lifecycle": {
+        "base": 0.950521,
+        "reverse": 1.0,
+        "sorted": 1.0
+      },
+      "metrics_before_lifecycle": {
+        "reverse": {
+          "ce": 2.483444,
+          "bpc": 3.582853,
+          "accuracy": 0.310484,
+          "residual": 0.043934
+        },
+        "sorted": {
+          "ce": 1.324204,
+          "bpc": 1.910423,
+          "accuracy": 0.557292,
+          "residual": 0.0319
+        }
+      },
+      "repeat_reverse": {
+        "growth_triggered": false,
+        "growth_pressure": 0.0,
+        "energy": 0.050836,
+        "route_existing": 1.0
+      },
+      "merge": {
+        "fault_injection": "exact persisted snapshot duplicate",
+        "merged": true,
+        "covered_fraction": 1.0,
+        "mean_energy_increase": 0.0,
+        "survivor": 1,
+        "params_with_duplicate": 10848,
+        "params_after_merge": 7232
+      },
+      "retirement": {
+        "retired": true,
+        "recent_route_fraction": 0.02474,
+        "route_fraction": 0.02474,
+        "winning_energy_advantage": 0.001418,
+        "route_after": {
+          "base": 1.0,
+          "sorted": 1.0
+        },
+        "sorted_bpc_delta": 0.0,
+        "reverse_return_triggers_growth": true,
+        "reverse_return_pressure": 0.619792,
+        "reverse_return_energy": 0.063276
+      },
+      "path_counts": [
+        1,
+        2,
+        3,
+        3,
+        4,
+        3,
+        2
+      ],
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 283.13
+    }
+  ],
+  "summary": {
+    "complete_seed_count": 3,
+    "pass_rate": 1.0,
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "path_counts": [
+      1.0,
+      2.0,
+      3.0,
+      3.0,
+      4.0,
+      3.0,
+      2.0
+    ],
+    "route_base": {
+      "mean": 0.953125,
+      "std": 0.002126
+    },
+    "route_reverse": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "route_sorted": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "reverse_reducibility": {
+      "mean": 0.314153,
+      "std": 0.005946
+    },
+    "reverse_bpc": {
+      "mean": 3.582906,
+      "std": 0.001508
+    },
+    "sorted_reducibility": {
+      "mean": 0.47354,
+      "std": 0.007546
+    },
+    "sorted_bpc": {
+      "mean": 1.898149,
+      "std": 0.009757
+    },
+    "repeat_growth_rate": 0.0,
+    "merge_rate": 1.0,
+    "retire_rate": 1.0,
+    "return_growth_rate": 1.0,
+    "route_after_retire_base": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "route_after_retire_sorted": {
+      "mean": 1.0,
+      "std": 0.0
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 多盆地生命周期成立：两个未知结构按 residual-F 连续长成独立低秩盆地；重复结构复用已有盆地，冗余快照按能量等价合并，不活跃容量被回收且不扰动仍活跃盆地；旧结构返回后重新形成生长压力。"
+}

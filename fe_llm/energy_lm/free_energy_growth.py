@@ -91,6 +91,131 @@ class FreeEnergyGrowthSystem(nn.Module):
         self.pathway_costs = torch.cat((self.pathway_costs, cost))
         return index
 
+    def remove_pathway(self, pathway: int) -> dict[int, int]:
+        """回收一个已固化的新增盆地，并返回旧索引到新索引的映射。
+
+        基础通路代表共享稳定态，不能被回收。新增通路删除后保持相对顺序，专属读出与
+        MDL 代价同步重编号，避免生命周期操作让路由、动力学与读出错位。
+        """
+        if pathway == 0:
+            raise ValueError("基础通路不能被回收。")
+        if not 1 <= pathway < self.pathway_count:
+            raise IndexError(f"pathway={pathway} 超出 [1,{self.pathway_count - 1}]。")
+
+        old_count = self.pathway_count
+        del self.grown_pathways[pathway - 1]
+
+        reindexed_heads = nn.ModuleDict()
+        mapping: dict[int, int] = {0: 0}
+        for old_index in range(1, old_count):
+            if old_index == pathway:
+                continue
+            new_index = old_index if old_index < pathway else old_index - 1
+            mapping[old_index] = new_index
+            key = str(old_index)
+            if key in self.grown_heads:
+                reindexed_heads[str(new_index)] = self.grown_heads[key]
+        self.grown_heads = reindexed_heads
+
+        keep = torch.ones(old_count, dtype=torch.bool, device=self.pathway_costs.device)
+        keep[pathway] = False
+        self.pathway_costs = self.pathway_costs[:old_count][keep]
+        return mapping
+
+    @torch.no_grad()
+    def pathway_statistics(self, ids: torch.Tensor, start: int = 1) -> dict[str, torch.Tensor]:
+        """给出各盆地的最低能路由占比和胜出时相对第二名的能量优势。"""
+        scores = self.score_all(ids, start=start)
+        choices = scores.argmin(dim=1)
+        fractions = torch.bincount(choices, minlength=self.pathway_count).to(scores.dtype)
+        fractions = fractions / max(1, ids.size(0))
+
+        advantages = torch.zeros(self.pathway_count, device=scores.device, dtype=scores.dtype)
+        if self.pathway_count > 1:
+            for pathway in range(self.pathway_count):
+                mask = choices == pathway
+                if bool(mask.any()):
+                    competitors = torch.cat(
+                        (scores[:, :pathway], scores[:, pathway + 1:]), dim=1)
+                    second_best = competitors.min(dim=1).values
+                    advantages[pathway] = (
+                        second_best[mask] - scores[mask, pathway]
+                    ).clamp_min(0).mean()
+        return {
+            "route_fraction": fractions,
+            "winning_energy_advantage": advantages,
+        }
+
+    @torch.no_grad()
+    def merge_pathways_if_redundant(
+        self,
+        keep: int,
+        remove: int,
+        evidence_ids: torch.Tensor,
+        *,
+        start: int = 1,
+        energy_tolerance: float = 1e-3,
+        min_covered_fraction: float = 0.95,
+    ) -> tuple[bool, dict[str, float | int]]:
+        """若保留盆地能等价解释待删盆地的证据，则合并冗余容量。
+
+        判据只读取因果序列已经产生的 residual-F 与 MDL 代价；不使用技能名或人工
+        路由标签。调用者仍应在任务级 held-out 上审计读出能力是否保持。
+        """
+        if keep == remove:
+            raise ValueError("keep 与 remove 必须是不同通路。")
+        if not 0 <= keep < self.pathway_count:
+            raise IndexError(f"keep={keep} 超出 [0,{self.pathway_count - 1}]。")
+        if not 1 <= remove < self.pathway_count:
+            raise IndexError(f"remove={remove} 超出 [1,{self.pathway_count - 1}]。")
+        if energy_tolerance < 0:
+            raise ValueError("energy_tolerance 不能为负。")
+        if not 0.0 < min_covered_fraction <= 1.0:
+            raise ValueError("min_covered_fraction 必须在 (0,1] 内。")
+
+        scores = self.score_all(evidence_ids, start=start)
+        increase = (scores[:, keep] - scores[:, remove]).clamp_min(0)
+        covered = float((increase <= energy_tolerance).float().mean().cpu())
+        mean_increase = float(increase.mean().cpu())
+        merged = covered >= min_covered_fraction
+        survivor = keep
+        if merged:
+            mapping = self.remove_pathway(remove)
+            survivor = mapping[keep]
+        return merged, {
+            "covered_fraction": covered,
+            "mean_energy_increase": mean_increase,
+            "survivor": survivor,
+        }
+
+    @torch.no_grad()
+    def retire_pathway_if_inactive(
+        self,
+        pathway: int,
+        recent_ids: torch.Tensor,
+        *,
+        start: int = 1,
+        max_route_fraction: float = 0.01,
+    ) -> tuple[bool, dict[str, float]]:
+        """在近期证据中几乎从不成为最低能解释时，回收一个新增盆地。"""
+        if pathway == 0:
+            raise ValueError("基础通路不能被回收。")
+        if not 1 <= pathway < self.pathway_count:
+            raise IndexError(f"pathway={pathway} 超出 [1,{self.pathway_count - 1}]。")
+        if not 0.0 <= max_route_fraction < 1.0:
+            raise ValueError("max_route_fraction 必须在 [0,1) 内。")
+
+        stats = self.pathway_statistics(recent_ids, start=start)
+        fraction = float(stats["route_fraction"][pathway].cpu())
+        advantage = float(stats["winning_energy_advantage"][pathway].cpu())
+        retired = fraction <= max_route_fraction
+        if retired:
+            self.remove_pathway(pathway)
+        return retired, {
+            "route_fraction": fraction,
+            "winning_energy_advantage": advantage,
+        }
+
     def train_only_provisional(self, provisional: nn.Module) -> list[nn.Parameter]:
         """冻结现有系统，只开放尚未固化的临时通路。"""
         for parameter in self.parameters():
