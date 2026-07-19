@@ -1,0 +1,799 @@
+{
+  "task": "full transition vs low-rank generative dynamics growth",
+  "config": {
+    "device": "cuda",
+    "seeds": "71,72,73",
+    "ranks": "2,4,8,16",
+    "base_steps": 150,
+    "growth_steps": 180,
+    "batch": 128,
+    "eval_batch": 384,
+    "length": 14,
+    "vocab": 8,
+    "dim": 48,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "full_lr": 0.002,
+    "delta_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "complexity_quantile": 0.95,
+    "complexity_margin": 0.0001,
+    "log_every": 60,
+    "write_report": true
+  },
+  "rows": [
+    {
+      "seed": 71,
+      "arm": "full",
+      "rank": null,
+      "added_params": 9360,
+      "full_transition_params": 9360,
+      "param_ratio": 1.0,
+      "new_accuracy": 1.0,
+      "new_residual": 0.098999,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.984375,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.306834,
+          "residual": 0.204843
+        },
+        {
+          "step": 60,
+          "ce": 0.146297,
+          "residual": 0.157267
+        },
+        {
+          "step": 120,
+          "ce": 0.085231,
+          "residual": 0.112065
+        },
+        {
+          "step": 180,
+          "ce": 0.070875,
+          "residual": 0.100021
+        }
+      ],
+      "seconds": 17.81
+    },
+    {
+      "seed": 71,
+      "arm": "r2",
+      "rank": 2,
+      "added_params": 192,
+      "full_transition_params": 9360,
+      "param_ratio": 0.020513,
+      "new_accuracy": 0.409564,
+      "new_residual": 0.222303,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.221354,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.18608,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.306834,
+          "residual": 0.204843
+        },
+        {
+          "step": 60,
+          "ce": 2.595815,
+          "residual": 0.198097
+        },
+        {
+          "step": 120,
+          "ce": 1.810763,
+          "residual": 0.1987
+        },
+        {
+          "step": 180,
+          "ce": 1.557794,
+          "residual": 0.225502
+        }
+      ],
+      "seconds": 20.23
+    },
+    {
+      "seed": 71,
+      "arm": "r4",
+      "rank": 4,
+      "added_params": 384,
+      "full_transition_params": 9360,
+      "param_ratio": 0.041026,
+      "new_accuracy": 0.748343,
+      "new_residual": 0.20495,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.523438,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.496922,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.306834,
+          "residual": 0.204843
+        },
+        {
+          "step": 60,
+          "ce": 1.741937,
+          "residual": 0.191009
+        },
+        {
+          "step": 120,
+          "ce": 1.092834,
+          "residual": 0.201149
+        },
+        {
+          "step": 180,
+          "ce": 0.7654,
+          "residual": 0.205781
+        }
+      ],
+      "seconds": 19.16
+    },
+    {
+      "seed": 71,
+      "arm": "r8",
+      "rank": 8,
+      "added_params": 768,
+      "full_transition_params": 9360,
+      "param_ratio": 0.082051,
+      "new_accuracy": 0.999053,
+      "new_residual": 0.133663,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.976562,
+      "ood_route_new_accuracy": 0.984375,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.995739,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.306834,
+          "residual": 0.204843
+        },
+        {
+          "step": 60,
+          "ce": 0.915655,
+          "residual": 0.164346
+        },
+        {
+          "step": 120,
+          "ce": 0.360956,
+          "residual": 0.154387
+        },
+        {
+          "step": 180,
+          "ce": 0.231161,
+          "residual": 0.1377
+        }
+      ],
+      "seconds": 18.7
+    },
+    {
+      "seed": 71,
+      "arm": "r16",
+      "rank": 16,
+      "added_params": 1536,
+      "full_transition_params": 9360,
+      "param_ratio": 0.164103,
+      "new_accuracy": 1.0,
+      "new_residual": 0.105253,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.976562,
+      "ood_route_new_accuracy": 0.984375,
+      "routed_id_accuracy": 0.998047,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.306834,
+          "residual": 0.204843
+        },
+        {
+          "step": 60,
+          "ce": 0.434054,
+          "residual": 0.150515
+        },
+        {
+          "step": 120,
+          "ce": 0.188026,
+          "residual": 0.122081
+        },
+        {
+          "step": 180,
+          "ce": 0.121893,
+          "residual": 0.105814
+        }
+      ],
+      "seconds": 18.12
+    },
+    {
+      "seed": 72,
+      "arm": "full",
+      "rank": null,
+      "added_params": 9360,
+      "full_transition_params": 9360,
+      "param_ratio": 1.0,
+      "new_accuracy": 1.0,
+      "new_residual": 0.09855,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.992188,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.381796,
+          "residual": 0.222436
+        },
+        {
+          "step": 60,
+          "ce": 0.163719,
+          "residual": 0.156212
+        },
+        {
+          "step": 120,
+          "ce": 0.0835,
+          "residual": 0.114127
+        },
+        {
+          "step": 180,
+          "ce": 0.073841,
+          "residual": 0.099841
+        }
+      ],
+      "seconds": 19.82
+    },
+    {
+      "seed": 72,
+      "arm": "r2",
+      "rank": 2,
+      "added_params": 192,
+      "full_transition_params": 9360,
+      "param_ratio": 0.020513,
+      "new_accuracy": 0.427083,
+      "new_residual": 0.242952,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.270833,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.218513,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.381796,
+          "residual": 0.222436
+        },
+        {
+          "step": 60,
+          "ce": 2.375401,
+          "residual": 0.200293
+        },
+        {
+          "step": 120,
+          "ce": 1.775488,
+          "residual": 0.228568
+        },
+        {
+          "step": 180,
+          "ce": 1.539566,
+          "residual": 0.24044
+        }
+      ],
+      "seconds": 20.27
+    },
+    {
+      "seed": 72,
+      "arm": "r4",
+      "rank": 4,
+      "added_params": 384,
+      "full_transition_params": 9360,
+      "param_ratio": 0.041026,
+      "new_accuracy": 0.791193,
+      "new_residual": 0.205526,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.700521,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.619792,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.381796,
+          "residual": 0.222436
+        },
+        {
+          "step": 60,
+          "ce": 1.828488,
+          "residual": 0.195118
+        },
+        {
+          "step": 120,
+          "ce": 0.959868,
+          "residual": 0.207393
+        },
+        {
+          "step": 180,
+          "ce": 0.786768,
+          "residual": 0.206923
+        }
+      ],
+      "seconds": 20.47
+    },
+    {
+      "seed": 72,
+      "arm": "r8",
+      "rank": 8,
+      "added_params": 768,
+      "full_transition_params": 9360,
+      "param_ratio": 0.082051,
+      "new_accuracy": 0.997869,
+      "new_residual": 0.151481,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.984375,
+      "ood_route_new_accuracy": 0.942708,
+      "routed_id_accuracy": 0.998698,
+      "routed_ood_accuracy": 0.965909,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.381796,
+          "residual": 0.222436
+        },
+        {
+          "step": 60,
+          "ce": 1.06591,
+          "residual": 0.181338
+        },
+        {
+          "step": 120,
+          "ce": 0.515462,
+          "residual": 0.174764
+        },
+        {
+          "step": 180,
+          "ce": 0.315652,
+          "residual": 0.152202
+        }
+      ],
+      "seconds": 19.29
+    },
+    {
+      "seed": 72,
+      "arm": "r16",
+      "rank": 16,
+      "added_params": 1536,
+      "full_transition_params": 9360,
+      "param_ratio": 0.164103,
+      "new_accuracy": 1.0,
+      "new_residual": 0.109826,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.958333,
+      "ood_route_new_accuracy": 0.997396,
+      "routed_id_accuracy": 0.998047,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.381796,
+          "residual": 0.222436
+        },
+        {
+          "step": 60,
+          "ce": 0.46927,
+          "residual": 0.150437
+        },
+        {
+          "step": 120,
+          "ce": 0.195946,
+          "residual": 0.129366
+        },
+        {
+          "step": 180,
+          "ce": 0.126675,
+          "residual": 0.110934
+        }
+      ],
+      "seconds": 19.67
+    },
+    {
+      "seed": 73,
+      "arm": "full",
+      "rank": null,
+      "added_params": 9360,
+      "full_transition_params": 9360,
+      "param_ratio": 1.0,
+      "new_accuracy": 1.0,
+      "new_residual": 0.099789,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.994792,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.356471,
+          "residual": 0.225665
+        },
+        {
+          "step": 60,
+          "ce": 0.165421,
+          "residual": 0.15944
+        },
+        {
+          "step": 120,
+          "ce": 0.082968,
+          "residual": 0.113436
+        },
+        {
+          "step": 180,
+          "ce": 0.071849,
+          "residual": 0.099776
+        }
+      ],
+      "seconds": 18.32
+    },
+    {
+      "seed": 73,
+      "arm": "r2",
+      "rank": 2,
+      "added_params": 192,
+      "full_transition_params": 9360,
+      "param_ratio": 0.020513,
+      "new_accuracy": 0.3634,
+      "new_residual": 0.213699,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 1.0,
+      "ood_route_new_accuracy": 0.523438,
+      "routed_id_accuracy": 1.0,
+      "routed_ood_accuracy": 0.272727,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.356471,
+          "residual": 0.225665
+        },
+        {
+          "step": 60,
+          "ce": 2.544985,
+          "residual": 0.212696
+        },
+        {
+          "step": 120,
+          "ce": 1.835311,
+          "residual": 0.212871
+        },
+        {
+          "step": 180,
+          "ce": 1.466843,
+          "residual": 0.213237
+        }
+      ],
+      "seconds": 19.71
+    },
+    {
+      "seed": 73,
+      "arm": "r4",
+      "rank": 4,
+      "added_params": 384,
+      "full_transition_params": 9360,
+      "param_ratio": 0.041026,
+      "new_accuracy": 0.738873,
+      "new_residual": 0.20472,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.960938,
+      "ood_route_new_accuracy": 0.601562,
+      "routed_id_accuracy": 0.998047,
+      "routed_ood_accuracy": 0.531723,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.356471,
+          "residual": 0.225665
+        },
+        {
+          "step": 60,
+          "ce": 1.972625,
+          "residual": 0.210861
+        },
+        {
+          "step": 120,
+          "ce": 1.103267,
+          "residual": 0.198965
+        },
+        {
+          "step": 180,
+          "ce": 0.766996,
+          "residual": 0.205672
+        }
+      ],
+      "seconds": 19.07
+    },
+    {
+      "seed": 73,
+      "arm": "r8",
+      "rank": 8,
+      "added_params": 768,
+      "full_transition_params": 9360,
+      "param_ratio": 0.082051,
+      "new_accuracy": 0.998816,
+      "new_residual": 0.144958,
+      "complexity_cost": 0.003295,
+      "id_route_base_accuracy": 0.963542,
+      "ood_route_new_accuracy": 0.96875,
+      "routed_id_accuracy": 0.996962,
+      "routed_ood_accuracy": 0.980587,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.356471,
+          "residual": 0.225665
+        },
+        {
+          "step": 60,
+          "ce": 1.037268,
+          "residual": 0.186467
+        },
+        {
+          "step": 120,
+          "ce": 0.420601,
+          "residual": 0.165494
+        },
+        {
+          "step": 180,
+          "ce": 0.264102,
+          "residual": 0.143514
+        }
+      ],
+      "seconds": 22.74
+    },
+    {
+      "seed": 73,
+      "arm": "r16",
+      "rank": 16,
+      "added_params": 1536,
+      "full_transition_params": 9360,
+      "param_ratio": 0.164103,
+      "new_accuracy": 1.0,
+      "new_residual": 0.110571,
+      "complexity_cost": 0.0001,
+      "id_route_base_accuracy": 0.955729,
+      "ood_route_new_accuracy": 0.997396,
+      "routed_id_accuracy": 0.999349,
+      "routed_ood_accuracy": 1.0,
+      "base_logit_max_delta": 0.0,
+      "history": [
+        {
+          "step": 1,
+          "ce": 3.356471,
+          "residual": 0.225665
+        },
+        {
+          "step": 60,
+          "ce": 0.472602,
+          "residual": 0.165461
+        },
+        {
+          "step": 120,
+          "ce": 0.188067,
+          "residual": 0.130723
+        },
+        {
+          "step": 180,
+          "ce": 0.117839,
+          "residual": 0.109795
+        }
+      ],
+      "seconds": 19.76
+    }
+  ],
+  "summary": {
+    "full": {
+      "added_params": 9360,
+      "param_ratio": 1.0,
+      "new_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "new_residual": {
+        "mean": 0.099113,
+        "std": 0.000512
+      },
+      "complexity_cost": {
+        "mean": 0.0001,
+        "std": 0.0
+      },
+      "id_route_base_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "ood_route_new_accuracy": {
+        "mean": 0.990452,
+        "std": 0.004426
+      },
+      "routed_id_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "routed_ood_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "r16": {
+      "added_params": 1536,
+      "param_ratio": 0.164103,
+      "new_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "new_residual": {
+        "mean": 0.10855,
+        "std": 0.002351
+      },
+      "complexity_cost": {
+        "mean": 0.0001,
+        "std": 0.0
+      },
+      "id_route_base_accuracy": {
+        "mean": 0.963541,
+        "std": 0.009268
+      },
+      "ood_route_new_accuracy": {
+        "mean": 0.993056,
+        "std": 0.006138
+      },
+      "routed_id_accuracy": {
+        "mean": 0.998481,
+        "std": 0.000614
+      },
+      "routed_ood_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "r2": {
+      "added_params": 192,
+      "param_ratio": 0.020513,
+      "new_accuracy": {
+        "mean": 0.400016,
+        "std": 0.026861
+      },
+      "new_residual": {
+        "mean": 0.226318,
+        "std": 0.012275
+      },
+      "complexity_cost": {
+        "mean": 0.0001,
+        "std": 0.0
+      },
+      "id_route_base_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "ood_route_new_accuracy": {
+        "mean": 0.338542,
+        "std": 0.132293
+      },
+      "routed_id_accuracy": {
+        "mean": 1.0,
+        "std": 0.0
+      },
+      "routed_ood_accuracy": {
+        "mean": 0.225773,
+        "std": 0.035744
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "r4": {
+      "added_params": 384,
+      "param_ratio": 0.041026,
+      "new_accuracy": {
+        "mean": 0.75947,
+        "std": 0.022763
+      },
+      "new_residual": {
+        "mean": 0.205065,
+        "std": 0.000339
+      },
+      "complexity_cost": {
+        "mean": 0.0001,
+        "std": 0.0
+      },
+      "id_route_base_accuracy": {
+        "mean": 0.986979,
+        "std": 0.018414
+      },
+      "ood_route_new_accuracy": {
+        "mean": 0.608507,
+        "std": 0.07246
+      },
+      "routed_id_accuracy": {
+        "mean": 0.999349,
+        "std": 0.000921
+      },
+      "routed_ood_accuracy": {
+        "mean": 0.549479,
+        "std": 0.051709
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    },
+    "r8": {
+      "added_params": 768,
+      "param_ratio": 0.082051,
+      "new_accuracy": {
+        "mean": 0.998579,
+        "std": 0.000512
+      },
+      "new_residual": {
+        "mean": 0.143367,
+        "std": 0.007361
+      },
+      "complexity_cost": {
+        "mean": 0.001165,
+        "std": 0.001506
+      },
+      "id_route_base_accuracy": {
+        "mean": 0.974826,
+        "std": 0.008593
+      },
+      "ood_route_new_accuracy": {
+        "mean": 0.965278,
+        "std": 0.017187
+      },
+      "routed_id_accuracy": {
+        "mean": 0.998553,
+        "std": 0.001244
+      },
+      "routed_ood_accuracy": {
+        "mean": 0.980745,
+        "std": 0.012179
+      },
+      "base_logit_max_delta": {
+        "mean": 0.0,
+        "std": 0.0
+      }
+    }
+  },
+  "best_low_rank": "r8",
+  "pass": true,
+  "verdict": "✅ 低秩生成性生长成立：r8 以完整通路 8.2% 的新增参数保持新结构学习、最低自由能路由与旧稳定态零变化。"
+}

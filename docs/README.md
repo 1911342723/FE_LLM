@@ -13,6 +13,9 @@
 > `100%` 固化，等字符边际噪声仅可约 `25.5%`、固化率 `0%`；MDL 代价使旧流路由
 > `95.2%`、结构流路由 `99.9%`。详见
 > [free_energy_reducibility_eval.md](reports/free_energy_reducibility_eval.md)。
+> 第四项参数效率裁决：低秩生成性修正 rank-8 仅用完整新通路 `8.2%` 参数，保持新结构
+> `99.9%`、OOD 能量路由 `96.5%`、ID 留旧通路 `97.5%`；详见
+> [free_energy_low_rank_growth_eval.md](reports/free_energy_low_rank_growth_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >
