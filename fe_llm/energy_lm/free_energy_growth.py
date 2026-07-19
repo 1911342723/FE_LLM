@@ -16,11 +16,23 @@
 from __future__ import annotations
 
 import copy
+from dataclasses import dataclass
 
 import torch
 import torch.nn as nn
 
 from fe_llm.energy_lm.models.free_energy_lm import FreeEnergyLM
+
+
+@dataclass
+class ArchivedPathway:
+    """从活动路由卸下的冻结盆地；第一版只保证进程内 CPU 冷存储。"""
+
+    transition: nn.Module
+    head: nn.Module | None
+    complexity_cost: float
+    original_index: int
+    offload_device: str
 
 
 class StructuralFreeEnergyStabilizer(nn.Module):
@@ -164,6 +176,9 @@ class FreeEnergyGrowthSystem(nn.Module):
         self.core = core
         self.grown_pathways = nn.ModuleList()
         self.grown_heads = nn.ModuleDict()
+        # 普通 Python 容器刻意不注册为子模块：归档参数不随 system.to(cuda) 回到活动显存，
+        # 也不进入活动参数统计。磁盘持久化需后续显式 archive checkpoint 协议。
+        self.archived_pathways: list[ArchivedPathway | None] = []
         self.register_buffer("pathway_costs", torch.zeros(1))
         self.growth_threshold: float | None = None
 
@@ -254,6 +269,95 @@ class FreeEnergyGrowthSystem(nn.Module):
         keep[pathway] = False
         self.pathway_costs = self.pathway_costs[:old_count][keep]
         return mapping
+
+    @property
+    def archive_count(self) -> int:
+        return sum(entry is not None for entry in self.archived_pathways)
+
+    def archived_parameter_count(self) -> int:
+        total = 0
+        for entry in self.archived_pathways:
+            if entry is None:
+                continue
+            total += sum(parameter.numel() for parameter in entry.transition.parameters())
+            if entry.head is not None:
+                total += sum(parameter.numel() for parameter in entry.head.parameters())
+        return total
+
+    def archive_pathway(
+        self,
+        pathway: int,
+        *,
+        offload_device: str = "cpu",
+    ) -> tuple[int, dict[int, int]]:
+        """冻结并从活动路由移除一个新增盆地，返回归档 id 与活动索引映射。"""
+        if pathway == 0:
+            raise ValueError("基础通路不能归档。")
+        if not 1 <= pathway < self.pathway_count:
+            raise IndexError(f"pathway={pathway} 超出 [1,{self.pathway_count - 1}]。")
+        transition = self.transition_for(pathway)
+        key = str(pathway)
+        head = self.grown_heads[key] if key in self.grown_heads else None
+        for parameter in transition.parameters():
+            parameter.requires_grad_(False)
+        if head is not None:
+            for parameter in head.parameters():
+                parameter.requires_grad_(False)
+        cost = float(self.pathway_costs[pathway].detach().cpu())
+        transition.to(offload_device)
+        if head is not None:
+            head.to(offload_device)
+        entry = ArchivedPathway(
+            transition=transition,
+            head=head,
+            complexity_cost=cost,
+            original_index=pathway,
+            offload_device=offload_device,
+        )
+        mapping = self.remove_pathway(pathway)
+        self.archived_pathways.append(entry)
+        return len(self.archived_pathways) - 1, mapping
+
+    def _archive_entry(self, archive_id: int) -> ArchivedPathway:
+        if not 0 <= archive_id < len(self.archived_pathways):
+            raise IndexError(f"archive_id={archive_id} 越界。")
+        entry = self.archived_pathways[archive_id]
+        if entry is None:
+            raise RuntimeError(f"archive_id={archive_id} 已恢复或不存在。")
+        return entry
+
+    @torch.no_grad()
+    def archived_scores(
+        self,
+        ids: torch.Tensor,
+        archive_id: int,
+        *,
+        start: int = 1,
+    ) -> torch.Tensor:
+        """临时载入归档动力学，用 residual-F + 原 MDL 代价复核是否值得恢复。"""
+        entry = self._archive_entry(archive_id)
+        active_device = next(self.core.parameters()).device
+        entry.transition.to(active_device)
+        try:
+            raw = self.provisional_scores(ids, entry.transition, start=start)
+            return raw + entry.complexity_cost
+        finally:
+            entry.transition.to(entry.offload_device)
+
+    def restore_archived_pathway(self, archive_id: int) -> int:
+        """把已通过返回能量复核的冷盆地无训练恢复到活动路由。"""
+        entry = self._archive_entry(archive_id)
+        active_device = next(self.core.parameters()).device
+        entry.transition.to(active_device)
+        if entry.head is not None:
+            entry.head.to(active_device)
+        pathway = self.commit_pathway(
+            entry.transition,
+            complexity_cost=entry.complexity_cost,
+            head=entry.head,
+        )
+        self.archived_pathways[archive_id] = None
+        return pathway
 
     @torch.no_grad()
     def pathway_statistics(self, ids: torch.Tensor, start: int = 1) -> dict[str, torch.Tensor]:
@@ -424,6 +528,34 @@ class FreeEnergyGrowthSystem(nn.Module):
         provisional_raw = self.provisional_scores(stable_ids, provisional, start=start)
         false_advantage = existing_best - provisional_raw
         cost = torch.quantile(false_advantage, quantile).clamp_min(0) + max(0.0, margin)
+        return float(cost.cpu())
+
+    @torch.no_grad()
+    def recalibrate_pathway_cost(
+        self,
+        stable_ids: torch.Tensor,
+        pathway: int,
+        *,
+        start: int = 1,
+        quantile: float = 0.90,
+        margin: float = 1e-4,
+    ) -> float:
+        """拓扑合并/删除后，相对其余稳定解释重新校准已固化盆地的 MDL 代价。"""
+        if not 1 <= pathway < self.pathway_count:
+            raise IndexError(f"pathway={pathway} 超出 [1,{self.pathway_count - 1}]。")
+        if not 0.5 < quantile < 1.0:
+            raise ValueError("quantile 应在 (0.5,1.0) 内。")
+        other_scores = []
+        for other in range(self.pathway_count):
+            if other == pathway:
+                continue
+            raw = self.residual_scores(stable_ids, other, start=start)
+            other_scores.append(raw + self.pathway_costs[other].to(raw))
+        reference = torch.stack(other_scores, dim=1).min(dim=1).values
+        target_raw = self.residual_scores(stable_ids, pathway, start=start)
+        false_advantage = reference - target_raw
+        cost = torch.quantile(false_advantage, quantile).clamp_min(0) + max(0.0, margin)
+        self.pathway_costs[pathway] = cost.to(self.pathway_costs)
         return float(cost.cpu())
 
     @torch.no_grad()

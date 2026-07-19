@@ -254,3 +254,65 @@ def test_batched_low_rank_scores_match_sequential_energy_solves() -> None:
     torch.testing.assert_close(batched, sequential, atol=1e-6, rtol=1e-5)
     torch.testing.assert_close(cascade_scores, sequential, atol=1e-6, rtol=1e-5)
     torch.testing.assert_close(cascade_choices, sequential.argmin(dim=1))
+
+
+def test_archived_pathway_leaves_active_route_and_restores_exactly() -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (8, 9))
+    transition = LowRankGenerativeTransition(system.core.transition, dim=12, rank=3)
+    head = system.create_provisional_head()
+    with torch.no_grad():
+        transition.up.weight.normal_(std=0.03)
+        head.bias.add_(0.2)
+    pathway = system.commit_pathway(transition, complexity_cost=0.012, head=head)
+    logits_before = system.forward_pathway(ids, pathway).detach().clone()
+    score_before = (
+        system.residual_scores(ids, pathway) + system.pathway_costs[pathway]).clone()
+    active_params_before = system.added_parameter_count()
+
+    archive_id, mapping = system.archive_pathway(pathway)
+
+    assert mapping == {0: 0}
+    assert system.pathway_count == 1
+    assert system.archive_count == 1
+    assert system.added_parameter_count() == 0
+    assert system.archived_parameter_count() == active_params_before
+    torch.testing.assert_close(system.archived_scores(ids, archive_id), score_before)
+
+    restored = system.restore_archived_pathway(archive_id)
+    assert restored == 1
+    assert system.archive_count == 0
+    assert system.added_parameter_count() == active_params_before
+    torch.testing.assert_close(system.forward_pathway(ids, restored), logits_before)
+
+
+def test_archiving_middle_pathway_reindexes_remaining_active_capacity() -> None:
+    system = _system().eval()
+    paths = []
+    for seed in range(3):
+        torch.manual_seed(70 + seed)
+        transition = LowRankGenerativeTransition(system.core.transition, dim=12, rank=2)
+        paths.append(transition)
+        system.commit_pathway(transition, complexity_cost=0.01 * seed)
+
+    archive_id, mapping = system.archive_pathway(2)
+
+    assert mapping == {0: 0, 1: 1, 3: 2}
+    assert system.transition_for(2) is paths[2]
+    assert system._archive_entry(archive_id).transition is paths[1]
+    torch.testing.assert_close(system.pathway_costs, torch.tensor([0.0, 0.0, 0.02]))
+
+
+def test_recalibrating_committed_cost_protects_stable_reference_after_merge() -> None:
+    system = _system().eval()
+    ids = torch.randint(0, 17, (64, 9))
+    transition = LowRankGenerativeTransition(system.core.transition, dim=12, rank=3)
+    with torch.no_grad():
+        transition.up.weight.normal_(std=0.05)
+    pathway = system.commit_pathway(transition, complexity_cost=0.0)
+
+    cost = system.recalibrate_pathway_cost(ids, pathway, quantile=0.90)
+    choices, _ = system.route(ids)
+
+    assert cost >= 0
+    assert float((choices == 0).float().mean()) >= 0.89

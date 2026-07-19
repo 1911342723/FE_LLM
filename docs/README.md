@@ -35,6 +35,10 @@
 > 最大能量差 `0`，实测加速 `15.03×`。短前缀级联虽有 `99.6%` oracle 入围，但相对
 > 批量穷举只有 `0.77×`，因此明确拒绝。详见
 > [free_energy_cascade_routing_eval.md](reports/free_energy_cascade_routing_eval.md)。
+> 第十项完成真正独立盆地的生命周期：两个互斥子流、不同初始化的 rank-16 盆地按
+> held-out 能量合并覆盖 `99.7%`，BPC 只变 `+0.33%`，活动参数减半；CPU 冷存储期间
+> 活动新增参数归零，返回后无训练恢复 logits 差为 `0`。详见
+> [free_energy_independent_merge_archive_eval.md](reports/free_energy_independent_merge_archive_eval.md)。
 
 > **因果 PER 语言模型 · 从 0 训练字符级 Python 代码模型**
 >

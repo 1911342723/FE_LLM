@@ -1,0 +1,693 @@
+{
+  "task": "independently learned basin merge, cold archive and reactivation",
+  "config": {
+    "data": "data\\translation\\opus100_train.jsonl",
+    "device": "cuda",
+    "seeds": "132,133,134",
+    "sentences": 12000,
+    "base_steps": 350,
+    "probe_steps": 240,
+    "readout_steps": 240,
+    "batch": 128,
+    "eval_batch": 384,
+    "stream_batch": 128,
+    "length": 32,
+    "dim": 64,
+    "rank": 16,
+    "relax_steps": 5,
+    "tolerance": 0.0001,
+    "transition_mult": 2,
+    "lr": 0.002,
+    "probe_lr": 0.004,
+    "readout_lr": 0.004,
+    "weight_decay": 0.0001,
+    "free_energy_weight": 2.0,
+    "probe_ce_weight": 0.0,
+    "threshold_quantile": 0.99,
+    "energy_start": 2,
+    "min_reducibility": 0.3,
+    "complexity_quantile": 0.9,
+    "complexity_margin": 0.0001,
+    "max_relative_energy_increase": 0.05,
+    "min_merge_coverage": 0.95,
+    "max_relative_bpc_increase": 0.03,
+    "min_parameter_reduction": 0.45,
+    "min_reactivation_fraction": 0.9,
+    "min_route_accuracy": 0.9,
+    "log_every": 60,
+    "write_report": true
+  },
+  "data": {
+    "vocab_size": 34,
+    "sentence_counts": {
+      "base_train": 7200,
+      "base_valid": 1800,
+      "structure_train": 1500,
+      "structure_valid": 1500
+    }
+  },
+  "rows": [
+    {
+      "seed": 132,
+      "threshold": 0.060975,
+      "base_reverse": {
+        "ce": 3.987419,
+        "bpc": 5.75263,
+        "accuracy": 0.100218,
+        "residual": 0.062854
+      },
+      "candidates": [
+        {
+          "index": 1,
+          "pathway": 1,
+          "reducibility": 0.311233,
+          "probe": {
+            "ce": 4.504871,
+            "bpc": 6.499156,
+            "accuracy": 0.066532,
+            "residual": 0.043292
+          },
+          "consolidated": {
+            "ce": 2.459703,
+            "bpc": 3.548602,
+            "accuracy": 0.320817,
+            "residual": 0.043292
+          },
+          "complexity_cost": 0.005261,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.927725,
+              "residual": 0.061954
+            },
+            {
+              "step": 60,
+              "ce": 4.4085,
+              "residual": 0.045542
+            },
+            {
+              "step": 120,
+              "ce": 4.47715,
+              "residual": 0.043772
+            },
+            {
+              "step": 180,
+              "ce": 4.471425,
+              "residual": 0.043252
+            },
+            {
+              "step": 240,
+              "ce": 4.478202,
+              "residual": 0.043613
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.552715
+            },
+            {
+              "step": 60,
+              "ce": 3.159969
+            },
+            {
+              "step": 120,
+              "ce": 2.671648
+            },
+            {
+              "step": 180,
+              "ce": 2.529178
+            },
+            {
+              "step": 240,
+              "ce": 2.446256
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "pathway": 2,
+          "reducibility": 0.31134,
+          "probe": {
+            "ce": 4.542767,
+            "bpc": 6.553827,
+            "accuracy": 0.061324,
+            "residual": 0.043285
+          },
+          "consolidated": {
+            "ce": 2.444566,
+            "bpc": 3.526763,
+            "accuracy": 0.322077,
+            "residual": 0.043285
+          },
+          "complexity_cost": 0.004671,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 4.023561,
+              "residual": 0.062893
+            },
+            {
+              "step": 60,
+              "ce": 4.465615,
+              "residual": 0.045909
+            },
+            {
+              "step": 120,
+              "ce": 4.590607,
+              "residual": 0.044324
+            },
+            {
+              "step": 180,
+              "ce": 4.594718,
+              "residual": 0.043495
+            },
+            {
+              "step": 240,
+              "ce": 4.58944,
+              "residual": 0.043199
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.536528
+            },
+            {
+              "step": 60,
+              "ce": 3.193775
+            },
+            {
+              "step": 120,
+              "ce": 2.64663
+            },
+            {
+              "step": 180,
+              "ce": 2.489954
+            },
+            {
+              "step": 240,
+              "ce": 2.465743
+            }
+          ]
+        }
+      ],
+      "transition_max_difference": 0.814344645,
+      "independent_pathways": [
+        1,
+        2
+      ],
+      "pathway_mean_scores": {
+        "1": 0.048553,
+        "2": 0.047956
+      },
+      "keep": 2,
+      "remove": 1,
+      "merge_energy_tolerance": 0.002428,
+      "merge": {
+        "merged": true,
+        "covered_fraction": 0.994792,
+        "mean_energy_increase": 0.000166,
+        "survivor": 1,
+        "recalibrated_complexity_cost": 0.005019,
+        "routed_bpc_before": 3.514952,
+        "routed_bpc_after": 3.526763,
+        "relative_bpc_increase": 0.00336,
+        "base_route_before": 0.841146,
+        "base_route_after": 0.90625,
+        "reverse_route_after": 1.0,
+        "active_params_before": 7232,
+        "active_params_after": 3616,
+        "parameter_reduction": 0.5,
+        "pathway_usage_before": {
+          "1": 0.226562,
+          "2": 0.773438
+        }
+      },
+      "archive": {
+        "archive_id": 0,
+        "active_mapping": {
+          "0": 0
+        },
+        "archived_params": 3616,
+        "active_params_cold": 0,
+        "archive_better_fraction": 1.0,
+        "archive_mean_energy_advantage": 0.01455,
+        "restored_pathway": 1,
+        "restored_logit_max_delta": 0.0,
+        "restored_bpc": 3.526763,
+        "restored_reverse_route": 1.0,
+        "restored_base_route": 0.90625
+      },
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 250.05
+    },
+    {
+      "seed": 133,
+      "threshold": 0.063141,
+      "base_reverse": {
+        "ce": 3.999127,
+        "bpc": 5.769521,
+        "accuracy": 0.106771,
+        "residual": 0.064404
+      },
+      "candidates": [
+        {
+          "index": 1,
+          "pathway": 1,
+          "reducibility": 0.315494,
+          "probe": {
+            "ce": 4.552026,
+            "bpc": 6.567185,
+            "accuracy": 0.062416,
+            "residual": 0.044085
+          },
+          "consolidated": {
+            "ce": 2.421391,
+            "bpc": 3.493329,
+            "accuracy": 0.317876,
+            "residual": 0.044085
+          },
+          "complexity_cost": 0.006735,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 4.00564,
+              "residual": 0.064113
+            },
+            {
+              "step": 60,
+              "ce": 4.418427,
+              "residual": 0.04684
+            },
+            {
+              "step": 120,
+              "ce": 4.533447,
+              "residual": 0.04498
+            },
+            {
+              "step": 180,
+              "ce": 4.51716,
+              "residual": 0.044259
+            },
+            {
+              "step": 240,
+              "ce": 4.529012,
+              "residual": 0.044119
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.559047
+            },
+            {
+              "step": 60,
+              "ce": 3.190862
+            },
+            {
+              "step": 120,
+              "ce": 2.665547
+            },
+            {
+              "step": 180,
+              "ce": 2.519637
+            },
+            {
+              "step": 240,
+              "ce": 2.431543
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "pathway": 2,
+          "reducibility": 0.31899,
+          "probe": {
+            "ce": 4.525956,
+            "bpc": 6.529574,
+            "accuracy": 0.070565,
+            "residual": 0.04386
+          },
+          "consolidated": {
+            "ce": 2.469451,
+            "bpc": 3.562665,
+            "accuracy": 0.310568,
+            "residual": 0.04386
+          },
+          "complexity_cost": 0.006473,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.989594,
+              "residual": 0.064319
+            },
+            {
+              "step": 60,
+              "ce": 4.431043,
+              "residual": 0.04693
+            },
+            {
+              "step": 120,
+              "ce": 4.514706,
+              "residual": 0.044753
+            },
+            {
+              "step": 180,
+              "ce": 4.53739,
+              "residual": 0.04457
+            },
+            {
+              "step": 240,
+              "ce": 4.507028,
+              "residual": 0.043887
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.579935
+            },
+            {
+              "step": 60,
+              "ce": 3.177078
+            },
+            {
+              "step": 120,
+              "ce": 2.684536
+            },
+            {
+              "step": 180,
+              "ce": 2.54846
+            },
+            {
+              "step": 240,
+              "ce": 2.467869
+            }
+          ]
+        }
+      ],
+      "transition_max_difference": 0.985420644,
+      "independent_pathways": [
+        1,
+        2
+      ],
+      "pathway_mean_scores": {
+        "1": 0.05082,
+        "2": 0.050333
+      },
+      "keep": 2,
+      "remove": 1,
+      "merge_energy_tolerance": 0.002541,
+      "merge": {
+        "merged": true,
+        "covered_fraction": 0.997396,
+        "mean_energy_increase": 0.000188,
+        "survivor": 1,
+        "recalibrated_complexity_cost": 0.006919,
+        "routed_bpc_before": 3.529565,
+        "routed_bpc_after": 3.562665,
+        "relative_bpc_increase": 0.009378,
+        "base_route_before": 0.867188,
+        "base_route_after": 0.903646,
+        "reverse_route_after": 1.0,
+        "active_params_before": 7232,
+        "active_params_after": 3616,
+        "parameter_reduction": 0.5,
+        "pathway_usage_before": {
+          "1": 0.289062,
+          "2": 0.710938
+        }
+      },
+      "archive": {
+        "archive_id": 0,
+        "active_mapping": {
+          "0": 0
+        },
+        "archived_params": 3616,
+        "active_params_cold": 0,
+        "archive_better_fraction": 1.0,
+        "archive_mean_energy_advantage": 0.013625,
+        "restored_pathway": 1,
+        "restored_logit_max_delta": 0.0,
+        "restored_bpc": 3.562665,
+        "restored_reverse_route": 1.0,
+        "restored_base_route": 0.903646
+      },
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 245.1
+    },
+    {
+      "seed": 134,
+      "threshold": 0.06183,
+      "base_reverse": {
+        "ce": 3.959471,
+        "bpc": 5.71231,
+        "accuracy": 0.106267,
+        "residual": 0.062522
+      },
+      "candidates": [
+        {
+          "index": 1,
+          "pathway": 1,
+          "reducibility": 0.316675,
+          "probe": {
+            "ce": 4.498863,
+            "bpc": 6.490488,
+            "accuracy": 0.066784,
+            "residual": 0.042723
+          },
+          "consolidated": {
+            "ce": 2.484948,
+            "bpc": 3.585022,
+            "accuracy": 0.322245,
+            "residual": 0.042723
+          },
+          "complexity_cost": 0.006979,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.933281,
+              "residual": 0.062238
+            },
+            {
+              "step": 60,
+              "ce": 4.425674,
+              "residual": 0.044808
+            },
+            {
+              "step": 120,
+              "ce": 4.459369,
+              "residual": 0.043186
+            },
+            {
+              "step": 180,
+              "ce": 4.479285,
+              "residual": 0.042819
+            },
+            {
+              "step": 240,
+              "ce": 4.490567,
+              "residual": 0.042893
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.554797
+            },
+            {
+              "step": 60,
+              "ce": 3.12227
+            },
+            {
+              "step": 120,
+              "ce": 2.655288
+            },
+            {
+              "step": 180,
+              "ce": 2.513641
+            },
+            {
+              "step": 240,
+              "ce": 2.454819
+            }
+          ]
+        },
+        {
+          "index": 2,
+          "pathway": 2,
+          "reducibility": 0.317087,
+          "probe": {
+            "ce": 4.5075,
+            "bpc": 6.502948,
+            "accuracy": 0.065776,
+            "residual": 0.042697
+          },
+          "consolidated": {
+            "ce": 2.442177,
+            "bpc": 3.523316,
+            "accuracy": 0.317708,
+            "residual": 0.042697
+          },
+          "complexity_cost": 0.006564,
+          "committed": true,
+          "probe_history": [
+            {
+              "step": 1,
+              "ce": 3.987963,
+              "residual": 0.062387
+            },
+            {
+              "step": 60,
+              "ce": 4.518165,
+              "residual": 0.045378
+            },
+            {
+              "step": 120,
+              "ce": 4.572023,
+              "residual": 0.043258
+            },
+            {
+              "step": 180,
+              "ce": 4.629505,
+              "residual": 0.042781
+            },
+            {
+              "step": 240,
+              "ce": 4.572509,
+              "residual": 0.042895
+            }
+          ],
+          "readout_history": [
+            {
+              "step": 1,
+              "ce": 4.536526
+            },
+            {
+              "step": 60,
+              "ce": 3.165855
+            },
+            {
+              "step": 120,
+              "ce": 2.708573
+            },
+            {
+              "step": 180,
+              "ce": 2.544118
+            },
+            {
+              "step": 240,
+              "ce": 2.458917
+            }
+          ]
+        }
+      ],
+      "transition_max_difference": 0.86867398,
+      "independent_pathways": [
+        1,
+        2
+      ],
+      "pathway_mean_scores": {
+        "1": 0.049702,
+        "2": 0.049261
+      },
+      "keep": 2,
+      "remove": 1,
+      "merge_energy_tolerance": 0.002485,
+      "merge": {
+        "merged": true,
+        "covered_fraction": 0.997396,
+        "mean_energy_increase": 0.000178,
+        "survivor": 1,
+        "recalibrated_complexity_cost": 0.006883,
+        "routed_bpc_before": 3.533335,
+        "routed_bpc_after": 3.523316,
+        "relative_bpc_increase": -0.002835,
+        "base_route_before": 0.861979,
+        "base_route_after": 0.901042,
+        "reverse_route_after": 1.0,
+        "active_params_before": 7232,
+        "active_params_after": 3616,
+        "parameter_reduction": 0.5,
+        "pathway_usage_before": {
+          "1": 0.304688,
+          "2": 0.695312
+        }
+      },
+      "archive": {
+        "archive_id": 0,
+        "active_mapping": {
+          "0": 0
+        },
+        "archived_params": 3616,
+        "active_params_cold": 0,
+        "archive_better_fraction": 1.0,
+        "archive_mean_energy_advantage": 0.012942,
+        "restored_pathway": 1,
+        "restored_logit_max_delta": 0.0,
+        "restored_bpc": 3.523316,
+        "restored_reverse_route": 1.0,
+        "restored_base_route": 0.901042
+      },
+      "base_logit_max_delta": 0.0,
+      "pass": true,
+      "seconds": 247.39
+    }
+  ],
+  "summary": {
+    "complete_seed_count": 3,
+    "pass_rate": 1.0,
+    "merge_rate": 1.0,
+    "restore_rate": 1.0,
+    "merge_coverage": {
+      "mean": 0.996528,
+      "std": 0.001228
+    },
+    "merge_bpc_increase": {
+      "mean": 0.003301,
+      "std": 0.004986
+    },
+    "parameter_reduction": {
+      "mean": 0.5,
+      "std": 0.0
+    },
+    "base_route_after_merge": {
+      "mean": 0.903646,
+      "std": 0.002126
+    },
+    "reverse_route_after_merge": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "archive_better_fraction": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "restored_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    },
+    "restored_base_route": {
+      "mean": 0.903646,
+      "std": 0.002126
+    },
+    "restored_reverse_route": {
+      "mean": 1.0,
+      "std": 0.0
+    },
+    "base_logit_max_delta": {
+      "mean": 0.0,
+      "std": 0.0
+    }
+  },
+  "pass": true,
+  "verdict": "✅ 独立盆地生命周期成立：互斥经验上独立学习的两个低能盆地通过 held-out 能量等价性合并；不活跃时活动 GPU 容量降为零；结构返回时归档 residual-F 重新胜出并无训练恢复，基础稳定态和恢复 logits 均严格不变。"
+}
