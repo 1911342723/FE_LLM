@@ -1,0 +1,344 @@
+{
+  "note": "诊断，仅训练/验证数据；不冻结配置，不碰测试集，不做能力结论",
+  "solver_forward_check": {
+    "quadratic_降幅正常": true
+  },
+  "audit_untrained_spectral": [
+    {
+      "step": 1,
+      "grad_norm": 0.006630716845393181,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 0.9382808804512024,
+      "delta_energy": 4.5243650674819946e-05,
+      "disp_from_z0": 0.006630725227296352,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 2,
+      "grad_norm": 0.006628596223890781,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 0.9382356405258179,
+      "delta_energy": 4.521757364273071e-05,
+      "disp_from_z0": 0.01325932890176773,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 3,
+      "grad_norm": 0.006626463029533625,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 0.9381904006004333,
+      "delta_energy": 4.520639777183533e-05,
+      "disp_from_z0": 0.01988578960299492,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 4,
+      "grad_norm": 0.006624318193644285,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 0.9381451606750488,
+      "delta_energy": 4.5165419578552246e-05,
+      "disp_from_z0": 0.026510097086429596,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 5,
+      "grad_norm": 0.006622161716222763,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 0.9381001591682434,
+      "delta_energy": 4.513189196586609e-05,
+      "disp_from_z0": 0.033132243901491165,
+      "changed_node_frac": 0.00390625,
+      "violations": 10.4375
+    }
+  ],
+  "task_grad_spectral": {
+    "task_loss": 9.930849075317383,
+    "total_grad_norm": 0.057828858151516775,
+    "nonzero_param_groups": 18,
+    "n_param_groups": 18
+  },
+  "traj_mismatch_spectral": {
+    "traj_l2_diff": 0.0,
+    "decode_agreement": 1.0
+  },
+  "audit_untrained_nospectral": [
+    {
+      "step": 1,
+      "grad_norm": 0.0058616530150175095,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 2.168727397918701,
+      "delta_energy": 3.4965574741363525e-05,
+      "disp_from_z0": 0.0058616516180336475,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 2,
+      "grad_norm": 0.005860235542058945,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 2.1686925888061523,
+      "delta_energy": 3.4928321838378906e-05,
+      "disp_from_z0": 0.011721882969141006,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 3,
+      "grad_norm": 0.005858811549842358,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 2.1686575412750244,
+      "delta_energy": 3.4868717193603516e-05,
+      "disp_from_z0": 0.01758069172501564,
+      "changed_node_frac": 0.0,
+      "violations": 10.3125
+    },
+    {
+      "step": 4,
+      "grad_norm": 0.005857381969690323,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 2.1686227321624756,
+      "delta_energy": 3.492087125778198e-05,
+      "disp_from_z0": 0.023438073694705963,
+      "changed_node_frac": 0.00390625,
+      "violations": 10.4375
+    },
+    {
+      "step": 5,
+      "grad_norm": 0.005855944938957691,
+      "eta": 1.0,
+      "backoffs": 0,
+      "energy": 2.1685874462127686,
+      "delta_energy": 3.495067358016968e-05,
+      "disp_from_z0": 0.02929401770234108,
+      "changed_node_frac": 0.00390625,
+      "violations": 10.4375
+    }
+  ],
+  "task_grad_nospectral": {
+    "task_loss": 9.930376052856445,
+    "total_grad_norm": 0.04068049125271183,
+    "nonzero_param_groups": 18,
+    "n_param_groups": 18
+  },
+  "overfit_1": [
+    {
+      "iter": 25,
+      "loss_energy": 0.949533224105835,
+      "loss_direct": 0.4702206254005432,
+      "succ_energy": 0.0,
+      "succ_direct": 0.0,
+      "viol_energy": 11.0,
+      "viol_direct": 3.0
+    },
+    {
+      "iter": 50,
+      "loss_energy": 0.5003400444984436,
+      "loss_direct": 0.2975321114063263,
+      "succ_energy": 0.0,
+      "succ_direct": 0.0,
+      "viol_energy": 1.0,
+      "viol_direct": 1.0
+    },
+    {
+      "iter": 75,
+      "loss_energy": 0.44258934259414673,
+      "loss_direct": 0.14889998733997345,
+      "succ_energy": 0.0,
+      "succ_direct": 1.0,
+      "viol_energy": 1.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 100,
+      "loss_energy": 0.21354423463344574,
+      "loss_direct": 0.0002816163469105959,
+      "succ_energy": 0.0,
+      "succ_direct": 1.0,
+      "viol_energy": 1.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 125,
+      "loss_energy": 0.014221884310245514,
+      "loss_direct": 1.7947553715202957e-05,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 150,
+      "loss_energy": 0.009125351905822754,
+      "loss_direct": 1.3194471648603212e-05,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 175,
+      "loss_energy": 0.007190126925706863,
+      "loss_direct": 1.1697031368385069e-05,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 200,
+      "loss_energy": 0.005726862233132124,
+      "loss_direct": 1.0601878784655128e-05,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    }
+  ],
+  "overfit_16": [
+    {
+      "iter": 50,
+      "loss_energy": 0.7381654381752014,
+      "loss_direct": 0.6444089412689209,
+      "succ_energy": 0.0,
+      "succ_direct": 0.0,
+      "viol_energy": 3.875,
+      "viol_direct": 7.4375
+    },
+    {
+      "iter": 100,
+      "loss_energy": 0.32540786266326904,
+      "loss_direct": 0.409349650144577,
+      "succ_energy": 0.4375,
+      "succ_direct": 0.0625,
+      "viol_energy": 1.0625,
+      "viol_direct": 3.8125
+    },
+    {
+      "iter": 150,
+      "loss_energy": 0.11393072456121445,
+      "loss_direct": 0.10616856068372726,
+      "succ_energy": 1.0,
+      "succ_direct": 0.8125,
+      "viol_energy": 0.0,
+      "viol_direct": 0.1875
+    },
+    {
+      "iter": 200,
+      "loss_energy": 0.05508117750287056,
+      "loss_direct": 0.03160378336906433,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 250,
+      "loss_energy": 0.05472007766366005,
+      "loss_direct": 0.023646280169487,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 300,
+      "loss_energy": 0.04959086701273918,
+      "loss_direct": 0.02262277714908123,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 350,
+      "loss_energy": 0.045547932386398315,
+      "loss_direct": 0.022226272150874138,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    },
+    {
+      "iter": 400,
+      "loss_energy": 0.0391266793012619,
+      "loss_direct": 0.022007297724485397,
+      "succ_energy": 1.0,
+      "succ_direct": 1.0,
+      "viol_energy": 0.0,
+      "viol_direct": 0.0
+    }
+  ],
+  "elapsed_s": 688.9792301654816,
+  "log": [
+    "=== ② 求解器正向检查（凸二次能量，已知最优点）===",
+    "  eta=1.0: E 44.7197 -> 0.0000, ||z5-z0||=6.6391, 记录步数=2",
+    "  eta=0.5: E 44.7197 -> 0.0000, ||z5-z0||=6.6391, 记录步数=2",
+    "  eta=0.1: E 44.7197 -> 4.8017, ||z5-z0||=4.4636, 记录步数=5",
+    "  结论：求解器链路 正常",
+    "=== ① 单批次轨迹审计 [未训练 + spectral_norm] ===",
+    "  {\"step\": 1, \"grad_norm\": 0.006630716845393181, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 0.9382808804512024, \"delta_energy\": 4.5243650674819946e-05, \"disp_from_z0\": 0.006630725227296352, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 2, \"grad_norm\": 0.006628596223890781, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 0.9382356405258179, \"delta_energy\": 4.521757364273071e-05, \"disp_from_z0\": 0.01325932890176773, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 3, \"grad_norm\": 0.006626463029533625, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 0.9381904006004333, \"delta_energy\": 4.520639777183533e-05, \"disp_from_z0\": 0.01988578960299492, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 4, \"grad_norm\": 0.006624318193644285, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 0.9381451606750488, \"delta_energy\": 4.5165419578552246e-05, \"disp_from_z0\": 0.026510097086429596, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 5, \"grad_norm\": 0.006622161716222763, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 0.9381001591682434, \"delta_energy\": 4.513189196586609e-05, \"disp_from_z0\": 0.033132243901491165, \"changed_node_frac\": 0.00390625, \"violations\": 10.4375}",
+    "=== ① 任务损失 -> 能量网络 的梯度范数（仅任务损失，无辅助项）===",
+    "  任务损失=9.930849  总梯度范数=5.782886e-02  非零参数组=18/18",
+    "    enc.inp.weight: 2.182e-05",
+    "    enc.inp.bias: 7.778e-06",
+    "    enc.mp.0.weight: 6.325e-05",
+    "    enc.mp.0.bias: 2.873e-05",
+    "    enc.mp.1.weight: 6.897e-05",
+    "    enc.mp.1.bias: 9.539e-05",
+    "    enc.mp.2.weight: 1.153e-04",
+    "    enc.mp.2.bias: 2.945e-04",
+    "=== 训练(固定步长) vs 评估(带回退) 轨迹差异 ===",
+    "  ||z_fixed - z_backtrack|| = 0.000000, 解码相同节点比例 = 1.0000",
+    "=== ① 单批次轨迹审计 [未训练 + 无 spectral_norm] ===",
+    "  {\"step\": 1, \"grad_norm\": 0.0058616530150175095, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 2.168727397918701, \"delta_energy\": 3.4965574741363525e-05, \"disp_from_z0\": 0.0058616516180336475, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 2, \"grad_norm\": 0.005860235542058945, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 2.1686925888061523, \"delta_energy\": 3.4928321838378906e-05, \"disp_from_z0\": 0.011721882969141006, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 3, \"grad_norm\": 0.005858811549842358, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 2.1686575412750244, \"delta_energy\": 3.4868717193603516e-05, \"disp_from_z0\": 0.01758069172501564, \"changed_node_frac\": 0.0, \"violations\": 10.3125}",
+    "  {\"step\": 4, \"grad_norm\": 0.005857381969690323, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 2.1686227321624756, \"delta_energy\": 3.492087125778198e-05, \"disp_from_z0\": 0.023438073694705963, \"changed_node_frac\": 0.00390625, \"violations\": 10.4375}",
+    "  {\"step\": 5, \"grad_norm\": 0.005855944938957691, \"eta\": 1.0, \"backoffs\": 0, \"energy\": 2.1685874462127686, \"delta_energy\": 3.495067358016968e-05, \"disp_from_z0\": 0.02929401770234108, \"changed_node_frac\": 0.00390625, \"violations\": 10.4375}",
+    "=== ① 任务损失 -> 能量网络 的梯度范数（仅任务损失，无辅助项）===",
+    "  任务损失=9.930376  总梯度范数=4.068049e-02  非零参数组=18/18",
+    "    enc.inp.weight: 1.705e-05",
+    "    enc.inp.bias: 5.393e-06",
+    "    enc.mp.0.weight: 5.086e-05",
+    "    enc.mp.0.bias: 1.903e-05",
+    "    enc.mp.1.weight: 5.677e-05",
+    "    enc.mp.1.bias: 7.536e-05",
+    "    enc.mp.2.weight: 1.079e-04",
+    "    enc.mp.2.bias: 2.783e-04",
+    "=== ③ 小样本过拟合 n_graphs=1 ===",
+    "  {\"iter\": 25, \"loss_energy\": 0.949533224105835, \"loss_direct\": 0.4702206254005432, \"succ_energy\": 0.0, \"succ_direct\": 0.0, \"viol_energy\": 11.0, \"viol_direct\": 3.0}",
+    "  {\"iter\": 50, \"loss_energy\": 0.5003400444984436, \"loss_direct\": 0.2975321114063263, \"succ_energy\": 0.0, \"succ_direct\": 0.0, \"viol_energy\": 1.0, \"viol_direct\": 1.0}",
+    "  {\"iter\": 75, \"loss_energy\": 0.44258934259414673, \"loss_direct\": 0.14889998733997345, \"succ_energy\": 0.0, \"succ_direct\": 1.0, \"viol_energy\": 1.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 100, \"loss_energy\": 0.21354423463344574, \"loss_direct\": 0.0002816163469105959, \"succ_energy\": 0.0, \"succ_direct\": 1.0, \"viol_energy\": 1.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 125, \"loss_energy\": 0.014221884310245514, \"loss_direct\": 1.7947553715202957e-05, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 150, \"loss_energy\": 0.009125351905822754, \"loss_direct\": 1.3194471648603212e-05, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 175, \"loss_energy\": 0.007190126925706863, \"loss_direct\": 1.1697031368385069e-05, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 200, \"loss_energy\": 0.005726862233132124, \"loss_direct\": 1.0601878784655128e-05, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "=== ③ 小样本过拟合 n_graphs=16 ===",
+    "  {\"iter\": 50, \"loss_energy\": 0.7381654381752014, \"loss_direct\": 0.6444089412689209, \"succ_energy\": 0.0, \"succ_direct\": 0.0, \"viol_energy\": 3.875, \"viol_direct\": 7.4375}",
+    "  {\"iter\": 100, \"loss_energy\": 0.32540786266326904, \"loss_direct\": 0.409349650144577, \"succ_energy\": 0.4375, \"succ_direct\": 0.0625, \"viol_energy\": 1.0625, \"viol_direct\": 3.8125}",
+    "  {\"iter\": 150, \"loss_energy\": 0.11393072456121445, \"loss_direct\": 0.10616856068372726, \"succ_energy\": 1.0, \"succ_direct\": 0.8125, \"viol_energy\": 0.0, \"viol_direct\": 0.1875}",
+    "  {\"iter\": 200, \"loss_energy\": 0.05508117750287056, \"loss_direct\": 0.03160378336906433, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 250, \"loss_energy\": 0.05472007766366005, \"loss_direct\": 0.023646280169487, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 300, \"loss_energy\": 0.04959086701273918, \"loss_direct\": 0.02262277714908123, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 350, \"loss_energy\": 0.045547932386398315, \"loss_direct\": 0.022226272150874138, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}",
+    "  {\"iter\": 400, \"loss_energy\": 0.0391266793012619, \"loss_direct\": 0.022007297724485397, \"succ_energy\": 1.0, \"succ_direct\": 1.0, \"viol_energy\": 0.0, \"viol_direct\": 0.0}"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "config": {
+    "n_train": 300,
+    "n_val": 100,
+    "n_test": 100,
+    "n_ood": 100,
+    "density": 0.35,
+    "ood_density": 0.5,
+    "epochs": 1,
+    "eta": 1.0,
+    "k_steps": 5,
+    "seeds": [
+      11
+    ]
+  },
+  "config_hash": "811026df489f2c172c53dd4c957860ab1c1fe3b006776cbe166f8e537fc3ebd3",
+  "smoke": true,
+  "per_seed": [
+    {
+      "seed": 11,
+      "acc_energy": 0.0,
+      "acc_direct": 0.0,
+      "delta": 0.0,
+      "aux_zero_step": 0.0,
+      "aux_sample_best_of_n": 0.0,
+      "time_train_energy_s": 18.266096591949463,
+      "time_train_direct_s": 0.2509148120880127,
+      "time_infer_energy_s": 1.187807559967041,
+      "time_infer_direct_s": 0.015563249588012695
+    }
+  ],
+  "gate1": {
+    "verdict": "冒烟测试，不做统计裁决"
+  }
+}

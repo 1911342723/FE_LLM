@@ -1,0 +1,25 @@
+{
+  "note": "仅训练集/验证集，预算标定，不构成能力结论，不做统计裁决",
+  "config": {
+    "n_train": 2000,
+    "n_val": 500,
+    "epochs": 5,
+    "seed": 11,
+    "density": 0.35,
+    "out": "calibration.json"
+  },
+  "train_time_energy_s": 1565.6978604793549,
+  "train_time_direct_s": 21.63959765434265,
+  "train_success_energy": 0.0,
+  "train_success_direct": 0.026,
+  "diag_train_edge_rate_energy": 0.6696065533258847,
+  "diag_train_edge_rate_direct": 0.8681563986530864,
+  "diag_train_violations_energy": 9.318,
+  "diag_train_violations_direct": 3.79,
+  "val_success_energy": 0.0,
+  "val_success_direct": 0.028,
+  "diag_val_edge_rate_energy": 0.6663475940056869,
+  "diag_val_edge_rate_direct": 0.8641791094503739,
+  "diag_val_violations_energy": 9.268,
+  "diag_val_violations_direct": 3.85
+}
